@@ -1,0 +1,43 @@
+scalar Time
+
+type Tweet {
+  id:ID!
+  fullText:String!
+  createdAt:Time
+  user:User!
+  imageURL:String
+  thumbnaildImageURL:String
+  favoriteCount:Int
+  retweetCount:Int
+  resources:[Resource]
+}
+type User {
+  id:ID!
+  userName:String!
+  screenName:String
+}
+
+type Resource {
+  id:ID!
+  url:String!
+  respurceType:String
+  width:Int
+  height:Int
+}
+
+
+input SearchInput {
+  term:String!
+}
+
+type Query {
+  #  find a tweet
+  tweet(id:ID!):Tweet
+
+  #  search
+  search(input:SearchInput!, size:Int = 20, cursor:ID):[Tweet]
+}
+
+type Mutation {
+  capture(url:String): Tweet
+}

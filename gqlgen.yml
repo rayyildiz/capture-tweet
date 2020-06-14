@@ -1,0 +1,14 @@
+schema:
+  - schema.graphqls
+
+exec:
+  filename: pkg/graph/generated/generated.go
+  package: generated
+
+federation:
+  filename: pkg/graph/generated/federation.go
+  package: generated
+
+model:
+  filename: pkg/graph/generated/models_gen.go
+  package: generated
