@@ -1,3 +1,4 @@
+//go:generate mockgen -package=tweet -self_package=com.capturetweet/pkg/tweet -destination=repository_mock.go . Repository
 package tweet
 
 import (
@@ -8,7 +9,9 @@ import (
 
 type Repository interface {
 	FindById(id string) (*model.Tweet, error)
-	Store(id, fullText, lang string, retweetCount, favCount int, createdAt *time.Time) error
+	Store(id, fullText, lang, userId string, retweetCount, favCount int, createdAt *time.Time) error
+
+	FindBySearch(term string, limit int, cursorId *string) ([]model.Tweet, error)
 }
 
 type repositoryImpl struct {
@@ -20,10 +23,48 @@ func NewRepository(db *gorm.DB) Repository {
 }
 
 func (r repositoryImpl) FindById(id string) (*model.Tweet, error) {
-	return nil, nil
+	tweet := &model.Tweet{}
+
+	err := r.db.Where(&model.Tweet{ID: id}).First(tweet).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return tweet, nil
 }
 
-func (r repositoryImpl) Store(id, fullText, lang string, retweetCount, favCount int, createdAt *time.Time) error {
+func (r repositoryImpl) Store(id, fullText, lang, userId string, retweetCount, favCount int, createdAt *time.Time) error {
+	tweetCreatedAt := time.Now()
+	if createdAt != nil {
+		tweetCreatedAt = *createdAt
+	}
+	return r.db.Create(&model.Tweet{
+		ID:              id,
+		CreatedAt:       tweetCreatedAt,
+		UpdatedAt:       time.Now(),
+		FullText:        fullText,
+		CaptureURL:      "", // TODO get url
+		CaptureThumbURL: "", // TODO get thumbnail ?
+		Lang:            lang,
+		FavoriteCount:   favCount,
+		RetweetCount:    retweetCount,
+		UserID:          userId,
+	}).Error
+}
 
-	return nil
+func strPointer(s string) *string {
+	return &s
+}
+
+func (r repositoryImpl) FindBySearch(term string, limit int, cursorId *string) ([]model.Tweet, error) {
+	if cursorId == nil {
+		cursorId = strPointer("")
+	}
+	var list []model.Tweet
+
+	err := r.db.Where("id > & AND full_text is '%?%'", cursorId, term).Limit(limit).Scan(&list).Error
+	if err != nil {
+		return nil, err
+	}
+	return list, nil
 }

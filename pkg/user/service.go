@@ -5,14 +5,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-/*
-
-type UserService interface {
-	FindById(id string) (*UserModel, error)
-	FindOrCreate(id, userName, screenName string) (*UserModel, error)
-}
-*/
-
 type serviceImpl struct {
 	repo Repository
 }

@@ -14,11 +14,6 @@ func newQueryResolver(ts service.TweetService) generated.QueryResolver {
 	return &queryResolverImpl{ts}
 }
 
-/*
-Tweet(ctx context.Context, id string) (*Tweet, error)
-	Search(ctx context.Context, input SearchInput, size *int, cursor *string) ([]*Tweet, error)
-*/
-
 func (r queryResolverImpl) Tweet(ctx context.Context, id string) (*generated.Tweet, error) {
 
 	return nil, nil
