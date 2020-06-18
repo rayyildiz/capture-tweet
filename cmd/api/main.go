@@ -4,6 +4,7 @@ import (
 	"com.capturetweet/internal/infra"
 	"com.capturetweet/pkg/graph"
 	"com.capturetweet/pkg/graph/generated"
+	"com.capturetweet/pkg/search"
 	"com.capturetweet/pkg/tweet"
 	"com.capturetweet/pkg/user"
 	"context"
@@ -51,10 +52,11 @@ func InitServer(lifecycle fx.Lifecycle) {
 
 func main() {
 	app := fx.New(
-		infra.Module, // Database, Logger
-		user.Module,  // user repository, service
-		tweet.Module, // tweet repository, service
-		graph.Module, // Handler, resolvers...
+		infra.Module,  // Database, Logger
+		search.Module, // Search Module
+		user.Module,   // user repository, service
+		tweet.Module,  // tweet repository, service
+		graph.Module,  // Handler, resolvers...
 		fx.Invoke(
 			Register,
 			InitServer,

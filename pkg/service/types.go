@@ -14,6 +14,7 @@ type TweetModel struct {
 	ThumbnailURL  *string
 	FavoriteCount int
 	RetweetCount  int
+	Author        *UserModel
 }
 
 type ResourceModel struct {
@@ -22,4 +23,10 @@ type ResourceModel struct {
 	Width        int
 	Height       int
 	ResourceType string
+}
+
+type SearchModel struct {
+	TweetID  string `json:"tweet_id"`
+	FullText string `json:"full_text"`
+	Author   string `json:"author"`
 }

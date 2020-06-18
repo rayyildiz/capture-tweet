@@ -47,7 +47,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Search func(childComplexity int, input SearchInput, size *int, cursor *string) int
+		Search func(childComplexity int, input SearchInput, size int, page int, start int) int
 		Tweet  func(childComplexity int, id string) int
 	}
 
@@ -83,7 +83,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	Tweet(ctx context.Context, id string) (*Tweet, error)
-	Search(ctx context.Context, input SearchInput, size *int, cursor *string) ([]*Tweet, error)
+	Search(ctx context.Context, input SearchInput, size int, page int, start int) ([]*Tweet, error)
 }
 
 type executableSchema struct {
@@ -123,7 +123,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Search(childComplexity, args["input"].(SearchInput), args["size"].(*int), args["cursor"].(*string)), true
+		return e.complexity.Query.Search(childComplexity, args["input"].(SearchInput), args["size"].(int), args["page"].(int), args["start"].(int)), true
 
 	case "Query.tweet":
 		if e.complexity.Query.Tweet == nil {
@@ -357,7 +357,7 @@ type Query {
   tweet(id:ID!):Tweet
 
   #  search
-  search(input:SearchInput!, size:Int = 20, cursor:ID):[Tweet]
+  search(input:SearchInput!, size:Int! = 20, page:Int!=0, start:Int!=0):[Tweet]
 }
 
 type Mutation {
@@ -420,22 +420,30 @@ func (ec *executionContext) field_Query_search_args(ctx context.Context, rawArgs
 		}
 	}
 	args["input"] = arg0
-	var arg1 *int
+	var arg1 int
 	if tmp, ok := rawArgs["size"]; ok {
-		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
 	args["size"] = arg1
-	var arg2 *string
-	if tmp, ok := rawArgs["cursor"]; ok {
-		arg2, err = ec.unmarshalOID2ᚖstring(ctx, tmp)
+	var arg2 int
+	if tmp, ok := rawArgs["page"]; ok {
+		arg2, err = ec.unmarshalNInt2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["cursor"] = arg2
+	args["page"] = arg2
+	var arg3 int
+	if tmp, ok := rawArgs["start"]; ok {
+		arg3, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["start"] = arg3
 	return args, nil
 }
 
@@ -589,7 +597,7 @@ func (ec *executionContext) _Query_search(ctx context.Context, field graphql.Col
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Search(rctx, args["input"].(SearchInput), args["size"].(*int), args["cursor"].(*string))
+		return ec.resolvers.Query().Search(rctx, args["input"].(SearchInput), args["size"].(int), args["page"].(int), args["start"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2775,6 +2783,20 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 	return res
 }
 
+func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
+	return graphql.UnmarshalInt(v)
+}
+
+func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNSearchInput2comᚗcapturetweetᚋpkgᚋgraphᚋgeneratedᚐSearchInput(ctx context.Context, v interface{}) (SearchInput, error) {
 	return ec.unmarshalInputSearchInput(ctx, v)
 }
@@ -3068,29 +3090,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return ec.marshalOBoolean2bool(ctx, sel, *v)
-}
-
-func (ec *executionContext) unmarshalOID2string(ctx context.Context, v interface{}) (string, error) {
-	return graphql.UnmarshalID(v)
-}
-
-func (ec *executionContext) marshalOID2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	return graphql.MarshalID(v)
-}
-
-func (ec *executionContext) unmarshalOID2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalOID2string(ctx, v)
-	return &res, err
-}
-
-func (ec *executionContext) marshalOID2ᚖstring(ctx context.Context, sel ast.SelectionSet, v *string) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec.marshalOID2string(ctx, sel, *v)
 }
 
 func (ec *executionContext) unmarshalOInt2int(ctx context.Context, v interface{}) (int, error) {

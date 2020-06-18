@@ -2,6 +2,7 @@
 package tweet
 
 import (
+	"com.capturetweet/internal/convert"
 	"com.capturetweet/pkg/model"
 	"github.com/jinzhu/gorm"
 	"time"
@@ -9,6 +10,7 @@ import (
 
 type Repository interface {
 	FindById(id string) (*model.Tweet, error)
+	FindByIds(ids []string) ([]model.Tweet, error)
 	Store(id, fullText, lang, userId string, retweetCount, favCount int, createdAt *time.Time) error
 
 	FindBySearch(term string, limit int, cursorId *string) ([]model.Tweet, error)
@@ -52,13 +54,9 @@ func (r repositoryImpl) Store(id, fullText, lang, userId string, retweetCount, f
 	}).Error
 }
 
-func strPointer(s string) *string {
-	return &s
-}
-
 func (r repositoryImpl) FindBySearch(term string, limit int, cursorId *string) ([]model.Tweet, error) {
 	if cursorId == nil {
-		cursorId = strPointer("")
+		cursorId = convert.String("")
 	}
 	var list []model.Tweet
 
@@ -67,4 +65,8 @@ func (r repositoryImpl) FindBySearch(term string, limit int, cursorId *string) (
 		return nil, err
 	}
 	return list, nil
+}
+
+func (r repositoryImpl) FindByIds(ids []string) ([]model.Tweet, error) {
+
 }
