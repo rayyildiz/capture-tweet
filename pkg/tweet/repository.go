@@ -14,6 +14,7 @@ type Repository interface {
 	FindByIds(ids []string) ([]Tweet, error)
 	Store(tweet *anaconda.Tweet) error
 	Exist(id string) bool
+	UpdateCaptureURLs(id, captureUrl, captureThumbUrl string) error
 }
 
 type repositoryImpl struct {
@@ -54,7 +55,6 @@ func (r repositoryImpl) Store(tweet *anaconda.Tweet) error {
 	for _, media := range tweet.Entities.Media {
 		resources = append(resources, Resource{
 			ID:        media.Id_str,
-			CreatedAt: postedAt,
 			URL:       media.Media_url_https,
 			Width:     media.Sizes.Medium.H,
 			Height:    media.Sizes.Medium.W,
@@ -68,8 +68,8 @@ func (r repositoryImpl) Store(tweet *anaconda.Tweet) error {
 		UpdatedAt:       time.Now(),
 		PostedAt:        postedAt,
 		FullText:        tweet.FullText,
-		CaptureURL:      nil, // TODO get url
-		CaptureThumbURL: nil, // TODO get thumbnail ?
+		CaptureURL:      nil,
+		CaptureThumbURL: nil,
 		Lang:            tweet.Lang,
 		FavoriteCount:   tweet.FavoriteCount,
 		RetweetCount:    tweet.RetweetCount,
@@ -87,4 +87,9 @@ func (r repositoryImpl) FindByIds(ids []string) ([]Tweet, error) {
 		}
 	}
 	return list, nil
+}
+
+func (r repositoryImpl) UpdateCaptureURLs(id, captureUrl, captureThumbUrl string) error {
+	tweet := &Tweet{ID: id}
+	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_url": captureUrl, "capture_thumb_url": captureThumbUrl, "updated_at": time.Now()}).Do(context.Background())
 }

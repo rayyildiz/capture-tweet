@@ -39,3 +39,9 @@ type SearchModel struct {
 	FullText string `json:"fullText"`
 	Author   string `json:"author"`
 }
+
+type CaptureRequestModel struct {
+	ID     string `json:"id"`
+	Author string `json:"author"`
+	Url    string `json:"url"`
+}

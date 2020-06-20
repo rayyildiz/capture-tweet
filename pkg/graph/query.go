@@ -4,6 +4,7 @@ import (
 	"com.capturetweet/internal/convert"
 	"context"
 	"errors"
+	"go.uber.org/zap"
 	"gocloud.dev/gcerrors"
 )
 
@@ -18,10 +19,12 @@ func (r queryResolverImpl) Tweet(ctx context.Context, id string) (*Tweet, error)
 	model, err := _twitterService.FindById(id)
 	code := gcerrors.Code(err)
 	if code == gcerrors.NotFound {
+		_log.Warn("tweet not found", zap.String("id", id))
 		return nil, nil
 	}
 
 	if err != nil {
+		_log.Error("tweet find error", zap.String("id", id), zap.Error(err))
 		return nil, err
 	}
 	var resources []*Resource
@@ -53,6 +56,7 @@ func (r queryResolverImpl) Search(ctx context.Context, input SearchInput, size i
 
 	models, err := _twitterService.Search(input.Term, size, start, page)
 	if err != nil {
+		_log.Error("search error", zap.String("term", input.Term), zap.Error(err))
 		return nil, errors.New("could not ind any result")
 	}
 	var list []*Tweet

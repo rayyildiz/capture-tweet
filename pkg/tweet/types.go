@@ -21,10 +21,9 @@ type Tweet struct {
 }
 
 type Resource struct {
-	ID        string
-	CreatedAt time.Time
-	URL       string
-	Width     int
-	Height    int
-	MediaType string
+	ID        string `docstore:"id"`
+	URL       string `docstore:"url"`
+	Width     int    `docstore:"width"`
+	Height    int    `docstore:"height"`
+	MediaType string `docstore:"media_type"`
 }

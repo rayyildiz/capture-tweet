@@ -3,6 +3,7 @@ package graph
 import (
 	"com.capturetweet/internal/convert"
 	"context"
+	"go.uber.org/zap"
 )
 
 type mutationResolverImpl struct {
@@ -15,11 +16,13 @@ func newMutationResolver() MutationResolver {
 func (r mutationResolverImpl) Capture(ctx context.Context, url string) (*Tweet, error) {
 	id, err := _twitterService.Store(url)
 	if err != nil {
+		_log.Error("capture error", zap.String("url", url), zap.Error(err))
 		return nil, err
 	}
 
 	model, err := _twitterService.FindById(id)
 	if err != nil {
+		_log.Error("capture error, findById", zap.String("id", id), zap.Error(err))
 		return nil, err
 	}
 

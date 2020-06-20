@@ -1,6 +1,7 @@
 package user
 
 import (
+	"com.capturetweet/internal/infra"
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -13,6 +14,9 @@ func TestUserService_FindById(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
+	log := infra.NewLogger()
+	require.NotNil(t, log)
+
 	repo := NewMockRepository(ctrl)
 	repo.EXPECT().FindById("testUserIdStr").Return(&User{
 		ID:         "testUserIdStr",
@@ -22,7 +26,7 @@ func TestUserService_FindById(t *testing.T) {
 		ScreenName: "Ramazan A.",
 	}, nil)
 
-	svc := NewService(repo)
+	svc := NewService(repo, log)
 
 	userModel, err := svc.FindById("testUserIdStr")
 	require.NoError(t, err)
@@ -36,6 +40,8 @@ func TestUserService_FindById(t *testing.T) {
 func TestUserService_FindOrCreate_Exist(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
+	log := infra.NewLogger()
+	require.NotNil(t, log)
 
 	repo := NewMockRepository(ctrl)
 	repo.EXPECT().FindById("testId").Return(&User{
@@ -46,7 +52,7 @@ func TestUserService_FindOrCreate_Exist(t *testing.T) {
 		ScreenName: "Ramazan A.",
 	}, nil)
 
-	svc := NewService(repo)
+	svc := NewService(repo, log)
 
 	userModel, err := svc.FindOrCreate(&anaconda.User{
 		IdStr:      "testId",
@@ -65,6 +71,9 @@ func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
+	log := infra.NewLogger()
+	require.NotNil(t, log)
+
 	repo := NewMockRepository(ctrl)
 
 	strDate := "Mon Jan 02 15:04:05 -0700 2006"
@@ -74,15 +83,15 @@ func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 	repo.EXPECT().FindById("testId").Return(nil, nil)
 	repo.EXPECT().Store("testId", "rayyildiz", "Ramazan A.", "bio", "profile.png", dt).Return(nil)
 
-	svc := NewService(repo)
+	svc := NewService(repo, log)
 
 	userModel, err := svc.FindOrCreate(&anaconda.User{
-		IdStr:                          "testId",
-		ScreenName:                     "rayyildiz",
-		Name:                           "Ramazan A.",
-		Description:                    "bio",
-		ProfileBackgroundImageUrlHttps: "profile.png",
-		CreatedAt:                      strDate,
+		IdStr:                "testId",
+		ScreenName:           "rayyildiz",
+		Name:                 "Ramazan A.",
+		Description:          "bio",
+		ProfileImageUrlHttps: "profile.png",
+		CreatedAt:            strDate,
 	})
 
 	require.NoError(t, err)

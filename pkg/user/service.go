@@ -4,20 +4,23 @@ import (
 	"com.capturetweet/internal/convert"
 	"com.capturetweet/pkg/service"
 	"github.com/ChimeraCoder/anaconda"
+	"go.uber.org/zap"
 	"time"
 )
 
 type serviceImpl struct {
 	repo Repository
+	log  *zap.Logger
 }
 
-func NewService(repo Repository) service.UserService {
-	return &serviceImpl{repo}
+func NewService(repo Repository, log *zap.Logger) service.UserService {
+	return &serviceImpl{repo, log}
 }
 
 func (s serviceImpl) FindById(id string) (*service.UserModel, error) {
 	user, err := s.repo.FindById(id)
 	if err != nil {
+		s.log.Error("user:service findById", zap.String("tweet_id", id), zap.Error(err))
 		return nil, err
 	}
 
@@ -49,8 +52,9 @@ func (s serviceImpl) FindOrCreate(author *anaconda.User) (*service.UserModel, er
 		registeredAt = time.Now()
 	}
 
-	err = s.repo.Store(id, author.ScreenName, author.Name, author.Description, author.ProfileBackgroundImageUrlHttps, registeredAt)
+	err = s.repo.Store(id, author.ScreenName, author.Name, author.Description, author.ProfileImageUrlHttps, registeredAt)
 	if err != nil {
+		s.log.Error("user:service findOrCreate", zap.String("tweet_id", id), zap.String("tweet_user", author.ScreenName), zap.Error(err))
 		return nil, err
 	}
 
