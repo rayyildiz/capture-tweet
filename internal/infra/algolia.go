@@ -1,3 +1,4 @@
+//go:generate mockgen -package=infra -self_package=com.capturetweet/internal/infra -destination=algolia_mock.go . IndexInterface
 package infra
 
 import (
@@ -10,7 +11,7 @@ var (
 	ErrInvalidSearchConfig = errors.New("invalid search client config, check your env_variables")
 )
 
-func NewIndex() (*search.Index, error) {
+func NewIndex() (IndexInterface, error) {
 	secret := os.Getenv("ALGOLIA_SECRET")
 	clientId := os.Getenv("ALGOLIA_CLIENT_ID")
 	indexName := os.Getenv("ALGOLIA_INDEX")
@@ -21,4 +22,18 @@ func NewIndex() (*search.Index, error) {
 	client := search.NewClient(clientId, secret)
 	index := client.InitIndex(indexName)
 	return index, nil
+}
+
+type IndexInterface interface {
+	Delete(opts ...interface{}) (res search.DeleteTaskRes, err error)
+	Exists() (exists bool, err error)
+
+	// Indexing
+	GetObject(objectID string, object interface{}, opts ...interface{}) error
+	GetObjects(objectIDs []string, objects interface{}, opts ...interface{}) error
+	SaveObject(object interface{}, opts ...interface{}) (res search.SaveObjectRes, err error)
+	SaveObjects(objects interface{}, opts ...interface{}) (res search.GroupBatchRes, err error)
+
+	// Searching
+	Search(query string, opts ...interface{}) (res search.QueryRes, err error)
 }

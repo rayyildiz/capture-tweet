@@ -3,15 +3,13 @@ package main
 import (
 	"com.capturetweet/internal/infra"
 	"com.capturetweet/pkg/graph"
-	"com.capturetweet/pkg/graph/generated"
 	"com.capturetweet/pkg/search"
 	"com.capturetweet/pkg/tweet"
 	"com.capturetweet/pkg/user"
-	"context"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/joho/godotenv"
-	"go.uber.org/fx"
+	"log"
 	"net/http"
 	"os"
 )
@@ -20,47 +18,56 @@ func init() {
 	godotenv.Load()
 }
 
-func Register(resolver generated.ResolverRoot) {
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
+func main() {
+	logger := infra.NewLogger()
+	ensureNotNil(logger, "zap:logger")
+
+	tweetColl, err := infra.NewTweetCollection()
+	ensureNoError(err, "twitter:docstore collection")
+
+	userColl, err := infra.NewUserCollection()
+	ensureNoError(err, "user:docstore collection")
+
+	searchIndexer, err := infra.NewIndex()
+	ensureNoError(err, "search index, algolia")
+
+	searchService := search.NewService(searchIndexer)
+	ensureNotNil(searchService, "search:NewService")
+
+	userService := user.NewService(user.NewRepository(userColl))
+	ensureNotNil(userService, "user:NewService")
+
+	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), searchService)
+	ensureNotNil(tweetService, "tweet:NewService")
+
+	rootResolver := graph.NewResolver()
+	ensureNotNil(rootResolver, "graph:NewResolver")
+	graph.InitService(tweetService, searchService, userService)
+
+	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: rootResolver}))
 
 	if os.Getenv("GRAPHQL_ENABLE_PLAYGROUND") == "true" {
 		http.Handle("/", playground.Handler("GraphQL playground", "/api/query"))
 	}
 	http.Handle("/api/query", srv)
-}
 
-func InitServer(lifecycle fx.Lifecycle) {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "4000"
 	}
 
-	srv := &http.Server{
-		Addr: ":" + port,
-	}
-
-	lifecycle.Append(fx.Hook{
-		OnStart: func(ctx context.Context) error {
-			go srv.ListenAndServe()
-			return nil
-		},
-		OnStop: func(ctx context.Context) error {
-			return srv.Close()
-		},
-	})
+	err = http.ListenAndServe(":"+port, nil)
+	ensureNoError(err, "http:ListenAndServe, port :"+port)
 }
 
-func main() {
-	app := fx.New(
-		infra.Module,  // Database, Logger
-		search.Module, // Search Module
-		user.Module,   // user repository, service
-		tweet.Module,  // tweet repository, service
-		graph.Module,  // Handler, resolvers...
-		fx.Invoke(
-			Register,
-			InitServer,
-		), // Start server
-	)
-	app.Run()
+func ensureNoError(err error, msg string) {
+	if err != nil {
+		log.Fatalf("%s, %v", msg, err)
+	}
+}
+
+func ensureNotNil(obj interface{}, msg string) {
+	if obj == nil {
+		log.Fatalf("object is nil, %s", msg)
+	}
 }

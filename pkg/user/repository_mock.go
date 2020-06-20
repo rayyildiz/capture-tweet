@@ -5,7 +5,6 @@
 package user
 
 import (
-	model "com.capturetweet/pkg/model"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 )
@@ -34,10 +33,10 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 }
 
 // FindById mocks base method.
-func (m *MockRepository) FindById(arg0 string) (*model.User, error) {
+func (m *MockRepository) FindById(arg0 string) (*User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindById", arg0)
-	ret0, _ := ret[0].(*model.User)
+	ret0, _ := ret[0].(*User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -49,10 +48,10 @@ func (mr *MockRepositoryMockRecorder) FindById(arg0 interface{}) *gomock.Call {
 }
 
 // FindByUserName mocks base method.
-func (m *MockRepository) FindByUserName(arg0 string) (*model.User, error) {
+func (m *MockRepository) FindByUserName(arg0 string) (*User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByUserName", arg0)
-	ret0, _ := ret[0].(*model.User)
+	ret0, _ := ret[0].(*User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -2,24 +2,66 @@ package search
 
 import (
 	"com.capturetweet/internal/infra"
+	"com.capturetweet/pkg/service"
+	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
 
-func _TestService_PutSearch(t *testing.T) {
+func TestService_Search(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 
-	index, err := infra.NewIndex()
-	require.NoError(t, err)
-	require.NotNil(t, index)
+	algolia := infra.NewMockIndexInterface(ctrl)
+	algolia.EXPECT().Search("test", gomock.Any()).Return(search.QueryRes{
+		Hits: []map[string]interface{}{
+			{
+				"tweet_id":  "1",
+				"full_text": "test",
+				"author":    "rayyildiz",
+			},
+			{
+				"tweet_id":  "2",
+				"full_text": "second tweet",
+				"author":    "rayyildiz",
+			},
+		},
+	}, nil)
 
-	service := NewService(index)
+	svc := NewService(algolia)
 
-	// err = service.Put(uuid.UUIDv4(), "test text", "rayyildiz")
-	// require.NoError(t, err)
-
-	searchModels, err := service.Search("test", 20)
+	searchModels, err := svc.Search("test", 20)
 	require.NoError(t, err)
 	require.NotNil(t, searchModels)
-	assert.Equal(t, 4, len(searchModels))
+	if assert.Equal(t, 2, len(searchModels)) {
+		if assert.NotNil(t, searchModels[0]) {
+			assert.Equal(t, "1", searchModels[0].TweetID)
+			assert.Equal(t, "test", searchModels[0].FullText)
+			assert.Equal(t, "rayyildiz", searchModels[0].Author)
+		}
+
+		if assert.NotNil(t, searchModels[1]) {
+			assert.Equal(t, "2", searchModels[1].TweetID)
+			assert.Equal(t, "second tweet", searchModels[1].FullText)
+		}
+	}
+}
+
+func TestService_Put(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	algolia := infra.NewMockIndexInterface(ctrl)
+	algolia.EXPECT().SaveObject(service.SearchModel{
+		TweetID:  "1",
+		FullText: "test",
+		Author:   "RAYYILDIZ",
+	}).Return(search.SaveObjectRes{}, nil)
+
+	svc := NewService(algolia)
+
+	err := svc.Put("1", "test", "RAYYILDIZ")
+	require.NoError(t, err)
 }

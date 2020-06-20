@@ -2,7 +2,6 @@ package user
 
 import (
 	"com.capturetweet/pkg/service"
-	"github.com/jinzhu/gorm"
 )
 
 type serviceImpl struct {
@@ -21,7 +20,7 @@ func (s serviceImpl) FindById(id string) (*service.UserModel, error) {
 
 	return &service.UserModel{
 		ID:         user.ID,
-		UserName:   user.UserName,
+		UserName:   user.Username,
 		ScreenName: user.ScreenName,
 	}, nil
 }
@@ -31,12 +30,9 @@ func (s serviceImpl) FindOrCreate(id, userName, screenName string) (*service.Use
 	if user != nil {
 		return &service.UserModel{
 			ID:         user.ID,
-			UserName:   user.UserName,
+			UserName:   user.Username,
 			ScreenName: user.ScreenName,
 		}, nil
-	}
-	if err != gorm.ErrRecordNotFound {
-		return nil, err
 	}
 
 	err = s.repo.Store(id, userName, screenName)

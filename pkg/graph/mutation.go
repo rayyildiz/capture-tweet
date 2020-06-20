@@ -1,20 +1,17 @@
 package graph
 
 import (
-	"com.capturetweet/pkg/graph/generated"
-	"com.capturetweet/pkg/service"
 	"context"
 )
 
 type mutationResolverImpl struct {
-	tweetSvc service.TweetService
 }
 
-func newMutationResolver(ts service.TweetService) generated.MutationResolver {
-	return &mutationResolverImpl{ts}
+func newMutationResolver() MutationResolver {
+	return &mutationResolverImpl{}
 }
 
-func (r mutationResolverImpl) Capture(ctx context.Context, url *string) (*generated.Tweet, error) {
+func (r mutationResolverImpl) Capture(ctx context.Context, url *string) (*Tweet, error) {
 
 	return nil, nil
 }

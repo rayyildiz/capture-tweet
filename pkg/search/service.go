@@ -1,16 +1,16 @@
 package search
 
 import (
+	"com.capturetweet/internal/infra"
 	"com.capturetweet/pkg/service"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/opt"
-	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 )
 
 type serviceImpl struct {
-	index *search.Index
+	index infra.IndexInterface
 }
 
-func NewService(index *search.Index) service.SearchService {
+func NewService(index infra.IndexInterface) service.SearchService {
 	return &serviceImpl{index}
 }
 

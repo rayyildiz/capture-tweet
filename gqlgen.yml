@@ -2,13 +2,24 @@ schema:
   - schema.graphqls
 
 exec:
-  filename: pkg/graph/generated/generated.go
-  package: generated
+  filename: pkg/graph/gen_interfaces.go
+  package: graph
 
 federation:
-  filename: pkg/graph/generated/federation.go
-  package: generated
+  filename: pkg/graph/gen_federation.go
+  package: graph
 
 model:
-  filename: pkg/graph/generated/models_gen.go
-  package: generated
+  filename: pkg/graph/gen_models.go
+  package: graph
+#
+#autobind:
+#  - "com.capturetweet/pkg/graph/types"
+#
+models:
+  Author:
+    model: com.capturetweet/pkg/graph.Author
+  Tweet:
+    model: com.capturetweet/pkg/graph.Tweet
+  Resource:
+    model: com.capturetweet/pkg/graph.Resource

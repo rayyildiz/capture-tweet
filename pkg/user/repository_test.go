@@ -1,34 +1,30 @@
 package user
 
 import (
-	"com.capturetweet/pkg/model"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"com.capturetweet/internal/infra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"gocloud.dev/gcerrors"
 	"testing"
 )
 
 func TestRepository_Store(t *testing.T) {
-	db, err := gorm.Open("sqlite3", ":memory:")
+	coll, err := infra.NewDocstore("mem://collection/id")
 	require.NoError(t, err)
-	defer db.Close()
+	defer coll.Close()
 
-	db.AutoMigrate(&model.User{})
-
-	repo := NewRepository(db)
+	repo := NewRepository(coll)
 
 	err = repo.Store("testId", "username", "display name")
 	require.NoError(t, err)
 }
 
 func TestRepository_FindById(t *testing.T) {
-	db, err := gorm.Open("sqlite3", ":memory:")
+	coll, err := infra.NewDocstore("mem://collection2/id")
 	require.NoError(t, err)
-	defer db.Close()
+	defer coll.Close()
 
-	db.AutoMigrate(&model.User{})
-	repo := NewRepository(db)
+	repo := NewRepository(coll)
 
 	id := "1270800178421706753"
 
@@ -37,19 +33,18 @@ func TestRepository_FindById(t *testing.T) {
 
 	user, err := repo.FindById(id)
 	if assert.NoError(t, err) && assert.NotNil(t, user) {
-		assert.Equal(t, "test", user.UserName)
+		assert.Equal(t, "test", user.Username)
 		assert.Equal(t, "screenName", user.ScreenName)
 		assert.Equal(t, id, user.ID)
 	}
 }
 
-func TestMockRepository_FindByUserName(t *testing.T) {
-	db, err := gorm.Open("sqlite3", ":memory:")
+func TestRepository_FindByUserName(t *testing.T) {
+	coll, err := infra.NewDocstore("mem://collection3/id")
 	require.NoError(t, err)
-	defer db.Close()
+	defer coll.Close()
 
-	db.AutoMigrate(&model.User{})
-	repo := NewRepository(db)
+	repo := NewRepository(coll)
 
 	require.NoError(t, repo.Store("1", "test1", "screenName 1"))
 	require.NoError(t, repo.Store("2", "test2", "screenName 2"))
@@ -57,24 +52,24 @@ func TestMockRepository_FindByUserName(t *testing.T) {
 
 	user, err := repo.FindByUserName("test3")
 	if assert.NoError(t, err) && assert.NotNil(t, user) {
-		assert.Equal(t, "test3", user.UserName)
+		assert.Equal(t, "test3", user.Username)
 		assert.Equal(t, "screenName 3", user.ScreenName)
 		assert.Equal(t, "3", user.ID)
 	}
 }
 
 func TestRepository_FindById_NotFound(t *testing.T) {
-	db, err := gorm.Open("sqlite3", ":memory:")
+	coll, err := infra.NewDocstore("mem://collection4/id")
 	require.NoError(t, err)
-	defer db.Close()
+	defer coll.Close()
 
-	db.AutoMigrate(&model.User{})
-	repo := NewRepository(db)
+	repo := NewRepository(coll)
 
 	user, err := repo.FindById("1")
 
 	if assert.Nil(t, user) {
 		assert.Error(t, err, "record not found")
-		assert.Equal(t, gorm.ErrRecordNotFound, err)
+		code := gcerrors.Code(err)
+		assert.Equal(t, code, gcerrors.NotFound)
 	}
 }

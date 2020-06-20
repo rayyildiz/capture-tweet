@@ -5,7 +5,6 @@
 package tweet
 
 import (
-	model "com.capturetweet/pkg/model"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 	time "time"
@@ -35,10 +34,10 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 }
 
 // FindById mocks base method.
-func (m *MockRepository) FindById(arg0 string) (*model.Tweet, error) {
+func (m *MockRepository) FindById(arg0 string) (*Tweet, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindById", arg0)
-	ret0, _ := ret[0].(*model.Tweet)
+	ret0, _ := ret[0].(*Tweet)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -47,6 +46,21 @@ func (m *MockRepository) FindById(arg0 string) (*model.Tweet, error) {
 func (mr *MockRepositoryMockRecorder) FindById(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockRepository)(nil).FindById), arg0)
+}
+
+// FindByIds mocks base method.
+func (m *MockRepository) FindByIds(arg0 []string) ([]Tweet, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByIds", arg0)
+	ret0, _ := ret[0].([]Tweet)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByIds indicates an expected call of FindByIds.
+func (mr *MockRepositoryMockRecorder) FindByIds(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByIds", reflect.TypeOf((*MockRepository)(nil).FindByIds), arg0)
 }
 
 // Store mocks base method.

@@ -1,3 +1,4 @@
+//go:generate mockgen -package=service -self_package=com.capturetweet/pkg/service -destination=interfaces_mock.go . UserService,TweetService,ResourceService,SearchService
 package service
 
 type UserService interface {

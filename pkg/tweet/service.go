@@ -14,7 +14,21 @@ func NewService(repo Repository, search service.SearchService) service.TweetServ
 }
 
 func (s serviceImpl) FindById(id string) (*service.TweetModel, error) {
-	return nil, nil
+	tweet, err := s.repo.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &service.TweetModel{
+		ID:              tweet.ID,
+		FullText:        tweet.FullText,
+		Lang:            tweet.Lang,
+		CaptureURL:      tweet.CaptureURL,
+		CaptureThumbURL: tweet.CaptureThumbURL,
+		FavoriteCount:   tweet.FavoriteCount,
+		RetweetCount:    tweet.RetweetCount,
+		Author:          nil,
+	}, nil
 }
 
 func (s serviceImpl) Store(tweet *service.TweetModel, user *service.UserModel, resources []service.ResourceModel) error {
@@ -49,14 +63,14 @@ func (s serviceImpl) Search(term string, size, start, page int) ([]service.Tweet
 
 	for _, tweet := range tweets {
 		res = append(res, service.TweetModel{
-			ID:            tweet.ID,
-			FullText:      tweet.FullText,
-			Lang:          tweet.Lang,
-			CaptureURL:    nil,
-			ThumbnailURL:  nil,
-			FavoriteCount: tweet.FavoriteCount,
-			RetweetCount:  tweet.RetweetCount,
-			Author:        nil,
+			ID:              tweet.ID,
+			FullText:        tweet.FullText,
+			Lang:            tweet.Lang,
+			CaptureURL:      nil,
+			CaptureThumbURL: nil,
+			FavoriteCount:   tweet.FavoriteCount,
+			RetweetCount:    tweet.RetweetCount,
+			Author:          nil,
 		})
 	}
 

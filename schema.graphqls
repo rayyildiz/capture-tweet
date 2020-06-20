@@ -3,28 +3,31 @@ scalar Time
 type Tweet {
   id:ID!
   fullText:String!
-  createdAt:Time
-  user:User!
-  imageURL:String
-  thumbnaildImageURL:String
+  postedAt:Time
+  authorID:ID!
+  author:Author!
+  captureURL:String
+  captureThumbURL:String
   favoriteCount:Int
+  lang :String
   retweetCount:Int
   resources:[Resource]
 }
-type User {
+type Author {
   id:ID!
   userName:String!
   screenName:String
+  bio: String
+  profileImageURL:String
 }
 
 type Resource {
   id:ID!
   url:String!
-  respurceType:String
+  mediaType:String
   width:Int
   height:Int
 }
-
 
 input SearchInput {
   term:String!

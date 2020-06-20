@@ -1,21 +1,17 @@
 package tweet
 
 import (
-	"com.capturetweet/pkg/model"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"com.capturetweet/internal/infra"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
 
 func TestRepository_Store(t *testing.T) {
-	db, err := gorm.Open("sqlite3", ":memory:")
+	coll, err := infra.NewDocstore("mem://collection/id")
 	require.NoError(t, err)
-	defer db.Close()
+	defer coll.Close()
 
-	db.AutoMigrate(&model.User{}, &model.Tweet{})
-
-	repo := NewRepository(db)
+	repo := NewRepository(coll)
 	err = repo.Store("id1", "full text", "en", "userId1", 1, 1, nil)
 	require.NoError(t, err)
 }

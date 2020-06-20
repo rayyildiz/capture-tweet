@@ -2,35 +2,41 @@
 package user
 
 import (
-	"com.capturetweet/pkg/model"
-	"github.com/jinzhu/gorm"
+	"context"
+	"gocloud.dev/docstore"
 	"time"
 )
 
 type Repository interface {
-	FindByUserName(userName string) (*model.User, error)
-	FindById(id string) (*model.User, error)
+	FindByUserName(userName string) (*User, error)
+	FindById(id string) (*User, error)
 
 	Store(userIdStr, userName, screenName string) error
 }
 
 type repositoryImpl struct {
-	db *gorm.DB
+	coll *docstore.Collection
 }
 
-func NewRepository(db *gorm.DB) Repository {
-	return &repositoryImpl{db}
+func NewRepository(coll *docstore.Collection) Repository {
+	return &repositoryImpl{coll}
 }
 
-func (r repositoryImpl) FindByUserName(userName string) (*model.User, error) {
-	user := &model.User{}
-	err := r.db.Where(&model.User{UserName: userName}).First(user).Error
+func (r repositoryImpl) FindByUserName(userName string) (*User, error) {
+
+	user := &User{}
+	it := r.coll.Query().Where("username", "=", userName).Limit(1).Get(context.Background())
+
+	err := it.Next(context.Background(), user)
+	if err != nil {
+		return nil, err
+	}
 	return user, err
 }
 
-func (r repositoryImpl) FindById(id string) (*model.User, error) {
-	user := &model.User{}
-	err := r.db.Where(&model.User{ID: id}).First(user).Error
+func (r repositoryImpl) FindById(id string) (*User, error) {
+	user := &User{ID: id}
+	err := r.coll.Get(context.Background(), user)
 	if err != nil {
 		return nil, err
 	}
@@ -38,11 +44,14 @@ func (r repositoryImpl) FindById(id string) (*model.User, error) {
 }
 
 func (r repositoryImpl) Store(userIdStr, userName, screenName string) error {
-	return r.db.Create(&model.User{
-		ID:         userIdStr,
-		UserName:   userName,
-		ScreenName: screenName,
-		CreatedAt:  time.Now(),
-		UpdatedAt:  time.Now(),
-	}).Error
+	return r.coll.Put(context.Background(), &User{
+		ID:              userIdStr,
+		CreatedAt:       time.Now(),
+		UpdateAt:        time.Now(),
+		RegisterAt:      time.Now(),
+		Username:        userName,
+		ScreenName:      screenName,
+		Bio:             "",
+		ProfileImageURL: "",
+	})
 }

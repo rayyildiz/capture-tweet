@@ -1,9 +1,7 @@
 package user
 
 import (
-	"com.capturetweet/pkg/model"
 	"github.com/golang/mock/gomock"
-	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -15,12 +13,11 @@ func TestUserService_FindById(t *testing.T) {
 	defer ctrl.Finish()
 
 	repo := NewMockRepository(ctrl)
-	repo.EXPECT().FindById("testUserIdStr").Return(&model.User{
+	repo.EXPECT().FindById("testUserIdStr").Return(&User{
 		ID:         "testUserIdStr",
 		CreatedAt:  time.Now(),
-		UpdatedAt:  time.Now(),
-		DeletedAt:  nil,
-		UserName:   "rayyildiz",
+		RegisterAt: time.Now(),
+		Username:   "rayyildiz",
 		ScreenName: "Ramazan A.",
 	}, nil)
 
@@ -40,12 +37,11 @@ func TestUserService_FindOrCreate_Exist(t *testing.T) {
 	defer ctrl.Finish()
 
 	repo := NewMockRepository(ctrl)
-	repo.EXPECT().FindById("testId").Return(&model.User{
+	repo.EXPECT().FindById("testId").Return(&User{
 		ID:         "testId",
 		CreatedAt:  time.Now(),
-		UpdatedAt:  time.Now(),
-		DeletedAt:  nil,
-		UserName:   "rayyildiz",
+		RegisterAt: time.Now(),
+		Username:   "rayyildiz",
 		ScreenName: "Ramazan A.",
 	}, nil)
 
@@ -66,7 +62,7 @@ func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 
 	repo := NewMockRepository(ctrl)
 
-	repo.EXPECT().FindById("testId").Return(nil, gorm.ErrRecordNotFound)
+	repo.EXPECT().FindById("testId").Return(nil, nil)
 	repo.EXPECT().Store("testId", "rayyildiz", "Ramazan A.").Return(nil)
 
 	svc := NewService(repo)

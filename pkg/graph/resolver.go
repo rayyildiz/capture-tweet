@@ -2,23 +2,32 @@
 package graph
 
 import (
-	"com.capturetweet/pkg/graph/generated"
 	"com.capturetweet/pkg/service"
 )
 
 type resolver struct {
-	userSvc  service.UserService
-	tweetSvc service.TweetService
 }
 
-func NewResolver(us service.UserService, ts service.TweetService) generated.ResolverRoot {
-	return &resolver{us, ts}
+func NewResolver() ResolverRoot {
+	return &resolver{}
 }
 
-func (r resolver) Mutation() generated.MutationResolver {
-	return newMutationResolver(r.tweetSvc)
+func (r resolver) Mutation() MutationResolver {
+	return newMutationResolver()
 }
 
-func (r resolver) Query() generated.QueryResolver {
-	return newQueryResolver(r.tweetSvc)
+func (r resolver) Query() QueryResolver {
+	return newQueryResolver()
+}
+
+var (
+	_twitterService service.TweetService  = nil
+	_searchService  service.SearchService = nil
+	_userService    service.UserService   = nil
+)
+
+func InitService(twitterService service.TweetService, searchService service.SearchService, userService service.UserService) {
+	_twitterService = twitterService
+	_userService = userService
+	_searchService = searchService
 }
