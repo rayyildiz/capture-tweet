@@ -7,6 +7,7 @@ package user
 import (
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
+	time "time"
 )
 
 // MockRepository is a mock of Repository interface.
@@ -63,15 +64,15 @@ func (mr *MockRepositoryMockRecorder) FindByUserName(arg0 interface{}) *gomock.C
 }
 
 // Store mocks base method.
-func (m *MockRepository) Store(arg0, arg1, arg2 string) error {
+func (m *MockRepository) Store(arg0, arg1, arg2, arg3, arg4 string, arg5 time.Time) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Store", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "Store", arg0, arg1, arg2, arg3, arg4, arg5)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Store indicates an expected call of Store.
-func (mr *MockRepositoryMockRecorder) Store(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) Store(arg0, arg1, arg2, arg3, arg4, arg5 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockRepository)(nil).Store), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockRepository)(nil).Store), arg0, arg1, arg2, arg3, arg4, arg5)
 }
