@@ -1,0 +1,7 @@
+ignore:
+  - "**/*_mock.go"
+
+coverage:
+  round: down
+  range: "60...100"
+  precision: 2

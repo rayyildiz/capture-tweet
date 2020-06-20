@@ -1,6 +1,8 @@
 # CaptureTweet
 
 ![Build status](https://github.com/rayyildiz/capture-tweet/workflows/ci/badge.svg)
+[![codecov](https://codecov.io/gh/rayyildiz/capture-tweet/branch/master/graph/badge.svg?token=58YR43PZFS)](https://codecov.io/gh/rayyildiz/capture-tweet)
+
 
 
 ## Local Config

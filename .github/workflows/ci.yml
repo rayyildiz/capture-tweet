@@ -28,5 +28,8 @@ jobs:
           CGO_ENABLED: 1
 
       - name: Test
-        run: go test -cover ./...
+        run: go test -cover -coverprofile=coverage.txt -covermode=atomic ./...
 
+      - uses: codecov/codecov-action@v1.0.7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
