@@ -1,19 +1,19 @@
-//go:generate mockgen -package=service -self_package=com.capturetweet/pkg/service -destination=interfaces_mock.go . UserService,TweetService,ResourceService,SearchService
+//go:generate mockgen -package=service -self_package=com.capturetweet/pkg/service -destination=interfaces_mock.go . UserService,TweetService,SearchService
 package service
+
+import (
+	"github.com/ChimeraCoder/anaconda"
+)
 
 type UserService interface {
 	FindById(id string) (*UserModel, error)
-	FindOrCreate(id, userName, screenName string) (*UserModel, error)
+	FindOrCreate(user *anaconda.User) (*UserModel, error)
 }
 
 type TweetService interface {
 	FindById(id string) (*TweetModel, error)
-	Store(tweet *TweetModel, user *UserModel, resources []ResourceModel) error
+	Store(url string) (string, error)
 	Search(term string, size, start, page int) ([]TweetModel, error)
-}
-
-type ResourceService interface {
-	FindResourceByTweetId(tweetId string) ([]ResourceModel, error)
 }
 
 type SearchService interface {

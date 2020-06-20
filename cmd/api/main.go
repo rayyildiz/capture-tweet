@@ -31,13 +31,16 @@ func main() {
 	searchIndexer, err := infra.NewIndex()
 	ensureNoError(err, "search index, algolia")
 
+	twitterApi := infra.NewTwitterClient()
+	ensureNotNil(twitterApi, "anaconda:twitter client")
+
 	searchService := search.NewService(searchIndexer)
 	ensureNotNil(searchService, "search:NewService")
 
 	userService := user.NewService(user.NewRepository(userColl))
 	ensureNotNil(userService, "user:NewService")
 
-	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), searchService)
+	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), searchService, userService, twitterApi)
 	ensureNotNil(tweetService, "tweet:NewService")
 
 	rootResolver := graph.NewResolver()

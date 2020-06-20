@@ -11,7 +11,7 @@ type Repository interface {
 	FindByUserName(userName string) (*User, error)
 	FindById(id string) (*User, error)
 
-	Store(userIdStr, userName, screenName string) error
+	Store(userIdStr, userName, screenName, bio, profileImage string, registeredAt time.Time) error
 }
 
 type repositoryImpl struct {
@@ -43,15 +43,15 @@ func (r repositoryImpl) FindById(id string) (*User, error) {
 	return user, nil
 }
 
-func (r repositoryImpl) Store(userIdStr, userName, screenName string) error {
+func (r repositoryImpl) Store(userIdStr, userName, screenName, bio, profileImage string, registeredAt time.Time) error {
 	return r.coll.Put(context.Background(), &User{
 		ID:              userIdStr,
 		CreatedAt:       time.Now(),
 		UpdateAt:        time.Now(),
-		RegisterAt:      time.Now(),
+		RegisterAt:      registeredAt,
 		Username:        userName,
 		ScreenName:      screenName,
-		Bio:             "",
-		ProfileImageURL: "",
+		Bio:             bio,
+		ProfileImageURL: profileImage,
 	})
 }

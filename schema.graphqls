@@ -4,8 +4,8 @@ type Tweet {
   id:ID!
   fullText:String!
   postedAt:Time
-  authorID:ID!
-  author:Author!
+  authorID:ID
+  author:Author
   captureURL:String
   captureThumbURL:String
   favoriteCount:Int
@@ -42,5 +42,5 @@ type Query {
 }
 
 type Mutation {
-  capture(url:String): Tweet
+  capture(url:String!): Tweet
 }

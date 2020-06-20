@@ -18,14 +18,14 @@ func TestService_Search(t *testing.T) {
 	algolia.EXPECT().Search("test", gomock.Any()).Return(search.QueryRes{
 		Hits: []map[string]interface{}{
 			{
-				"tweet_id":  "1",
-				"full_text": "test",
-				"author":    "rayyildiz",
+				"objectID": "1",
+				"fullText": "test",
+				"author":   "rayyildiz",
 			},
 			{
-				"tweet_id":  "2",
-				"full_text": "second tweet",
-				"author":    "rayyildiz",
+				"objectID": "2",
+				"fullText": "second tweet",
+				"author":   "rayyildiz",
 			},
 		},
 	}, nil)

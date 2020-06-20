@@ -1,7 +1,10 @@
 package user
 
 import (
+	"com.capturetweet/internal/convert"
 	"com.capturetweet/pkg/service"
+	"github.com/ChimeraCoder/anaconda"
+	"time"
 )
 
 type serviceImpl struct {
@@ -19,30 +22,43 @@ func (s serviceImpl) FindById(id string) (*service.UserModel, error) {
 	}
 
 	return &service.UserModel{
-		ID:         user.ID,
-		UserName:   user.Username,
-		ScreenName: user.ScreenName,
+		ID:           user.ID,
+		UserName:     user.Username,
+		ScreenName:   user.ScreenName,
+		Bio:          user.Bio,
+		ProfileImage: convert.String(user.ProfileImageURL),
 	}, nil
 }
 
-func (s serviceImpl) FindOrCreate(id, userName, screenName string) (*service.UserModel, error) {
+func (s serviceImpl) FindOrCreate(author *anaconda.User) (*service.UserModel, error) {
+	id := author.IdStr
+
 	user, err := s.repo.FindById(id)
 	if user != nil {
 		return &service.UserModel{
-			ID:         user.ID,
-			UserName:   user.Username,
-			ScreenName: user.ScreenName,
+			ID:           user.ID,
+			UserName:     user.Username,
+			ScreenName:   user.ScreenName,
+			Bio:          author.Description,
+			ProfileImage: convert.String(author.ProfileImageURL),
 		}, nil
 	}
 
-	err = s.repo.Store(id, userName, screenName)
+	registeredAt, err := time.Parse(time.RubyDate, author.CreatedAt)
+	if err != nil {
+		registeredAt = time.Now()
+	}
+
+	err = s.repo.Store(id, author.ScreenName, author.Name, author.Description, author.ProfileBackgroundImageUrlHttps, registeredAt)
 	if err != nil {
 		return nil, err
 	}
 
 	return &service.UserModel{
-		ID:         id,
-		UserName:   userName,
-		ScreenName: screenName,
+		ID:           id,
+		UserName:     author.ScreenName,
+		ScreenName:   author.Name,
+		Bio:          author.Description,
+		ProfileImage: convert.String(author.ProfileImageURL),
 	}, nil
 }

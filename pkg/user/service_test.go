@@ -1,6 +1,7 @@
 package user
 
 import (
+	"github.com/ChimeraCoder/anaconda"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -47,7 +48,11 @@ func TestUserService_FindOrCreate_Exist(t *testing.T) {
 
 	svc := NewService(repo)
 
-	userModel, err := svc.FindOrCreate("testId", "rayyildiz", "Ramazan A.")
+	userModel, err := svc.FindOrCreate(&anaconda.User{
+		IdStr:      "testId",
+		ScreenName: "rayyildiz",
+		Name:       "Ramazan A.",
+	})
 	require.NoError(t, err)
 	if assert.NotNil(t, userModel) {
 		assert.Equal(t, "testId", userModel.ID)
@@ -62,12 +67,24 @@ func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 
 	repo := NewMockRepository(ctrl)
 
+	strDate := "Mon Jan 02 15:04:05 -0700 2006"
+	dt, err := time.Parse(time.RubyDate, strDate)
+	require.NoError(t, err)
+
 	repo.EXPECT().FindById("testId").Return(nil, nil)
-	repo.EXPECT().Store("testId", "rayyildiz", "Ramazan A.").Return(nil)
+	repo.EXPECT().Store("testId", "rayyildiz", "Ramazan A.", "bio", "profile.png", dt).Return(nil)
 
 	svc := NewService(repo)
 
-	userModel, err := svc.FindOrCreate("testId", "rayyildiz", "Ramazan A.")
+	userModel, err := svc.FindOrCreate(&anaconda.User{
+		IdStr:                          "testId",
+		ScreenName:                     "rayyildiz",
+		Name:                           "Ramazan A.",
+		Description:                    "bio",
+		ProfileBackgroundImageUrlHttps: "profile.png",
+		CreatedAt:                      strDate,
+	})
+
 	require.NoError(t, err)
 	if assert.NotNil(t, userModel) {
 		assert.Equal(t, "testId", userModel.ID)

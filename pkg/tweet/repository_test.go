@@ -2,8 +2,10 @@ package tweet
 
 import (
 	"com.capturetweet/internal/infra"
+	"github.com/ChimeraCoder/anaconda"
 	"github.com/stretchr/testify/require"
 	"testing"
+	"time"
 )
 
 func TestRepository_Store(t *testing.T) {
@@ -12,6 +14,14 @@ func TestRepository_Store(t *testing.T) {
 	defer coll.Close()
 
 	repo := NewRepository(coll)
-	err = repo.Store("id1", "full text", "en", "userId1", 1, 1, nil)
+	err = repo.Store(&anaconda.Tweet{
+		IdStr: "1",
+		User: anaconda.User{
+			IdStr:      "1",
+			ScreenName: "rayyildiz",
+		},
+		Lang:      "en",
+		CreatedAt: time.Now().String(),
+	})
 	require.NoError(t, err)
 }

@@ -12,10 +12,7 @@ federation:
 model:
   filename: pkg/graph/gen_models.go
   package: graph
-#
-#autobind:
-#  - "com.capturetweet/pkg/graph/types"
-#
+
 models:
   Author:
     model: com.capturetweet/pkg/graph.Author

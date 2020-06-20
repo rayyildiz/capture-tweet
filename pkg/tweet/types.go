@@ -5,18 +5,18 @@ import (
 )
 
 type Tweet struct {
-	ID               string    `docstore:"id"`
-	CreatedAt        time.Time `docstore:"created_at"`
-	UpdatedAt        time.Time `docstore:"updated_at"`
-	PostedAt         time.Time `docstore:"posted_at"`
-	FullText         string
-	CaptureURL       *string
-	CaptureThumbURL  *string
-	Lang             string
-	FavoriteCount    int
-	RetweetCount     int
-	UserID           string
-	Resources        []Resource
+	ID               string     `docstore:"id"`
+	CreatedAt        time.Time  `docstore:"created_at"`
+	UpdatedAt        time.Time  `docstore:"updated_at"`
+	PostedAt         time.Time  `docstore:"posted_at"`
+	FullText         string     `docstore:"full_text"`
+	CaptureURL       *string    `docstore:"capture_url"`
+	CaptureThumbURL  *string    `docstore:"capture_thumb_url"`
+	Lang             string     `docstore:"lang"`
+	FavoriteCount    int        `docstore:"favorite_count"`
+	RetweetCount     int        `docstore:"retweet_count"`
+	AuthorID         string     `docstore:"author_id"`
+	Resources        []Resource `docstore:"resources"`
 	DocstoreRevision interface{}
 }
 

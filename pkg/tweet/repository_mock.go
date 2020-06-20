@@ -5,9 +5,9 @@
 package tweet
 
 import (
+	anaconda "github.com/ChimeraCoder/anaconda"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
-	time "time"
 )
 
 // MockRepository is a mock of Repository interface.
@@ -31,6 +31,20 @@ func NewMockRepository(ctrl *gomock.Controller) *MockRepository {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
+}
+
+// Exist mocks base method.
+func (m *MockRepository) Exist(arg0 string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Exist", arg0)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// Exist indicates an expected call of Exist.
+func (mr *MockRepositoryMockRecorder) Exist(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Exist", reflect.TypeOf((*MockRepository)(nil).Exist), arg0)
 }
 
 // FindById mocks base method.
@@ -64,15 +78,15 @@ func (mr *MockRepositoryMockRecorder) FindByIds(arg0 interface{}) *gomock.Call {
 }
 
 // Store mocks base method.
-func (m *MockRepository) Store(arg0, arg1, arg2, arg3 string, arg4, arg5 int, arg6 *time.Time) error {
+func (m *MockRepository) Store(arg0 *anaconda.Tweet) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Store", arg0, arg1, arg2, arg3, arg4, arg5, arg6)
+	ret := m.ctrl.Call(m, "Store", arg0)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Store indicates an expected call of Store.
-func (mr *MockRepositoryMockRecorder) Store(arg0, arg1, arg2, arg3, arg4, arg5, arg6 interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) Store(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockRepository)(nil).Store), arg0, arg1, arg2, arg3, arg4, arg5, arg6)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockRepository)(nil).Store), arg0)
 }

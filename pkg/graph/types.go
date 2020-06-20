@@ -25,7 +25,7 @@ type Tweet struct {
 	ID              string      `json:"id"`
 	FullText        string      `json:"fullText"`
 	PostedAt        *time.Time  `json:"postedAt"`
-	AuthorID        string      `json:"author_id"`
+	AuthorID        *string     `json:"authorID"`
 	CaptureURL      *string     `json:"captureURL"`
 	CaptureThumbURL *string     `json:"captureThumbURL"`
 	FavoriteCount   *int        `json:"favoriteCount"`
@@ -35,7 +35,10 @@ type Tweet struct {
 }
 
 func (c *Tweet) Author() *Author {
-	author, err := _userService.FindById(c.AuthorID)
+	if c.AuthorID == nil {
+		return nil
+	}
+	author, err := _userService.FindById(*c.AuthorID)
 	if err != nil {
 		return nil
 	}

@@ -21,7 +21,9 @@ type TweetModel struct {
 	CaptureThumbURL *string
 	FavoriteCount   int
 	RetweetCount    int
+	AuthorID        string
 	Author          *UserModel
+	Resources       []ResourceModel
 }
 
 type ResourceModel struct {
@@ -33,7 +35,7 @@ type ResourceModel struct {
 }
 
 type SearchModel struct {
-	TweetID  string `json:"tweet_id"`
-	FullText string `json:"full_text"`
+	TweetID  string `json:"objectID"`
+	FullText string `json:"fullText"`
 	Author   string `json:"author"`
 }

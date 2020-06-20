@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"gocloud.dev/gcerrors"
 	"testing"
+	"time"
 )
 
 func TestRepository_Store(t *testing.T) {
@@ -15,7 +16,7 @@ func TestRepository_Store(t *testing.T) {
 
 	repo := NewRepository(coll)
 
-	err = repo.Store("testId", "username", "display name")
+	err = repo.Store("testId", "username", "display name", "Bio", "profile.png", time.Now())
 	require.NoError(t, err)
 }
 
@@ -28,7 +29,7 @@ func TestRepository_FindById(t *testing.T) {
 
 	id := "1270800178421706753"
 
-	err = repo.Store(id, "test", "screenName")
+	err = repo.Store(id, "test", "screenName", "Bio", "profile.png", time.Now())
 	require.NoError(t, err)
 
 	user, err := repo.FindById(id)
@@ -46,9 +47,9 @@ func TestRepository_FindByUserName(t *testing.T) {
 
 	repo := NewRepository(coll)
 
-	require.NoError(t, repo.Store("1", "test1", "screenName 1"))
-	require.NoError(t, repo.Store("2", "test2", "screenName 2"))
-	require.NoError(t, repo.Store("3", "test3", "screenName 3"))
+	require.NoError(t, repo.Store("1", "test1", "screenName 1", "Bio", "profile1.png", time.Now()))
+	require.NoError(t, repo.Store("2", "test2", "screenName 2", "Bio", "profile2.png", time.Now()))
+	require.NoError(t, repo.Store("3", "test3", "screenName 3", "Bio", "profile3.png", time.Now()))
 
 	user, err := repo.FindByUserName("test3")
 	if assert.NoError(t, err) && assert.NotNil(t, user) {

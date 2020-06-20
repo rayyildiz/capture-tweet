@@ -1,16 +1,22 @@
 package tweet
 
 import (
+	"com.capturetweet/internal/convert"
 	"com.capturetweet/pkg/service"
+	"fmt"
+	"github.com/ChimeraCoder/anaconda"
+	"net/url"
 )
 
 type serviceImpl struct {
-	repo   Repository
-	search service.SearchService
+	repo       Repository
+	twitterAPI *anaconda.TwitterApi
+	search     service.SearchService
+	user       service.UserService
 }
 
-func NewService(repo Repository, search service.SearchService) service.TweetService {
-	return &serviceImpl{repo, search}
+func NewService(repo Repository, search service.SearchService, userService service.UserService, twitterAPI *anaconda.TwitterApi) service.TweetService {
+	return &serviceImpl{repo, twitterAPI, search, userService}
 }
 
 func (s serviceImpl) FindById(id string) (*service.TweetModel, error) {
@@ -19,28 +25,62 @@ func (s serviceImpl) FindById(id string) (*service.TweetModel, error) {
 		return nil, err
 	}
 
+	var resources []service.ResourceModel
+
+	for _, res := range tweet.Resources {
+		resources = append(resources, service.ResourceModel{
+			ID:           res.ID,
+			URL:          res.URL,
+			Width:        res.Width,
+			Height:       res.Height,
+			ResourceType: res.URL,
+		})
+	}
+
 	return &service.TweetModel{
 		ID:              tweet.ID,
+		PostedAt:        convert.Time(tweet.PostedAt),
 		FullText:        tweet.FullText,
 		Lang:            tweet.Lang,
 		CaptureURL:      tweet.CaptureURL,
 		CaptureThumbURL: tweet.CaptureThumbURL,
 		FavoriteCount:   tweet.FavoriteCount,
 		RetweetCount:    tweet.RetweetCount,
-		Author:          nil,
+		AuthorID:        tweet.AuthorID,
+		Resources:       resources,
 	}, nil
 }
 
-func (s serviceImpl) Store(tweet *service.TweetModel, user *service.UserModel, resources []service.ResourceModel) error {
-	err := s.repo.Store(tweet.ID, tweet.FullText, tweet.Lang, tweet.Author.ID, tweet.RetweetCount, tweet.FavoriteCount, nil)
+func (s serviceImpl) Store(tweetURL string) (string, error) {
+	tweetID, _, err := parseTweetURL(tweetURL)
 	if err != nil {
-		return err
+		return "", err
 	}
-	go func(t *service.TweetModel) {
-		s.search.Put(t.ID, t.FullText, t.Author.UserName)
+
+	tweetIdStr := fmt.Sprintf("%d", tweetID)
+	if s.repo.Exist(tweetIdStr) {
+		return tweetIdStr, nil
+	}
+
+	tweet, err := s.twitterAPI.GetTweet(tweetID, url.Values{})
+	if err != nil {
+		return "", err
+	}
+
+	err = s.repo.Store(&tweet)
+	if err != nil {
+		return "", err
+	}
+
+	go func(author *anaconda.User) {
+		s.user.FindOrCreate(author)
+	}(&tweet.User)
+
+	go func(t anaconda.Tweet) {
+		s.search.Put(t.IdStr, t.FullText, t.User.ScreenName)
 	}(tweet)
 
-	return nil
+	return tweetIdStr, nil
 }
 
 func (s serviceImpl) Search(term string, size, start, page int) ([]service.TweetModel, error) {
@@ -62,6 +102,18 @@ func (s serviceImpl) Search(term string, size, start, page int) ([]service.Tweet
 	var res []service.TweetModel
 
 	for _, tweet := range tweets {
+		var resources []service.ResourceModel
+
+		for _, res := range tweet.Resources {
+			resources = append(resources, service.ResourceModel{
+				ID:           res.ID,
+				URL:          res.URL,
+				Width:        res.Width,
+				Height:       res.Height,
+				ResourceType: res.URL,
+			})
+		}
+
 		res = append(res, service.TweetModel{
 			ID:              tweet.ID,
 			FullText:        tweet.FullText,
@@ -70,7 +122,9 @@ func (s serviceImpl) Search(term string, size, start, page int) ([]service.Tweet
 			CaptureThumbURL: nil,
 			FavoriteCount:   tweet.FavoriteCount,
 			RetweetCount:    tweet.RetweetCount,
-			Author:          nil,
+			AuthorID:        tweet.AuthorID,
+			PostedAt:        convert.Time(tweet.PostedAt),
+			Resources:       resources,
 		})
 	}
 
