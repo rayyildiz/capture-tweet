@@ -4,7 +4,7 @@ import {useQuery} from "@apollo/client";
 import {SEARCH_GQL} from "../graph/queries";
 import {Search, Search_search, SearchVariables} from "../graph/Search";
 import {useHistory} from "react-router-dom";
-
+import moment from 'moment';
 
 const getQueryStringValue = (key: string, queryString = window.location.search): string => {
   const values = qs.parse(queryString);
@@ -22,14 +22,16 @@ const SearchPage: FC = () => {
     }
   });
   if (loading) {
-    return <span>
-      Loading
-    </span>
+    return <span>Loading</span>
   }
 
   return <div>
     <h3>Search Page</h3>
     Query: {q}
+    {error && <div className="alert alert-dismissible alert-warning">
+      <p className="mb-0">{error.message}</p>
+    </div>}
+
     <div className="row">
       {data && data.search?.map(t => <TweetCard key={t?.id} tweet={t}/>)}
     </div>
@@ -57,7 +59,7 @@ const TweetCard: FC<TweetCardProps> = ({tweet}) => {
         <div className="card mb-3 cursor" onClick={handleClick}>
           <h3 className="card-header">Tweet by {tweet.author?.userName}</h3>
           <div className="card-body">
-            <h5 className="card-title">Posted at {tweet.postedAt}</h5>
+            <h5 className="card-title">Posted at {moment(tweet.postedAt).format("DD-MM-YYYY HH:MM")} </h5>
             <h6 className="card-subtitle text-muted">Language {tweet.lang}</h6>
           </div>
           <img

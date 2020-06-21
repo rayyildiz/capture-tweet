@@ -1,9 +1,57 @@
-import React, {FC} from "react";
+import React, {FC, FormEvent, useState} from "react";
+import './HomePage.css';
+import {useMutation} from "@apollo/client";
+import {Redirect} from "react-router-dom";
+import {CAPTURE_TWEET_GQL} from "../graph/queries";
+import {Capture, CaptureVariables} from "../graph/Capture";
 
 const HomePage: FC = () => {
+  const [url, setUrl] = useState('');
+  const [valideation, setValidation] = useState('');
+
+  const [doQuery, {data, loading, error}] = useMutation<Capture, CaptureVariables>(CAPTURE_TWEET_GQL)
+
+  const handleSummit = async (e: FormEvent) => {
+    e.preventDefault();
+    setValidation('');
+    if (url.length <= 5 || !url.startsWith("http")) {
+      setValidation("Please enter a valid URL. Example: https://twitter.com/jack/status/20");
+    } else {
+      try {
+        await doQuery({
+          variables: {url}
+        });
+      } catch (ex) {
+        console.log(ex.toString());
+      }
+    }
+  }
+
+  if (data && data.capture && data.capture.id.length > 0) {
+    return <Redirect to={`/tweet/${data.capture.id}`}/>
+  }
+
   return (
-      <div>
-        <h3>Home page</h3>
+      <div className="wrapper">
+        <div id="formContent">
+          <h3>Enter a twitter URL and click <code>CAPTURE</code> button</h3>
+          {error && <div className="alert alert-warning margin-top-1 alert-box mx-auto">
+            <p className="mb-0">{error.message}</p>
+          </div>
+          }
+          {valideation.length > 0 && <div className="alert alert-warning margin-top-1 alert-box mx-auto">
+            <p className="mb-0">{valideation}</p>
+          </div>
+          }
+          <form onSubmit={handleSummit} className="margin-top-2">
+            <input autoFocus autoComplete="off" type="text" id="url" name="url" placeholder="Enter Twitter URL" onChange={event => setUrl(event.target.value)}/>
+            <input type="submit" value="CAPTURE"/>
+          </form>
+          {loading && <div className="spinner-border" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+          }
+        </div>
       </div>
   )
 };

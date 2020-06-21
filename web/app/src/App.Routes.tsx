@@ -15,7 +15,7 @@ export const AppRoutes: FC = () => {
         <Switch>
           <Route path='/privacy' component={PrivacyPage}/>
           <Route path='/search' component={SearchPage}/>
-          <Route path='/tweet' component={TweetPage}/>
+          <Route path='/tweet/:id' component={TweetPage}/>
           <Route exact={true} path="/" component={HomePage}/>
         </Switch>
       </Suspense>

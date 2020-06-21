@@ -3,6 +3,7 @@ import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 import {BrowserRouter} from "react-router-dom";
 import {Header} from "./Header";
 import {AppRoutes} from "../App.Routes";
+import {Footer} from "./Footer";
 
 
 const client = new ApolloClient({
@@ -18,6 +19,7 @@ const App: FC = () => {
           <div className="container margin-top-7">
             <AppRoutes />
           </div>
+          <Footer />
         </BrowserRouter>
       </ApolloProvider>
   );
