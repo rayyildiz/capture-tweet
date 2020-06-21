@@ -45,3 +45,9 @@ type CaptureRequestModel struct {
 	Author string `json:"author"`
 	Url    string `json:"url"`
 }
+
+type CaptureResponseModel struct {
+	ID              string
+	CaptureURL      string
+	CaptureThumbURL string
+}

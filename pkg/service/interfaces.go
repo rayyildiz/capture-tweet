@@ -1,4 +1,4 @@
-//go:generate mockgen -package=service -self_package=com.capturetweet/pkg/service -destination=interfaces_mock.go . UserService,TweetService,SearchService
+//go:generate mockgen -package=service -self_package=com.capturetweet/pkg/service -destination=interfaces_mock.go . UserService,TweetService,SearchService,BrowserService
 package service
 
 import (
@@ -20,4 +20,16 @@ type TweetService interface {
 type SearchService interface {
 	Search(term string, size int) ([]SearchModel, error)
 	Put(tweetId, fullText, author string) error
+}
+
+type BrowserService interface {
+	// Capture and return a image (PNG)
+	CaptureURL(model *CaptureRequestModel) ([]byte, error)
+
+	// Save in a bucket
+	SaveCapture(originalImage []byte, model *CaptureRequestModel) (*CaptureResponseModel, error)
+
+	CaptureSaveUpdateDatabase(model *CaptureRequestModel) error
+
+	Close()
 }

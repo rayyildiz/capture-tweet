@@ -90,3 +90,17 @@ func (mr *MockRepositoryMockRecorder) Store(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockRepository)(nil).Store), arg0)
 }
+
+// UpdateCaptureURLs mocks base method.
+func (m *MockRepository) UpdateCaptureURLs(arg0, arg1, arg2 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateCaptureURLs", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateCaptureURLs indicates an expected call of UpdateCaptureURLs.
+func (mr *MockRepositoryMockRecorder) UpdateCaptureURLs(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCaptureURLs", reflect.TypeOf((*MockRepository)(nil).UpdateCaptureURLs), arg0, arg1, arg2)
+}

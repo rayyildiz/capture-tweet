@@ -12,6 +12,7 @@ DOCSTORE_TWEETS=mongo://capturetweet/tweets?id_field=id
 DOCSTORE_USERS=mongo://capturetweet/authors?id_field=id
 MONGO_SERVER_URL=mongodb://root:123456@localhost:27017
 TOPIC_CAPTURE=mem://captureRequest
+BLOB_BUCKET=file:///tmp/capture
 GRAPHQL_ENABLE_PLAYGROUND=true
 TWITTER_ACCESS_SECRET=
 TWITTER_ACCESS_TOKEN=
