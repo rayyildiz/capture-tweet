@@ -19,7 +19,9 @@ const App: FC = () => {
           <div className="container margin-top-7">
             <AppRoutes />
           </div>
+{/*
           <Footer />
+*/}
         </BrowserRouter>
       </ApolloProvider>
   );

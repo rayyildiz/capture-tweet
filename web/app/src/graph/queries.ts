@@ -59,3 +59,12 @@ export const TWEET_GQL = gql`
     }
   }
 `;
+
+export const TWEET_IMAGE_QUERY = gql`
+  query TweetImage($id:ID!) {
+    tweet(id:$id) {
+      id
+      captureURL
+    }
+  }
+`;

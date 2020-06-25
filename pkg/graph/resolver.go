@@ -20,6 +20,9 @@ func (r resolver) Mutation() MutationResolver {
 func (r resolver) Query() QueryResolver {
 	return newQueryResolver()
 }
+func (r resolver) Subscription() SubscriptionResolver {
+	return newSubscriptionResolver()
+}
 
 var (
 	_twitterService service.TweetService = nil

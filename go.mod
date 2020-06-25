@@ -20,4 +20,5 @@ require (
 	go.uber.org/zap v1.15.0
 	gocloud.dev v0.20.0
 	gocloud.dev/docstore/mongodocstore v0.20.0
+	gocloud.dev/pubsub/natspubsub v0.20.0
 )

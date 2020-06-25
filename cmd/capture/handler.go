@@ -51,7 +51,7 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	err = h.service.CaptureSaveUpdateDatabase(&request)
+	respModel, err := h.service.CaptureSaveUpdateDatabase(&request)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(&response{
@@ -69,7 +69,7 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 		Status:  true,
 		Code:    convert.Int(http.StatusOK),
 		Message: nil,
-		Data:    "capture saved in a bucket",
+		Data:    respModel,
 	})
 
 }

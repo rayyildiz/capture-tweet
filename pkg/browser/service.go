@@ -29,20 +29,26 @@ func NewService(log *zap.Logger, tweetService service.TweetService, bucket *blob
 	return &serviceImpl{log, tweetService, bucket, nil}
 }
 
-func (s serviceImpl) CaptureSaveUpdateDatabase(model *service.CaptureRequestModel) error {
+func (s serviceImpl) CaptureSaveUpdateDatabase(model *service.CaptureRequestModel) (*service.CaptureResponseModel, error) {
 
 	originalImage, err := s.CaptureURL(model)
 	if err != nil {
 		s.log.Error("browser CaptureSaveUpdateDatabase, captureURL", zap.String("tweet_id", model.ID), zap.Error(err))
-		return err
+		return nil, err
 	}
 	response, err := s.SaveCapture(originalImage, model)
 	if err != nil {
 		s.log.Error("browser CaptureSaveUpdateDatabase, SaveCapture", zap.String("tweet_id", model.ID), zap.Error(err))
-		return err
+		return nil, err
 	}
 
-	return s.tweetService.UpdateCaptureImage(model.ID, response.CaptureURL, response.CaptureThumbURL)
+	err = s.tweetService.UpdateCaptureImage(model.ID, response.CaptureURL, response.CaptureThumbURL)
+	if err != nil {
+		s.log.Error("browser CaptureSaveUpdateDatabase, service.UpdateCaptureImage", zap.String("tweet_id", model.ID), zap.Error(err))
+		return nil, err
+	}
+
+	return response, nil
 }
 
 func (s serviceImpl) SaveCapture(originalImage []byte, model *service.CaptureRequestModel) (*service.CaptureResponseModel, error) {

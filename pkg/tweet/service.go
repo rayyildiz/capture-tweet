@@ -8,7 +8,9 @@ import (
 	"github.com/ChimeraCoder/anaconda"
 	"go.uber.org/zap"
 	"gocloud.dev/pubsub"
+	"math/rand"
 	"net/url"
+	"time"
 )
 
 type serviceImpl struct {
@@ -167,4 +169,26 @@ func (s serviceImpl) UpdateCaptureImage(id, captureUrl, captureThumbUrl string) 
 	}
 	s.log.Info("tweet:service updateCaptureImage, updated capture images", zap.String("tweet_id", id))
 	return nil
+}
+
+func (s serviceImpl) WatchChange(ctx context.Context, id string) (<-chan *service.TweetModel, error) {
+	// TODO implement
+	ch := make(chan *service.TweetModel)
+
+	go func() {
+		for {
+			rand.Seed(time.Now().Unix())
+
+			ch <- &service.TweetModel{
+				ID:            "1272545509736017920",
+				FullText:      fmt.Sprintf("test : %v", time.Now()),
+				Lang:          "en",
+				FavoriteCount: rand.Intn(100),
+				RetweetCount:  rand.Intn(200),
+			}
+			time.Sleep(time.Second * 10)
+		}
+	}()
+
+	return ch, nil
 }

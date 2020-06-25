@@ -29,7 +29,7 @@ func (a ZapLogger) InterceptResponse(ctx context.Context, next graphql.ResponseH
 	start := time.Now()
 	oc := graphql.GetOperationContext(ctx)
 	response := next(ctx)
-	if oc.OperationName != "IntrospectionQuery" {
+	if oc.OperationName != "IntrospectionQuery" && oc.OperationName != "WatchChange" {
 		if len(response.Errors) > 0 {
 			a.Log.Warn("request:error", zap.Bool("is_error", true), zap.Duration("elapsed", time.Now().Sub(start)), zap.String("operation_name", oc.OperationName), zap.String("error", response.Errors.Error()))
 		} else {

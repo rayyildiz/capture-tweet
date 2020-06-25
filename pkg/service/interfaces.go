@@ -2,6 +2,7 @@
 package service
 
 import (
+	"context"
 	"github.com/ChimeraCoder/anaconda"
 )
 
@@ -15,6 +16,8 @@ type TweetService interface {
 	Store(url string) (string, error)
 	Search(term string, size, start, page int) ([]TweetModel, error)
 	UpdateCaptureImage(id, captureUrl, captureThumbUrl string) error
+
+	WatchChange(ctx context.Context, id string) (<-chan *TweetModel, error)
 }
 
 type SearchService interface {
@@ -29,7 +32,7 @@ type BrowserService interface {
 	// Save in a bucket
 	SaveCapture(originalImage []byte, model *CaptureRequestModel) (*CaptureResponseModel, error)
 
-	CaptureSaveUpdateDatabase(model *CaptureRequestModel) error
+	CaptureSaveUpdateDatabase(model *CaptureRequestModel) (*CaptureResponseModel, error)
 
 	Close()
 }

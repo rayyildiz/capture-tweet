@@ -12,5 +12,11 @@ services:
     volumes:
       - capture_mdb_data:/data/db
 
+  nats:
+    image: nats
+    container_name: ct_pubsub
+    ports:
+      - "4222:4222"
+
 volumes:
   capture_mdb_data: {}

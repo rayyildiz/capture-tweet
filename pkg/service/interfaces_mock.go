@@ -5,6 +5,7 @@
 package service
 
 import (
+	context "context"
 	anaconda "github.com/ChimeraCoder/anaconda"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
@@ -145,6 +146,21 @@ func (mr *MockTweetServiceMockRecorder) UpdateCaptureImage(arg0, arg1, arg2 inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCaptureImage", reflect.TypeOf((*MockTweetService)(nil).UpdateCaptureImage), arg0, arg1, arg2)
 }
 
+// WatchChange mocks base method.
+func (m *MockTweetService) WatchChange(arg0 context.Context, arg1 string) (<-chan *TweetModel, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WatchChange", arg0, arg1)
+	ret0, _ := ret[0].(<-chan *TweetModel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// WatchChange indicates an expected call of WatchChange.
+func (mr *MockTweetServiceMockRecorder) WatchChange(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WatchChange", reflect.TypeOf((*MockTweetService)(nil).WatchChange), arg0, arg1)
+}
+
 // MockSearchService is a mock of SearchService interface.
 type MockSearchService struct {
 	ctrl     *gomock.Controller
@@ -221,11 +237,12 @@ func (m *MockBrowserService) EXPECT() *MockBrowserServiceMockRecorder {
 }
 
 // CaptureSaveUpdateDatabase mocks base method.
-func (m *MockBrowserService) CaptureSaveUpdateDatabase(arg0 *CaptureRequestModel) error {
+func (m *MockBrowserService) CaptureSaveUpdateDatabase(arg0 *CaptureRequestModel) (*CaptureResponseModel, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CaptureSaveUpdateDatabase", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(*CaptureResponseModel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CaptureSaveUpdateDatabase indicates an expected call of CaptureSaveUpdateDatabase.

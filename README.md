@@ -31,12 +31,12 @@ ALGOLIA_INDEX=tweets-LOCAL
   - [x] CRUD for tweet service
   - [x] Use algolia for search
   - [x] Store user additional data in a different collection.
-- [ ] Async capture 
+- [x] Async capture 
   - [x] Pubsub support
-  - [ ] Capture and update collection
-- [ ] New UI design
-- [ ] Apollo client support
+  - [x] Capture and update collection
+- [x] New UI design
+- [x] Apollo client support
 - [ ] Capture tweet 
   - [ ] Real time image update with firebase js.
   - [ ] graphql subscribe ??? 
-- [ ] Search tweet
+- [x] Search tweet

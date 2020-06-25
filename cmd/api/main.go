@@ -34,7 +34,7 @@ func main() {
 	ensureNoError(err, "user:docstore collection")
 	defer userColl.Close()
 
-	topic, err := infra.NewCaptureTopic()
+	topic, err := infra.NewTopic(os.Getenv("TOPIC_CAPTURE"))
 	ensureNoError(err, "pubsub topic capture")
 	defer topic.Shutdown(context.Background())
 
