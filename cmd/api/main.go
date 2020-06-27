@@ -73,12 +73,14 @@ func main() {
 		port = "4000"
 	}
 
-	handler := cors.New(cors.Options{
+	/*	handler := cors.New(cors.Options{
 		AllowedOrigins:   []string{"https://beta.capturetweet.com", "http://localhost:3000"},
 		AllowedMethods:   []string{"HEAD", "GET", "POST"},
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: false,
-	}).Handler(mux)
+	}).Handler(mux)*/
+
+	handler := cors.AllowAll().Handler(mux)
 
 	diff := time.Now().Sub(start)
 	logger.Info("initialized objects", zap.Duration("elapsed", diff))
