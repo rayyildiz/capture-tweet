@@ -4,6 +4,7 @@ import (
 	"com.capturetweet/internal/convert"
 	"com.capturetweet/pkg/service"
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/ChimeraCoder/anaconda"
 	"go.uber.org/zap"
@@ -94,12 +95,24 @@ func (s serviceImpl) Store(tweetURL string) (string, error) {
 	}(tweet)
 
 	go func(id, author, url string) {
-		err := s.topic.Send(context.Background(), &pubsub.Message{
+
+		data, err := json.Marshal(service.CaptureRequestModel{
+			ID:     id,
+			Author: author,
+			Url:    url,
+		})
+		if err != nil {
+			s.log.Warn("tweet:service store, send pubsub message", zap.String("tweet_id", id), zap.String("tweet_user", author), zap.String("url", url), zap.Error(err))
+			return
+		}
+
+		err = s.topic.Send(context.Background(), &pubsub.Message{
 			Metadata: map[string]string{
 				"tweet_id":   id,
 				"tweet_user": author,
+				"version":    "beta",
 			},
-			Body: []byte(url),
+			Body: data,
 		})
 		if err != nil {
 			s.log.Warn("tweet:service store, send pubsub message", zap.String("tweet_id", id), zap.String("tweet_user", author), zap.String("url", url), zap.Error(err))
