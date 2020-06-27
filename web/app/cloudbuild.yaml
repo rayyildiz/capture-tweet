@@ -6,6 +6,7 @@ steps:
   - name: 'node:lts'
     args: ['yarn', 'build']
     dir: 'web/app'
+    env: ['BASE_API=https://beta-api.capturetweet.com/api/query']
 
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['-h','Cache-Control:public,max-age=3600','-m' ,'rsync','-R', 'build','gs://beta.capturetweet.com']

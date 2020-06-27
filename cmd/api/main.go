@@ -10,6 +10,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 	"go.uber.org/zap"
 	"log"
 	"net/http"
@@ -60,20 +61,29 @@ func main() {
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: rootResolver}))
 	srv.Use(infra.ZapLogger{Log: logger})
 
+	mux := http.NewServeMux()
+
 	if os.Getenv("GRAPHQL_ENABLE_PLAYGROUND") == "true" {
-		http.Handle("/", playground.Handler("GraphQL playground", "/api/query"))
+		mux.Handle("/", playground.Handler("GraphQL playground", "/api/query"))
 	}
-	http.Handle("/api/query", srv)
+	mux.Handle("/api/query", srv)
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "4000"
 	}
 
+	handler := cors.New(cors.Options{
+		AllowedOrigins:   []string{"https://beta.capturetweet.com", "http://localhost:3000"},
+		AllowedMethods:   []string{"HEAD", "GET", "POST"},
+		AllowedHeaders:   []string{"*"},
+		AllowCredentials: false,
+	}).Handler(mux)
+
 	diff := time.Now().Sub(start)
 	logger.Info("initialized objects", zap.Duration("elapsed", diff))
 
-	err = http.ListenAndServe(":"+port, nil)
+	err = http.ListenAndServe(":"+port, handler)
 	ensureNoError(err, "http:ListenAndServe, port :"+port)
 }
 

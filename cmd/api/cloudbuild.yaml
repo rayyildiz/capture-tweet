@@ -9,5 +9,5 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'eu.gcr.io/$PROJECT_ID/beta-api:$SHORT_SHA']
     dir: 'cmd/api'
-#  - name: 'gcr.io/cloud-builders/gcloud'
-#    args: ['run','deploy','beta-api','--image','eu.gcr.io/$PROJECT_ID/beta-api:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['run','deploy','beta-api','--image','eu.gcr.io/$PROJECT_ID/beta-api:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']

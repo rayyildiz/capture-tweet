@@ -3,11 +3,11 @@ import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 import {BrowserRouter} from "react-router-dom";
 import {Header} from "./Header";
 import {AppRoutes} from "../App.Routes";
-import {Footer} from "./Footer";
+import {BASE_API} from "../Constants";
 
 
 const client = new ApolloClient({
-  uri: "/api/query",
+  uri: BASE_API,
   cache: new InMemoryCache(),
 });
 
@@ -17,9 +17,9 @@ const App: FC = () => {
         <BrowserRouter>
           <Header/>
           <div className="container margin-top-7">
-            <AppRoutes />
+            <AppRoutes/>
           </div>
-{/*
+          {/*
           <Footer />
 */}
         </BrowserRouter>
