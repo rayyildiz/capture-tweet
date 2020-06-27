@@ -45,7 +45,7 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	request := service.CaptureRequestModel{}
-	err = json.Unmarshal(payload.Data, &payload)
+	err = json.Unmarshal(payload.Data, &request)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
