@@ -24,7 +24,7 @@ export const ImageCard: FC<ImageCardProps> = ({id}) => {
   if (data && data?.tweet && data.tweet.captureURL) {
     stopPolling();
 
-    return (<img src={data.tweet.captureURL} alt={"No image"} className="img-fluid"/>);
+    return (<img src={`/${data.tweet.captureURL}`} alt={"No image"} className="img-fluid"/>);
 
   }
 
