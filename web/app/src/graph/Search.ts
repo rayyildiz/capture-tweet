@@ -22,6 +22,7 @@ export interface Search_search {
   fullText: string;
   lang: string | null;
   postedAt: any | null;
+  captureURL: string | null;
   captureThumbURL: string | null;
   author: Search_search_author | null;
 }

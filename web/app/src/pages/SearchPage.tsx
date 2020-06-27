@@ -5,6 +5,7 @@ import {SEARCH_GQL} from "../graph/queries";
 import {Search, Search_search, SearchVariables} from "../graph/Search";
 import {useHistory} from "react-router-dom";
 import moment from 'moment';
+import notFound from '../assets/not_found.svg';
 
 const getQueryStringValue = (key: string, queryString = window.location.search): string => {
   const values = qs.parse(queryString);
@@ -63,7 +64,11 @@ const TweetCard: FC<TweetCardProps> = ({tweet}) => {
             <h6 className="card-subtitle text-muted">Language {tweet.lang}</h6>
           </div>
           <img
-              src={tweet.captureThumbURL ?? ''}
+              style={{
+                maxWidth: '20rem',
+                textAlign: "center"
+              }}
+              src={tweet.captureURL ?? notFound}
               alt="Card image"/>
           <div className="card-body">
             <p className="card-text">{tweet.fullText} </p>

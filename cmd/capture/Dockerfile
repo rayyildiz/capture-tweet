@@ -12,7 +12,7 @@ RUN \
   && rm -rf /var/cache/apk/* /tmp/*
 
 WORKDIR /apps
-ENV PORT="4000"
+ENV PORT="4200"
 
 COPY  ./tmp/app .
 

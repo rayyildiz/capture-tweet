@@ -25,6 +25,7 @@ export const SEARCH_GQL = gql`
       fullText
       lang
       postedAt
+      captureURL
       captureThumbURL
       author {
         userName

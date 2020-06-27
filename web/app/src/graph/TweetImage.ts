@@ -4,7 +4,7 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: ImageCard
+// GraphQL query operation: TweetImage
 // ====================================================
 
 export interface TweetImage_tweet {

@@ -4,6 +4,7 @@ import (
 	"com.capturetweet/pkg/service"
 	"encoding/json"
 	"go.uber.org/zap"
+	"log"
 	"net/http"
 )
 
@@ -13,7 +14,12 @@ type handlerImpl struct {
 }
 
 type PubSubMessage struct {
-	Data []byte `json:"data"`
+	Message struct {
+		Data       []byte            `json:"data"`
+		MessageId  string            `json:"messageId"`
+		Attributes map[string]string `json:"attributes"`
+	} `json:"message"`
+	Subscription string `json:"subscription"`
 }
 
 func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
@@ -36,8 +42,8 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	request := service.CaptureRequestModel{}
-	h.log.Info("message ", zap.ByteString("data", payload.Data))
-	err = json.Unmarshal(payload.Data, &request)
+	log.Printf("message: %v", payload)
+	err = json.Unmarshal(payload.Message.Data, &request)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		h.log.Error("bad request, decode payload.data", zap.Error(err))
