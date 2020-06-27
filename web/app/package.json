@@ -27,7 +27,7 @@
   "scripts": {
     "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
-    "build:prod": "GENERATE_SOURCEMAP=false BASE_API=https://beta-api.capturetweet.com/api/query react-scripts build",
+    "build:prod": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
