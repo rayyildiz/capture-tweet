@@ -63,10 +63,10 @@ const TweetCard: FC<TweetCardProps> = ({tweet}) => {
             <h5 className="card-title">Posted at {moment(tweet.postedAt).format("DD-MM-YYYY HH:MM")} </h5>
             <h6 className="card-subtitle text-muted">Language {tweet.lang}</h6>
           </div>
-          {tweet.captureURL !== null ? <img style={{
+          {tweet.captureURL ? <img style={{
                 maxWidth: '20rem',
                 textAlign: "center"
-              }} src={`/${tweet.captureURL}`} alt="Card image"/>
+              }} src={`/${tweet.captureThumbURL}`} alt="Card image"/>
               : <img style={{
                 maxWidth: '20rem',
                 textAlign: "center"
