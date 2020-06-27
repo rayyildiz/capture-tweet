@@ -16,7 +16,7 @@ export const ImageCard: FC<ImageCardProps> = ({id}) => {
   })
 
   useEffect(() => {
-    startPolling(2000);
+    startPolling(1500);
 
     return () => stopPolling();
   }, [id])
@@ -24,10 +24,8 @@ export const ImageCard: FC<ImageCardProps> = ({id}) => {
   if (data && data?.tweet && data.tweet.captureURL) {
     stopPolling();
 
-    return <>
-      image : {JSON.stringify(data?.tweet)}
-      <br/>
-    </>
+    return (<img src={data.tweet.captureURL} alt={"No image"} className="img-fluid"/>);
+
   }
 
   return <img src={folderImage} alt={"No image"} className="img-fluid"/>
