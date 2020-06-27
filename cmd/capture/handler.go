@@ -5,6 +5,7 @@ import (
 	"com.capturetweet/pkg/service"
 	"encoding/json"
 	"go.uber.org/zap"
+	"gocloud.dev/pubsub"
 	"net/http"
 )
 
@@ -34,10 +35,9 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var payload PubSubMessage
+	var payload pubsub.Message
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		h.log.Error("bad request", zap.Error(err))
 		return
@@ -45,9 +45,9 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	request := service.CaptureRequestModel{}
-	err = json.Unmarshal(payload.Data, &request)
+
+	err = json.Unmarshal(payload.Body, &request)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		h.log.Error("bad request, decode payload.data", zap.Error(err))
 		return
