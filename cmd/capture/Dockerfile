@@ -1,5 +1,5 @@
 FROM rayyildiz/ca-certificates
 
-COPY  ./tmp/capture .
+COPY  ./tmp/app .
 
-CMD ["/apps/capture"]
+CMD ["/apps/app"]

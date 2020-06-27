@@ -1,0 +1,12 @@
+steps:
+  - name: 'node:lts'
+    args: ['yarn']
+    dir: 'web/app'
+
+  - name: 'node:lts'
+    args: ['yarn', 'build']
+    dir: 'web/app'
+
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['-h','Cache-Control:public,max-age=3600','-m' ,'rsync','-R', 'build','gs://beta.capturetweet.com']
+    dir: 'web/app'

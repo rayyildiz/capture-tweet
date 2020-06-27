@@ -1,0 +1,13 @@
+steps:
+  - name: 'golang:1.14'
+    args: ['go', 'build', '-a', '-installsuffix','cgo', '-o' ,'tmp/app','.']
+    env: ['GO111MODULE=on','CGO_ENABLED=0','GOOS=linux']
+    dir: 'cmd/capture'
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-f', 'Dockerfile', '--tag=eu.gcr.io/$PROJECT_ID/beta-capture:$SHORT_SHA', '.']
+    dir: 'cmd/capture'
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'eu.gcr.io/$PROJECT_ID/beta-capture:$SHORT_SHA']
+    dir: 'cmd/capture'
+#  - name: 'gcr.io/cloud-builders/gcloud'
+#    args: ['run','deploy','beta-capture','--image','eu.gcr.io/$PROJECT_ID/beta-capture:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']

@@ -1,5 +1,5 @@
 FROM rayyildiz/ca-certificates
 
-COPY  ./tmp/api .
+COPY  ./tmp/app .
 
 CMD ["/apps/api"]

@@ -13,6 +13,10 @@ type handlerImpl struct {
 	service service.BrowserService
 }
 
+type PubSubMessage struct {
+	Data []byte `json:"data"`
+}
+
 type response struct {
 	Status  bool        `json:"status"`
 	Code    *int        `json:"code,omitempty"`
@@ -25,31 +29,29 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		json.NewEncoder(w).Encode(&response{
-			Status:  false,
-			Code:    convert.Int(http.StatusMethodNotAllowed),
-			Message: convert.String("method not allowed, only POST request"),
-			Data:    nil,
-		})
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		h.log.Warn("method not allowed", zap.String("method", r.Method))
-
 		return
 	}
 
-	request := service.CaptureRequestModel{}
-	err := json.NewDecoder(r.Body).Decode(&request)
+	var payload PubSubMessage
+	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(&response{
-			Status:  false,
-			Code:    convert.Int(http.StatusBadRequest),
-			Message: convert.String("bad request, check your input"),
-			Data:    nil,
-		})
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		h.log.Error("bad request", zap.Error(err))
 		return
 	}
 	defer r.Body.Close()
+
+	request := service.CaptureRequestModel{}
+	err = json.Unmarshal(payload.Data, &payload)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		h.log.Error("bad request, decode payload.data", zap.Error(err))
+		return
+	}
 
 	respModel, err := h.service.CaptureSaveUpdateDatabase(&request)
 	if err != nil {
@@ -64,12 +66,9 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(&response{
-		Status:  true,
-		Code:    convert.Int(http.StatusOK),
-		Message: nil,
-		Data:    respModel,
-	})
+	h.log.Info("capture successfully", zap.String("tweet_id", respModel.ID), zap.String("tweet_url", request.Url),
+		zap.String("capture_image", respModel.CaptureURL), zap.String("capture_thumb_image", respModel.CaptureThumbURL))
 
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("No Content"))
 }

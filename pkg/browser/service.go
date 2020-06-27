@@ -52,7 +52,7 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(model *service.CaptureRequestMode
 }
 
 func (s serviceImpl) SaveCapture(originalImage []byte, model *service.CaptureRequestModel) (*service.CaptureResponseModel, error) {
-	err := s.bucket.WriteAll(context.Background(), fmt.Sprintf("%s.jpg", model.ID), originalImage, &blob.WriterOptions{
+	err := s.bucket.WriteAll(context.Background(), fmt.Sprintf("capture/%s.jpg", model.ID), originalImage, &blob.WriterOptions{
 		ContentType:  "image/jpg",
 		CacheControl: "private,max-age=3600",
 		Metadata: map[string]string{
@@ -69,8 +69,8 @@ func (s serviceImpl) SaveCapture(originalImage []byte, model *service.CaptureReq
 
 	return &service.CaptureResponseModel{
 		ID:              model.ID,
-		CaptureURL:      fmt.Sprintf("%s.jpg", model.ID),
-		CaptureThumbURL: fmt.Sprintf("%s_thumb.jpg", model.ID),
+		CaptureURL:      fmt.Sprintf("capture/%s.jpg", model.ID),
+		CaptureThumbURL: fmt.Sprintf("capture/%s.jpg", model.ID), // TODO resize image and save thumbnail
 	}, nil
 }
 func (s serviceImpl) Close() {
