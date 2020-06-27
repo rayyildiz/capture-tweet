@@ -1,11 +1,9 @@
 package main
 
 import (
-	"com.capturetweet/internal/convert"
 	"com.capturetweet/pkg/service"
 	"encoding/json"
 	"go.uber.org/zap"
-	"gocloud.dev/pubsub"
 	"net/http"
 )
 
@@ -18,13 +16,6 @@ type PubSubMessage struct {
 	Data []byte `json:"data"`
 }
 
-type response struct {
-	Status  bool        `json:"status"`
-	Code    *int        `json:"code,omitempty"`
-	Message *string     `json:"message,omitempty"`
-	Data    interface{} `json:"data,omitempty"`
-}
-
 func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -35,7 +26,7 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var payload pubsub.Message
+	var payload PubSubMessage
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
@@ -45,8 +36,8 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	request := service.CaptureRequestModel{}
-
-	err = json.Unmarshal(payload.Body, &request)
+	h.log.Info("message ", zap.ByteString("data", payload.Data))
+	err = json.Unmarshal(payload.Data, &request)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		h.log.Error("bad request, decode payload.data", zap.Error(err))
@@ -56,12 +47,7 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	respModel, err := h.service.CaptureSaveUpdateDatabase(&request)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(&response{
-			Status:  false,
-			Code:    convert.Int(http.StatusInternalServerError),
-			Message: convert.String("could not capture your request, please try again"),
-			Data:    nil,
-		})
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		h.log.Error("could not capture", zap.String("tweet_id", request.ID), zap.String("url", request.Url), zap.Error(err))
 		return
 	}
