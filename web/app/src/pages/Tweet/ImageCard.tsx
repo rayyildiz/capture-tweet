@@ -29,14 +29,13 @@ export const ImageCard: FC<ImageCardProps> = ({id}) => {
   }
 
   return (
-      <div className="d-flex justify-content-center">
+      <>
         <img src={folderImage} alt={"No image"} className="img-fluid"/>
-        <br/>
+        <br/><br/>
         <div className="spinner-border" role="status">
           <span className="sr-only">Loading...</span>
         </div>
-
-      </div>
+      </>
   );
 }
 

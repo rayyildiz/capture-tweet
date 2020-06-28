@@ -1,21 +1,22 @@
 package main
 
 import (
+	"context"
+	"log"
+	"net/http"
+	"os"
+	"time"
+
 	"com.capturetweet/internal/infra"
 	"com.capturetweet/pkg/graph"
 	"com.capturetweet/pkg/search"
 	"com.capturetweet/pkg/tweet"
 	"com.capturetweet/pkg/user"
-	"context"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 	"go.uber.org/zap"
-	"log"
-	"net/http"
-	"os"
-	"time"
 )
 
 func init() {
@@ -73,14 +74,14 @@ func main() {
 		port = "4000"
 	}
 
-	/*	handler := cors.New(cors.Options{
+	handler := cors.New(cors.Options{
 		AllowedOrigins:   []string{"https://beta.capturetweet.com", "http://localhost:3000"},
-		AllowedMethods:   []string{"HEAD", "GET", "POST"},
+		AllowedMethods:   []string{"HEAD", "GET", "POST", "OPTIONS"},
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: false,
-	}).Handler(mux)*/
+	}).Handler(mux)
 
-	handler := cors.AllowAll().Handler(mux)
+	// handler := cors.AllowAll().Handler(mux)
 
 	diff := time.Now().Sub(start)
 	logger.Info("initialized objects", zap.Duration("elapsed", diff))

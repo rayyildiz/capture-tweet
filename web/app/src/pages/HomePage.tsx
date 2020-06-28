@@ -7,7 +7,7 @@ import {Capture, CaptureVariables} from "../graph/Capture";
 
 const HomePage: FC = () => {
   const [url, setUrl] = useState('');
-  const [valideation, setValidation] = useState('');
+  const [validation, setValidation] = useState('');
 
   const [doQuery, {data, loading, error}] = useMutation<Capture, CaptureVariables>(CAPTURE_TWEET_GQL)
 
@@ -19,7 +19,7 @@ const HomePage: FC = () => {
     } else {
       try {
         await doQuery({
-          variables: {url}
+          variables: {url: url}
         });
       } catch (ex) {
         console.log(ex.toString());
@@ -39,8 +39,8 @@ const HomePage: FC = () => {
             <p className="mb-0">{error.message}</p>
           </div>
           }
-          {valideation.length > 0 && <div className="alert alert-warning margin-top-1 alert-box mx-auto">
-            <p className="mb-0">{valideation}</p>
+          {validation.length > 0 && <div className="alert alert-warning margin-top-1 alert-box mx-auto">
+            <p className="mb-0">{validation}</p>
           </div>
           }
           <form onSubmit={handleSummit} className="margin-top-2">
