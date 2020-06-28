@@ -2,9 +2,9 @@ import React, {FC} from "react";
 import './Footer.css';
 
 export const Footer: FC = () => (
-    <footer className="footer">
-      <div className="container text-right">
-        <span className="text-muted">Capture Tweet (c) 2020</span>
+    <footer id="sticky-footer" className="footer py-4 bg-dark text-white-50">
+      <div className="container text-center">
+        <small>Copyright &copy; Capturetweet</small>
       </div>
     </footer>
 );

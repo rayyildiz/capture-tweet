@@ -5,7 +5,6 @@
   "proxy": "http://localhost:4000",
   "dependencies": {
     "@apollo/client": "^3.0.0-rc.6",
-    "@fortawesome/fontawesome-free": "^5.13.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -13,6 +12,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "bootstrap": "^5.0.0-alpha1",
     "bootswatch": "^4.5.0",
     "graphql": "^15.1.0",
     "moment": "^2.27.0",

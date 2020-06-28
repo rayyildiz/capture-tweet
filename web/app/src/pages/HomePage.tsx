@@ -35,15 +35,21 @@ const HomePage: FC = () => {
       <div className="wrapper">
         <div id="formContent">
           <h3>Enter a twitter URL and click <code>CAPTURE</code> button</h3>
-          {error && <div className="alert alert-warning margin-top-1 alert-box mx-auto">
+          {error && <div className="alert alert-warning mt-1 alert-box mx-auto alert-dismissible">
             <p className="mb-0">{error.message}</p>
+            <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
           }
-          {validation.length > 0 && <div className="alert alert-warning margin-top-1 alert-box mx-auto">
+          {validation.length > 0 && <div className="alert alert-warning mt-1 alert-box mx-auto alert-dismissible">
             <p className="mb-0">{validation}</p>
+            <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={() => setValidation('')}>
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
           }
-          <form onSubmit={handleSummit} className="margin-top-2">
+          <form onSubmit={handleSummit} className="mt-2">
             <input autoFocus autoComplete="off" type="text" id="url" name="url" placeholder="Enter Twitter URL" onChange={event => setUrl(event.target.value)}/>
             <input type="submit" value="CAPTURE"/>
           </form>

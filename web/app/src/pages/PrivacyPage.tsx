@@ -4,7 +4,7 @@ import privacyImage from '../assets/privacy.svg';
 
 const PrivacyPage: FC = () => (
     <div>
-      <img src={privacyImage} width={200} className={"img-thumbnail float-left"} alt="privacy" style={{marginRight: '1rem' }}/>
+      <img src={privacyImage} width={200} className={"img-thumbnail float-left mr-2"} alt="privacy" />
       <h3>What are cookies?</h3>
 
       <p>As is common practice with almost all professional websites this site uses cookies, which are tiny files that are downloaded to your computer, to improve your experience. This page describes what information they gather, how we

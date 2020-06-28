@@ -17,20 +17,19 @@ export const ImageCard: FC<ImageCardProps> = ({id}) => {
 
   useEffect(() => {
     startPolling(1500);
-
     return () => stopPolling();
-  }, [id])
+  }, [id, startPolling, stopPolling])
 
   if (data && data?.tweet && data.tweet.captureURL) {
     stopPolling();
 
-    return (<img src={`/${data.tweet.captureURL}`} alt={"No image"} className="img-fluid"/>);
+    return (<img src={`/${data.tweet.captureURL}`} alt="" className="img-fluid"/>);
 
   }
 
   return (
       <>
-        <img src={folderImage} alt={"No image"} className="img-fluid"/>
+        <img src={folderImage} alt="" className="img-fluid"/>
         <br/><br/>
         <div className="spinner-border" role="status">
           <span className="sr-only">Loading...</span>

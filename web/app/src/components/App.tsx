@@ -15,13 +15,12 @@ const App: FC = () => {
   return (
       <ApolloProvider client={client}>
         <BrowserRouter>
-          <Header/>
-          <div className="container margin-top-7">
-            <AppRoutes/>
+          <div className="flex-shrink-0">
+            <Header/>
+            <div className="container mt-lg-5 mt-sm-2">
+              <AppRoutes/>
+            </div>
           </div>
-          {/*
-          <Footer />
-*/}
         </BrowserRouter>
       </ApolloProvider>
   );

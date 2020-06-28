@@ -44,9 +44,9 @@ const TweetDetail: FC<TweetDetailProps> = ({tweet}) => (
         <ImageCard key={`img_${tweet.id}`} id={tweet.id}/>
       </div>
       <div className="col-md-6 col-lg-6 col-sm-12">
-        <h4>Tweet by <a target="_blank" className="text-decoration-none" href={`https://twitter.com/${tweet.author?.userName}`}>{tweet.author?.screenName}</a></h4>
+        <h4>Tweet by <a target="_blank" rel="noopener noreferrer" className="text-decoration-none" href={`https://twitter.com/${tweet.author?.userName}`}>{tweet.author?.screenName}</a></h4>
         <br/>
-        <a target="_blank" className=" text-muted text-black text-justify text-wrap text-decoration-none" href={`https://twitter.com/${tweet.author?.userName}/status/${tweet.id}`}>{tweet.fullText}</a>
+        <a target="_blank" rel="noopener noreferrer" className=" text-muted text-black text-justify text-wrap text-decoration-none" href={`https://twitter.com/${tweet.author?.userName}/status/${tweet.id}`}>{tweet.fullText}</a>
         <br/>
         <div className="col-12 text-right text-secondary">
           <br/>
