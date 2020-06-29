@@ -1,6 +1,7 @@
 package main
 
 import (
+	"com.capturetweet/pkg/content"
 	"context"
 	"log"
 	"net/http"
@@ -55,9 +56,12 @@ func main() {
 	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), searchService, userService, twitterApi, logger, topic)
 	ensureNotNil(tweetService, "tweet:NewService")
 
+	contentService := content.NewService(os.Getenv("SENDGRID_APIKEY"))
+	ensureNotNil(contentService, "content service")
+
 	rootResolver := graph.NewResolver()
 	ensureNotNil(rootResolver, "graph:NewResolver")
-	graph.InitService(logger, tweetService, userService)
+	graph.InitService(logger, tweetService, userService, contentService)
 
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: rootResolver}))
 	srv.Use(infra.ZapLogger{Log: logger})

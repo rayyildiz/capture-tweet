@@ -33,6 +33,12 @@ input SearchInput {
   term:String!
 }
 
+input ContactInput {
+  fullName:String!
+  email:String!
+  message:String!
+}
+
 type Query {
   #  find a tweet
   tweet(id:ID!):Tweet
@@ -43,8 +49,6 @@ type Query {
 
 type Mutation {
   capture(url:String!): Tweet
-}
 
-type Subscription {
-  captured(id:ID!):Tweet!
+  contact(input:ContactInput!):String!
 }

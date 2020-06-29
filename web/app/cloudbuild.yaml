@@ -4,6 +4,11 @@ steps:
     dir: 'web/app'
 
   - name: 'node:lts'
+    args: ['yarn','test']
+    dir: 'web/app'
+
+
+  - name: 'node:lts'
     args: ['yarn', 'build:prod']
     dir: 'web/app'
 

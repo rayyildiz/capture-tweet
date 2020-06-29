@@ -8,6 +8,7 @@ export const Header: FC = () => (
       <nav className="my-2 my-md-0 mr-md-3">
         <Link to='/' className="p-2 text-light text-decoration-none">Capture</Link>
         <Link to='/privacy' className="p-2 text-light text-decoration-none">Privacy</Link>
+        <Link to='/contact' className="p-2 text-light text-decoration-none">Contact Us</Link>
       </nav>
       <Search/>
     </div>

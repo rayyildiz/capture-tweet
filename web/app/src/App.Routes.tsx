@@ -5,7 +5,7 @@ import HomePage from "./pages/HomePage";
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
 const TweetPage = lazy(() => import("./pages/Tweet/TweetPage"));
-
+const ContactPage = lazy(() => import('./pages/ContactPage'));
 
 const Loading = () => (<span>Loading...</span>)
 
@@ -15,6 +15,7 @@ export const AppRoutes: FC = () => {
         <Switch>
           <Route path='/privacy' component={PrivacyPage}/>
           <Route path='/search' component={SearchPage}/>
+          <Route path='/contact' component={ContactPage}/>
           <Route path='/tweet/:id' component={TweetPage}/>
           <Route exact={true} path="/" component={HomePage}/>
         </Switch>

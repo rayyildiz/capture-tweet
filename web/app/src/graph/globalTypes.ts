@@ -7,6 +7,12 @@
 // START Enums and Input Objects
 //==============================================================
 
+export interface ContactInput {
+  fullName: string;
+  email: string;
+  message: string;
+}
+
 export interface SearchInput {
   term: string;
 }

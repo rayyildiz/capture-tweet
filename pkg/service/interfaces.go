@@ -1,8 +1,7 @@
-//go:generate mockgen -package=service -self_package=com.capturetweet/pkg/service -destination=interfaces_mock.go . UserService,TweetService,SearchService,BrowserService
+//go:generate mockgen -package=service -self_package=com.capturetweet/pkg/service -destination=interfaces_mock.go . UserService,TweetService,SearchService,BrowserService,ContentService
 package service
 
 import (
-	"context"
 	"github.com/ChimeraCoder/anaconda"
 )
 
@@ -16,8 +15,6 @@ type TweetService interface {
 	Store(url string) (string, error)
 	Search(term string, size, start, page int) ([]TweetModel, error)
 	UpdateCaptureImage(id, captureUrl, captureThumbUrl string) error
-
-	WatchChange(ctx context.Context, id string) (<-chan *TweetModel, error)
 }
 
 type SearchService interface {
@@ -35,4 +32,8 @@ type BrowserService interface {
 	CaptureSaveUpdateDatabase(model *CaptureRequestModel) (*CaptureResponseModel, error)
 
 	Close()
+}
+
+type ContentService interface {
+	SendMail(senderMail, senderName, message string) error
 }

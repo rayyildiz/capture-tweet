@@ -3,6 +3,7 @@ package graph
 import (
 	"com.capturetweet/internal/convert"
 	"context"
+	"errors"
 	"go.uber.org/zap"
 )
 
@@ -49,4 +50,13 @@ func (r mutationResolverImpl) Capture(ctx context.Context, url string) (*Tweet, 
 		RetweetCount:    convert.Int(model.RetweetCount),
 		Resources:       resources,
 	}, nil
+}
+
+func (r mutationResolverImpl) Contact(ctx context.Context, input ContactInput) (string, error) {
+	err := _contentService.SendMail(input.Email, input.FullName, input.Message)
+	if err != nil {
+		_log.Error("could not send mail", zap.String("contact_email", input.Email), zap.String("contact_fullName", input.FullName), zap.Error(err))
+		return "", errors.New("error occurred, please try again or contact from info@capturetweet.com mail address")
+	}
+	return "we had your message and we will contact you as soon as possible, thanks for feedback", nil
 }

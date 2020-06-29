@@ -69,3 +69,9 @@ export const TWEET_IMAGE_QUERY = gql`
     }
   }
 `;
+
+
+export const CONTACT_MUTATION = gql`
+  mutation Contact($input:ContactInput!) {
+    contact(input:$input)
+  }`;

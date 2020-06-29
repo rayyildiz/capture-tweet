@@ -20,18 +20,17 @@ func (r resolver) Mutation() MutationResolver {
 func (r resolver) Query() QueryResolver {
 	return newQueryResolver()
 }
-func (r resolver) Subscription() SubscriptionResolver {
-	return newSubscriptionResolver()
-}
 
 var (
-	_twitterService service.TweetService = nil
-	_userService    service.UserService  = nil
-	_log            *zap.Logger          = nil
+	_twitterService service.TweetService   = nil
+	_userService    service.UserService    = nil
+	_log            *zap.Logger            = nil
+	_contentService service.ContentService = nil
 )
 
-func InitService(log *zap.Logger, twitterService service.TweetService, userService service.UserService) {
+func InitService(log *zap.Logger, twitterService service.TweetService, userService service.UserService, contentService service.ContentService) {
 	_twitterService = twitterService
 	_userService = userService
 	_log = log
+	_contentService = contentService
 }

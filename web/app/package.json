@@ -13,6 +13,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "bootstrap": "^5.0.0-alpha1",
+    "bootstrap-icons": "^1.0.0-alpha5",
     "bootswatch": "^4.5.0",
     "graphql": "^15.1.0",
     "moment": "^2.27.0",
