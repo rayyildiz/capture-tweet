@@ -2,10 +2,10 @@ steps:
   - name: 'node:lts'
     args: ['yarn']
     dir: 'web/app'
-
-  - name: 'node:lts'
-    args: ['yarn','test']
-    dir: 'web/app'
+#
+#  - name: 'node:lts'
+#    args: ['yarn','test']
+#    dir: 'web/app'
 
 
   - name: 'node:lts'
