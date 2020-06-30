@@ -1,0 +1,19 @@
+{
+  "kind": "storage#object",
+  "id": "beta.capturetweet.com/capture/large/capture_1276466352740610050.jpg/1593521227800608",
+  "selfLink": "https://www.googleapis.com/storage/v1/b/beta.capturetweet.com/o/capture%2Flarge%2Fcapture_1276466352740610050.jpg",
+  "name": "capture/large/capture_1276466352740610050.jpg",
+  "bucket": "beta.capturetweet.com",
+  "generation": "1593521227800608",
+  "metageneration": "1",
+  "contentType": "image/jpeg",
+  "timeCreated": "2020-06-30T12:47:07.800Z",
+  "updated": "2020-06-30T12:47:07.800Z",
+  "storageClass": "STANDARD",
+  "timeStorageClassUpdated": "2020-06-30T12:47:07.800Z",
+  "size": "144686",
+  "md5Hash": "0JgTFLBlNP5+s/HpEYyF1w==",
+  "mediaLink": "https://www.googleapis.com/download/storage/v1/b/beta.capturetweet.com/o/capture%2Flarge%2Fcapture_1276466352740610050.jpg?generation=1593521227800608&alt=media",
+  "crc32c": "7WkCiA==",
+  "etag": "CKDA5pXJqeoCEAE="
+}

@@ -14,7 +14,8 @@ type Repository interface {
 	FindByIds(ids []string) ([]Tweet, error)
 	Store(tweet *anaconda.Tweet) error
 	Exist(id string) bool
-	UpdateCaptureURLs(id, captureUrl, captureThumbUrl string) error
+	UpdateLargeImage(id, captureUrl string) error
+	UpdateThumbImage(id, captureUrl string) error
 }
 
 type repositoryImpl struct {
@@ -89,7 +90,12 @@ func (r repositoryImpl) FindByIds(ids []string) ([]Tweet, error) {
 	return list, nil
 }
 
-func (r repositoryImpl) UpdateCaptureURLs(id, captureUrl, captureThumbUrl string) error {
+func (r repositoryImpl) UpdateLargeImage(id, captureUrl string) error {
 	tweet := &Tweet{ID: id}
-	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_url": captureUrl, "capture_thumb_url": captureThumbUrl, "updated_at": time.Now()}).Do(context.Background())
+	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_url": captureUrl, "updated_at": time.Now()}).Do(context.Background())
+}
+
+func (r repositoryImpl) UpdateThumbImage(id, captureUrl string) error {
+	tweet := &Tweet{ID: id}
+	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_thumb_url": captureUrl, "updated_at": time.Now()}).Do(context.Background())
 }

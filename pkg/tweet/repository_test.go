@@ -61,7 +61,7 @@ func TestRepository_FindByIds(t *testing.T) {
 	}
 }
 
-func TestRepository_UpdateCaptureURLs(t *testing.T) {
+func TestRepository_UpdateThumbImage(t *testing.T) {
 	coll, err := infra.NewDocstore("mem://collection/id")
 	require.NoError(t, err)
 	defer coll.Close()
@@ -70,16 +70,15 @@ func TestRepository_UpdateCaptureURLs(t *testing.T) {
 	err = repo.Store(&anaconda.Tweet{IdStr: "1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
 	require.NoError(t, err)
 
-	err = repo.UpdateCaptureURLs("1", "image1.png", "thumb_image.png")
+	err = repo.UpdateThumbImage("1", "image1.png")
 	require.NoError(t, err)
 
 	tweet, err := repo.FindById("1")
 	require.NoError(t, err)
 	if assert.NotNil(t, tweet) {
 		assert.Equal(t, "1", tweet.ID)
-		if assert.NotNil(t, tweet.CaptureURL) && assert.NotNil(t, tweet.CaptureThumbURL) {
-			assert.Equal(t, "image1.png", *tweet.CaptureURL)
-			assert.Equal(t, "thumb_image.png", *tweet.CaptureThumbURL)
+		if assert.NotNil(t, tweet.CaptureThumbURL) {
+			assert.Equal(t, "image1.png", *tweet.CaptureThumbURL)
 		}
 	}
 }

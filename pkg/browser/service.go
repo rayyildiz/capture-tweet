@@ -42,9 +42,9 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(model *service.CaptureRequestMode
 		return nil, err
 	}
 
-	err = s.tweetService.UpdateCaptureImage(model.ID, response.CaptureURL, response.CaptureThumbURL)
+	err = s.tweetService.UpdateLargeImage(model.ID, response.CaptureURL)
 	if err != nil {
-		s.log.Error("browser CaptureSaveUpdateDatabase, service.UpdateCaptureImage", zap.String("tweet_id", model.ID), zap.Error(err))
+		s.log.Error("browser CaptureSaveUpdateDatabase, service.UpdateLargeImage", zap.String("tweet_id", model.ID), zap.Error(err))
 		return nil, err
 	}
 
@@ -68,9 +68,8 @@ func (s serviceImpl) SaveCapture(originalImage []byte, model *service.CaptureReq
 	}
 
 	return &service.CaptureResponseModel{
-		ID:              model.ID,
-		CaptureURL:      fmt.Sprintf("capture/%s.jpg", model.ID),
-		CaptureThumbURL: fmt.Sprintf("capture/%s.jpg", model.ID), // TODO resize image and save thumbnail
+		ID:         model.ID,
+		CaptureURL: fmt.Sprintf("capture/large/%s.jpg", model.ID),
 	}, nil
 }
 func (s serviceImpl) Close() {

@@ -14,7 +14,8 @@ type TweetService interface {
 	FindById(id string) (*TweetModel, error)
 	Store(url string) (string, error)
 	Search(term string, size, start, page int) ([]TweetModel, error)
-	UpdateCaptureImage(id, captureUrl, captureThumbUrl string) error
+	UpdateLargeImage(id, captureUrl string) error
+	UpdateThumbImage(id, captureUrl string) error
 }
 
 type SearchService interface {

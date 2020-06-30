@@ -172,12 +172,22 @@ func (s serviceImpl) Search(term string, size, start, page int) ([]service.Tweet
 	return res, nil
 }
 
-func (s serviceImpl) UpdateCaptureImage(id, captureUrl, captureThumbUrl string) error {
-	err := s.repo.UpdateCaptureURLs(id, captureUrl, captureThumbUrl)
+func (s serviceImpl) UpdateLargeImage(id, captureUrl string) error {
+	err := s.repo.UpdateLargeImage(id, captureUrl)
 	if err != nil {
-		s.log.Error("tweet:service updateCaptureImage, findById", zap.String("tweet_id", id), zap.Error(err))
+		s.log.Error("tweet:service updateLargeImage, findById", zap.String("tweet_id", id), zap.Error(err))
 		return err
 	}
-	s.log.Info("tweet:service updateCaptureImage, updated capture images", zap.String("tweet_id", id))
+	s.log.Info("tweet:service updateLargeImage, updated capture images", zap.String("tweet_id", id))
+	return nil
+}
+
+func (s serviceImpl) UpdateThumbImage(id, captureUrl string) error {
+	err := s.repo.UpdateThumbImage(id, captureUrl)
+	if err != nil {
+		s.log.Error("tweet:service updateThumbImage, findById", zap.String("tweet_id", id), zap.Error(err))
+		return err
+	}
+	s.log.Info("tweet:service updateThumbImage, updated capture images", zap.String("tweet_id", id))
 	return nil
 }

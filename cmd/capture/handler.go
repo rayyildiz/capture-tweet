@@ -4,7 +4,6 @@ import (
 	"com.capturetweet/pkg/service"
 	"encoding/json"
 	"go.uber.org/zap"
-	"log"
 	"net/http"
 )
 
@@ -42,7 +41,6 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	request := service.CaptureRequestModel{}
-	log.Printf("message: %v", payload)
 	err = json.Unmarshal(payload.Message.Data, &request)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
@@ -58,8 +56,7 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.log.Info("capture successfully", zap.String("tweet_id", respModel.ID), zap.String("tweet_url", request.Url),
-		zap.String("capture_image", respModel.CaptureURL), zap.String("capture_thumb_image", respModel.CaptureThumbURL))
+	h.log.Info("capture successfully", zap.String("tweet_id", respModel.ID), zap.String("tweet_url", request.Url), zap.String("capture_image", respModel.CaptureURL))
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("No Content"))

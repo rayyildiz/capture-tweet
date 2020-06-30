@@ -47,7 +47,6 @@ type CaptureRequestModel struct {
 }
 
 type CaptureResponseModel struct {
-	ID              string
-	CaptureURL      string
-	CaptureThumbURL string
+	ID         string
+	CaptureURL string
 }
