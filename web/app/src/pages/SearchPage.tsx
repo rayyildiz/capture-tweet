@@ -67,10 +67,10 @@ const TweetCard: FC<TweetCardProps> = ({tweet}) => {
             width: '100%',
             textAlign: 'center',
             overflow: 'hidden',
-            height:'10rem'
+            height: '10rem'
           }}>
-            {tweet.captureURL ? <img style={{maxWidth:'20rem'}} src={`/${tweet.captureThumbURL}`} alt="captur eimage"/>
-                : <img style={{maxWidth:'20rem'}}  src={notFound} alt=""/>}
+            {tweet.captureThumbURL ? <img style={{maxWidth: '20rem'}} src={`/${tweet.captureThumbURL}`} alt="capture image"/>
+                : <img style={{maxWidth: '20rem'}} src={notFound} alt=""/>}
           </div>
           <div className="card-body">
             <p className="card-text">{tweet.fullText} </p>

@@ -12,6 +12,6 @@ steps:
     args: ['yarn', 'build:prod']
     dir: 'web/app'
 
-  - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['-h','Cache-Control:public,max-age=3600','-m' ,'rsync','-R', 'build','gs://beta.capturetweet.com']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args: ['gsutil', '-h','Cache-Control:public,max-age=3600','-m' ,'rsync','-R', 'build','gs://beta.capturetweet.com']
     dir: 'web/app'

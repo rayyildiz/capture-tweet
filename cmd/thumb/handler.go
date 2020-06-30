@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"com.capturetweet/pkg/service"
 	"context"
 	"encoding/json"
@@ -77,13 +78,12 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), time.Second*10)
 	defer cancel()
 
-	reader, err := h.bucket.NewReader(ctx, request.Name, nil)
+	img, err := h.bucket.ReadAll(ctx, request.Name)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		h.log.Error("open bucket", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
 		return
 	}
-	defer reader.Close()
 
 	attrs, err := h.bucket.Attributes(ctx, request.Name)
 	if err != nil {
@@ -96,7 +96,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	tweetUser := attrs.Metadata["tweet_user"]
 	tweetUrl := attrs.Metadata["tweet_url"]
 
-	decoder, _, err := image.Decode(reader)
+	decoder, _, err := image.Decode(bytes.NewBuffer(img))
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		h.log.Error("image decode", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
@@ -107,9 +107,17 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	fileName := split[len(split)-1]
 	thumbNailKey := fmt.Sprintf("capture/thumb/%s", fileName)
 
-	newImage := resize.Resize(200, 0, decoder, resize.Lanczos3)
+	newImage := resize.Resize(320, 0, decoder, resize.Lanczos3)
 
-	writer, err := h.bucket.NewWriter(ctx, thumbNailKey, &blob.WriterOptions{
+	buf := new(bytes.Buffer)
+	err = jpeg.Encode(buf, newImage, nil)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		h.log.Error("jpeg encode image", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		return
+	}
+
+	err = h.bucket.WriteAll(ctx, thumbNailKey, buf.Bytes(), &blob.WriterOptions{
 		ContentType:  "image/jpg",
 		CacheControl: "private,max-age=3600",
 		Metadata: map[string]string{
@@ -122,13 +130,6 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		h.log.Error("open bucket for thumbnail", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
-		return
-	}
-
-	err = jpeg.Encode(writer, newImage, nil)
-	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-		h.log.Error("jpeg encode image", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
 		return
 	}
 
