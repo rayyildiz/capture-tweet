@@ -52,7 +52,9 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(model *service.CaptureRequestMode
 }
 
 func (s serviceImpl) SaveCapture(originalImage []byte, model *service.CaptureRequestModel) (*service.CaptureResponseModel, error) {
-	err := s.bucket.WriteAll(context.Background(), fmt.Sprintf("capture/%s.jpg", model.ID), originalImage, &blob.WriterOptions{
+	imageKey := fmt.Sprintf("capture/large/%s.jpg", model.ID)
+
+	err := s.bucket.WriteAll(context.Background(), imageKey, originalImage, &blob.WriterOptions{
 		ContentType:  "image/jpg",
 		CacheControl: "private,max-age=3600",
 		Metadata: map[string]string{
@@ -69,12 +71,12 @@ func (s serviceImpl) SaveCapture(originalImage []byte, model *service.CaptureReq
 
 	return &service.CaptureResponseModel{
 		ID:         model.ID,
-		CaptureURL: fmt.Sprintf("capture/large/%s.jpg", model.ID),
+		CaptureURL: imageKey,
 	}, nil
 }
 func (s serviceImpl) Close() {
 	if s.browser != nil {
-		s.log.Info("closing browser context ")
+		s.log.Info("closing browser context")
 		s.browser.cancelFunc()
 	}
 }

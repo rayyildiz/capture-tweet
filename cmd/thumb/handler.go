@@ -40,6 +40,7 @@ type handlerImpl struct {
 }
 
 func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
 	w.Header().Set("Content-Type", "application/json")
 
 	if r.Method != http.MethodPost {
@@ -131,13 +132,17 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.log.Info("image saved as ", zap.String("image_thumb", thumbNailKey), zap.String("image_key", request.Name), zap.String("image_kind", request.Kind))
+	h.log.Info("image stored successfully", zap.String("image_key", thumbNailKey), zap.String("image_key", request.Name), zap.String("tweet_id", tweetId), zap.String("tweet_user", tweetUser))
 	err = h.service.UpdateThumbImage(tweetId, thumbNailKey)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		h.log.Error("save in database", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
 		return
 	}
+
+	diff := time.Now().Sub(start)
+	h.log.Info("image saved", zap.Duration("elapsed", diff), zap.String("image_thumb", thumbNailKey), zap.String("image_key", request.Name), zap.String("image_kind", request.Kind))
+
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("No Content"))
 }
