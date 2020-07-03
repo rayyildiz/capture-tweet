@@ -6,6 +6,7 @@ import {Search, Search_search, SearchVariables} from "../graph/Search";
 import {useHistory} from "react-router-dom";
 import moment from 'moment';
 import notFound from '../assets/not_found.svg';
+import './SearchPage.css';
 
 const getQueryStringValue = (key: string, queryString = window.location.search): string => {
   const values = qs.parse(queryString);
@@ -57,7 +58,7 @@ const TweetCard: FC<TweetCardProps> = ({tweet}) => {
 
   return (
       <div className="col-sm-4">
-        <div className="card mb-3 cursor" onClick={handleClick}>
+        <div className="card mb-3 cursor tweet-card" onClick={handleClick}>
           <h3 className="card-header">Tweet by {tweet.author?.userName}</h3>
           <div className="card-body">
             <h5 className="card-title">Posted at {moment(tweet.postedAt).format("DD-MM-YYYY HH:MM")} </h5>
