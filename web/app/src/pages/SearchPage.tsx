@@ -28,8 +28,7 @@ const SearchPage: FC = () => {
   }
 
   return <div>
-    <h3>Search Page</h3>
-    Query: {q}
+    <h4>Search results for <b>{q} </b></h4>
     {error && <div className="alert alert-dismissible alert-warning">
       <p className="mb-0">{error.message}</p>
     </div>}
