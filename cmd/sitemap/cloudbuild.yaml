@@ -1,0 +1,13 @@
+steps:
+  - name: 'golang:1.14'
+    args: ['go', 'build', '-a', '-installsuffix','cgo', '-o' ,'tmp/app','.']
+    env: ['GO111MODULE=on','CGO_ENABLED=0','GOOS=linux']
+    dir: 'cmd/sitemap'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args: ['docker','build', '-f', 'Dockerfile', '--tag=eu.gcr.io/$PROJECT_ID/sitemap:$SHORT_SHA', '.']
+    dir: 'cmd/sitemap'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args: ['docker','push', 'eu.gcr.io/$PROJECT_ID/sitemap:$SHORT_SHA']
+    dir: 'cmd/sitemap'
+#  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+#    args: ['gcloud', 'run','deploy','sitemap','--image','eu.gcr.io/$PROJECT_ID/sitemap:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']

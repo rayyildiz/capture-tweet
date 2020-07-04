@@ -47,6 +47,21 @@ func (mr *MockRepositoryMockRecorder) Exist(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Exist", reflect.TypeOf((*MockRepository)(nil).Exist), arg0)
 }
 
+// FindAllOrderByUpdated mocks base method.
+func (m *MockRepository) FindAllOrderByUpdated(arg0 int) ([]Tweet, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindAllOrderByUpdated", arg0)
+	ret0, _ := ret[0].([]Tweet)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindAllOrderByUpdated indicates an expected call of FindAllOrderByUpdated.
+func (mr *MockRepositoryMockRecorder) FindAllOrderByUpdated(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAllOrderByUpdated", reflect.TypeOf((*MockRepository)(nil).FindAllOrderByUpdated), arg0)
+}
+
 // FindById mocks base method.
 func (m *MockRepository) FindById(arg0 string) (*Tweet, error) {
 	m.ctrl.T.Helper()

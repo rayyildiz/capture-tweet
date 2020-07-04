@@ -6,6 +6,7 @@ import (
 	"github.com/ChimeraCoder/anaconda"
 	"gocloud.dev/docstore"
 	"gocloud.dev/gcerrors"
+	"io"
 	"time"
 )
 
@@ -16,6 +17,8 @@ type Repository interface {
 	Exist(id string) bool
 	UpdateLargeImage(id, captureUrl string) error
 	UpdateThumbImage(id, captureUrl string) error
+
+	FindAllOrderByUpdated(size int) ([]Tweet, error)
 }
 
 type repositoryImpl struct {
@@ -98,4 +101,27 @@ func (r repositoryImpl) UpdateLargeImage(id, captureUrl string) error {
 func (r repositoryImpl) UpdateThumbImage(id, captureUrl string) error {
 	tweet := &Tweet{ID: id}
 	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_thumb_url": captureUrl, "updated_at": time.Now()}).Do(context.Background())
+}
+
+func (r repositoryImpl) FindAllOrderByUpdated(size int) ([]Tweet, error) {
+	var tweets []Tweet
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	it := r.coll.Query().Limit(size).OrderBy("updated_at", "desc").Get(ctx)
+
+	for {
+		var tweet Tweet
+		err := it.Next(ctx, &tweet)
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return nil, err
+		}
+		tweets = append(tweets, tweet)
+	}
+
+	return tweets, nil
 }
