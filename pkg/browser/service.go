@@ -36,6 +36,11 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(model *service.CaptureRequestMode
 		s.log.Error("browser CaptureSaveUpdateDatabase, captureURL", zap.String("tweet_id", model.ID), zap.Error(err))
 		return nil, err
 	}
+
+	if len(originalImage) < 1024*25 {
+		return nil, fmt.Errorf("image size is less than 40Kb. try again")
+	}
+
 	response, err := s.SaveCapture(originalImage, model)
 	if err != nil {
 		s.log.Error("browser CaptureSaveUpdateDatabase, SaveCapture", zap.String("tweet_id", model.ID), zap.Error(err))
