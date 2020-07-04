@@ -9,5 +9,5 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args: ['docker','push', 'eu.gcr.io/$PROJECT_ID/sitemap:$SHORT_SHA']
     dir: 'cmd/sitemap'
-#  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#    args: ['gcloud', 'run','deploy','sitemap','--image','eu.gcr.io/$PROJECT_ID/sitemap:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args: ['gcloud', 'run','deploy','sitemap','--image','eu.gcr.io/$PROJECT_ID/sitemap:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']

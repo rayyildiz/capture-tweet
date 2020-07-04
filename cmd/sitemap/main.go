@@ -30,9 +30,14 @@ func main() {
 	ensureNoError(err, "twitter:docstore collection")
 	defer tweetColl.Close()
 
+	bucket, err := infra.NewBucketFromEnvironment()
+	ensureNoError(err, "blob bucket")
+	defer bucket.Close()
+
 	h := handlerImpl{
-		log:  logger,
-		repo: tweet.NewRepository(tweetColl),
+		log:    logger,
+		repo:   tweet.NewRepository(tweetColl),
+		bucket: bucket,
 	}
 
 	http.HandleFunc("/sitemap", h.handleRequest)
