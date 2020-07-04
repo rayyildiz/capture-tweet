@@ -4,10 +4,10 @@ steps:
     env: ['GO111MODULE=on','CGO_ENABLED=0','GOOS=linux']
     dir: 'cmd/thumb'
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ['docker','build', '-f', 'Dockerfile', '--tag=eu.gcr.io/$PROJECT_ID/beta-thumb:$SHORT_SHA', '.']
+    args: ['docker','build', '-f', 'Dockerfile', '--tag=eu.gcr.io/$PROJECT_ID/thumb:$SHORT_SHA', '.']
     dir: 'cmd/thumb'
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ['docker', 'push', 'eu.gcr.io/$PROJECT_ID/beta-thumb:$SHORT_SHA']
+    args: ['docker', 'push', 'eu.gcr.io/$PROJECT_ID/thumb:$SHORT_SHA']
     dir: 'cmd/thumb'
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ['gcloud','run','deploy','beta-thumb','--image','eu.gcr.io/$PROJECT_ID/beta-thumb:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']
+    args: ['gcloud','run','deploy','thumb','--image','eu.gcr.io/$PROJECT_ID/thumb:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']
