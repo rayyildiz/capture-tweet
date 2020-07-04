@@ -16,3 +16,8 @@ code {
   cursor: pointer;
 }
 
+.form-control::placeholder {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: #999;
+}

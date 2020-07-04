@@ -4,7 +4,7 @@ import HomePage from "./pages/HomePage";
 
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
-const TweetPage = lazy(() => import("./pages/Tweet/TweetPage"));
+const TweetPage = lazy(() => import("./pages/TweetPage"));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 
 const Loading = () => (<span>Loading...</span>)

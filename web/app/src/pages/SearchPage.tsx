@@ -1,12 +1,14 @@
 import React, {FC, FormEvent} from 'react';
 import * as qs from 'query-string';
 import {useQuery} from "@apollo/client";
-import {SEARCH_GQL} from "../graph/queries";
+import {SEARCH_TWEET} from "../graph/queries";
 import {Search, Search_search, SearchVariables} from "../graph/Search";
 import {useHistory} from "react-router-dom";
 import moment from 'moment';
 import notFound from '../assets/not_found.svg';
 import './SearchPage.css';
+import {Helmet} from "react-helmet";
+import {WEB_BASE_URL} from "../Constants";
 
 const getQueryStringValue = (key: string, queryString = window.location.search): string => {
   const values = qs.parse(queryString);
@@ -16,7 +18,7 @@ const getQueryStringValue = (key: string, queryString = window.location.search):
 
 const SearchPage: FC = () => {
   const q = getQueryStringValue('q');
-  const {data, loading, error} = useQuery<Search, SearchVariables>(SEARCH_GQL, {
+  const {data, loading, error} = useQuery<Search, SearchVariables>(SEARCH_TWEET, {
     variables: {
       input: {
         term: q
@@ -27,16 +29,25 @@ const SearchPage: FC = () => {
     return <span>Loading</span>
   }
 
-  return <div>
-    <h4>Search results for <b>{q} </b></h4>
-    {error && <div className="alert alert-dismissible alert-warning">
-      <p className="mb-0">{error.message}</p>
-    </div>}
+  return <>
+    <Helmet>
+      <meta property="og:title" content={`Search results for ${q}`}/>
+      <meta property="og:url" content={`${WEB_BASE_URL}/search?q=${q}`}/>
+      <meta property="og:image" content={`${WEB_BASE_URL}${notFound}`} />
+      <title>Capture Tweet | Search</title>
+    </Helmet>
 
-    <div className="row">
-      {data && data.search?.map(t => <TweetCard key={t?.id} tweet={t}/>)}
+    <div>
+      <h4>Search results for <b>{q} </b></h4>
+      {error && <div className="alert alert-dismissible alert-warning">
+        <p className="mb-0">{error.message}</p>
+      </div>}
+
+      <div className="row">
+        {data && data.search?.map(t => <TweetCard key={t?.id} tweet={t}/>)}
+      </div>
     </div>
-  </div>
+  </>
 }
 
 type TweetCardProps = {

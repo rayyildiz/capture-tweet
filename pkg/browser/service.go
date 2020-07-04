@@ -56,7 +56,7 @@ func (s serviceImpl) SaveCapture(originalImage []byte, model *service.CaptureReq
 
 	err := s.bucket.WriteAll(context.Background(), imageKey, originalImage, &blob.WriterOptions{
 		ContentType:  "image/jpg",
-		CacheControl: "private,max-age=3600",
+		CacheControl: "private,max-age=86400",
 		Metadata: map[string]string{
 			"image_type": "original",
 			"tweet_id":   model.ID,

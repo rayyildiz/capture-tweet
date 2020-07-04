@@ -1,7 +1,7 @@
 import {gql} from '@apollo/client';
 
 
-export const CAPTURE_TWEET_GQL = gql`
+export const CAPTURE_TWEET = gql`
   mutation Capture($url:String!) {
     capture(url:$url) {
       id
@@ -18,7 +18,7 @@ export const CAPTURE_TWEET_GQL = gql`
   }
 `;
 
-export const SEARCH_GQL = gql`
+export const SEARCH_TWEET = gql`
   query Search($input: SearchInput!) {
     search(input: $input) {
       id
@@ -35,7 +35,7 @@ export const SEARCH_GQL = gql`
     }
   }
 `;
-export const TWEET_GQL = gql`
+export const TWEET_BY_ID = gql`
   query Tweet($id:ID!) {
     tweet(id:$id) {
       id
@@ -61,7 +61,7 @@ export const TWEET_GQL = gql`
   }
 `;
 
-export const TWEET_IMAGE_QUERY = gql`
+export const TWEET_IMAGE = gql`
   query TweetImage($id:ID!) {
     tweet(id:$id) {
       id
@@ -71,7 +71,7 @@ export const TWEET_IMAGE_QUERY = gql`
 `;
 
 
-export const CONTACT_MUTATION = gql`
+export const CONTACT_US = gql`
   mutation Contact($input:ContactInput!) {
     contact(input:$input)
   }`;

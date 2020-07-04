@@ -1,16 +1,18 @@
-import React, {FC} from "react";
+import React, {FC, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {useQuery} from "@apollo/client";
-import {TWEET_GQL} from "../../graph/queries";
-import {Tweet, Tweet_tweet, TweetVariables} from "../../graph/Tweet";
-import {ImageCard} from "./ImageCard";
+import {TWEET_BY_ID, TWEET_IMAGE} from "../graph/queries";
+import {Tweet, Tweet_tweet, TweetVariables} from "../graph/Tweet";
+import {Helmet} from "react-helmet";
 import moment from "moment";
-
+import {TweetImage, TweetImageVariables} from "../graph/TweetImage";
+import folderImage from './../assets/folder.svg';
+import {WEB_BASE_URL} from "../Constants";
 
 const TweetPage: FC = () => {
   const {id} = useParams();
 
-  const {data, loading, error} = useQuery<Tweet, TweetVariables>(TWEET_GQL, {
+  const {data, loading, error} = useQuery<Tweet, TweetVariables>(TWEET_BY_ID, {
     variables: {id}
   });
 
@@ -28,7 +30,8 @@ const TweetPage: FC = () => {
             </div>
             }
           </div>
-          {data && data.tweet && <TweetDetail key={`detail_${data.tweet.id}`} tweet={data.tweet}/>}
+          {data && data.tweet && <TweetDetail key={`detail_${data.tweet.id}`} tweet={data.tweet}/>
+          }
         </div>
 
       </div>
@@ -40,8 +43,15 @@ type TweetDetailProps = {
 }
 const TweetDetail: FC<TweetDetailProps> = ({tweet}) => (
     <>
+      <Helmet>
+        <meta property="og:title" content={tweet.fullText}/>
+        <meta property="og:url" content={`${WEB_BASE_URL}/tweet/${tweet?.id}`}/>
+        <meta property="og:image" content={`${WEB_BASE_URL}/${tweet?.captureURL}`}/>
+        <title>Capture Tweet | Tweet by {tweet.author?.userName}</title>
+      </Helmet>
+
       <div className="col-md-6 col-lg-6 col-sm-12">
-        <ImageCard key={`img_${tweet.id}`} id={tweet.id}/>
+        <TweetImageCard key={`img_${tweet.id}`} id={tweet.id}/>
       </div>
       <div className="col-md-6 col-lg-6 col-sm-12">
         <h4>Tweet by <a target="_blank" rel="noopener noreferrer" className="text-decoration-none" href={`https://twitter.com/${tweet.author?.userName}`}>{tweet.author?.screenName}</a></h4>
@@ -62,6 +72,41 @@ const TweetDetail: FC<TweetDetailProps> = ({tweet}) => (
         </div>
       </div>
 
-    </>)
+    </>);
+
+
+type TweetImageCardProps = {
+  id: string
+}
+const TweetImageCard: FC<TweetImageCardProps> = ({id}) => {
+  const {data, startPolling, stopPolling} = useQuery<TweetImage, TweetImageVariables>(TWEET_IMAGE, {
+    variables: {
+      id
+    },
+  })
+
+  useEffect(() => {
+    startPolling(1500);
+    return () => stopPolling();
+  }, [id, startPolling, stopPolling])
+
+  if (data && data?.tweet && data.tweet.captureURL) {
+    stopPolling();
+
+    return (<img src={`/${data.tweet.captureURL}`} alt="" className="img-fluid"/>);
+
+  }
+
+  return (
+      <>
+        <img src={folderImage} alt="" className="img-fluid"/>
+        <br/><br/>
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </>
+  );
+}
+
 
 export default TweetPage;

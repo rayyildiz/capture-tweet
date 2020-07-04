@@ -119,7 +119,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 
 	err = h.bucket.WriteAll(ctx, thumbNailKey, buf.Bytes(), &blob.WriterOptions{
 		ContentType:  "image/jpg",
-		CacheControl: "private,max-age=3600",
+		CacheControl: "private,max-age=86400",
 		Metadata: map[string]string{
 			"image_type": "thumb",
 			"tweet_id":   tweetId,

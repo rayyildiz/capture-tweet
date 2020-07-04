@@ -26,6 +26,12 @@ func init() {
 
 func main() {
 	start := time.Now()
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "4000"
+	}
+
 	logger := infra.NewLogger()
 	ensureNotNil(logger, "zap:logger")
 
@@ -73,24 +79,17 @@ func main() {
 	}
 	mux.Handle("/api/query", srv)
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "4000"
-	}
-
-	handler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"https://beta.capturetweet.com", "http://localhost:3000"},
+	h := cors.New(cors.Options{
+		AllowedOrigins:   []string{"https://beta.capturetweet.com", "https://capturetweet.com", "https://www.capturetweet.com", "http://localhost:3000"},
 		AllowedMethods:   []string{"HEAD", "GET", "POST", "OPTIONS"},
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: false,
 	}).Handler(mux)
 
-	// handler := cors.AllowAll().Handler(mux)
-
 	diff := time.Now().Sub(start)
 	logger.Info("initialized objects", zap.Duration("elapsed", diff))
 
-	err = http.ListenAndServe(":"+port, handler)
+	err = http.ListenAndServe(":"+port, h)
 	ensureNoError(err, "http:ListenAndServe, port :"+port)
 }
 

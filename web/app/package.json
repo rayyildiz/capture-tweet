@@ -4,7 +4,7 @@
   "private": true,
   "proxy": "http://localhost:4000",
   "dependencies": {
-    "@apollo/client": "^3.0.0-rc.6",
+    "@apollo/client": "^3.0.0-rc.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -14,8 +14,7 @@
     "@types/react-dom": "^16.9.0",
     "bootstrap": "^5.0.0-alpha1",
     "bootstrap-icons": "^1.0.0-alpha5",
-    "bootswatch": "^4.5.0",
-    "graphql": "^15.1.0",
+    "graphql": "^15.2.0",
     "moment": "^2.27.0",
     "query-string": "^6.13.1",
     "react": "^16.13.1",
@@ -29,7 +28,7 @@
     "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "build:prod": "GENERATE_SOURCEMAP=false react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -48,6 +47,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-helmet": "^6.0.0",
     "@types/react-router-dom": "^5.1.5"
   }
 }

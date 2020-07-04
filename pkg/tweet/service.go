@@ -2,6 +2,7 @@ package tweet
 
 import (
 	"com.capturetweet/internal/convert"
+	"com.capturetweet/internal/infra"
 	"com.capturetweet/pkg/service"
 	"context"
 	"encoding/json"
@@ -14,14 +15,14 @@ import (
 
 type serviceImpl struct {
 	repo       Repository
-	twitterAPI *anaconda.TwitterApi
+	twitterAPI infra.TweetAPI
 	search     service.SearchService
 	user       service.UserService
 	log        *zap.Logger
 	topic      *pubsub.Topic
 }
 
-func NewService(repo Repository, search service.SearchService, userService service.UserService, twitterAPI *anaconda.TwitterApi, log *zap.Logger, topic *pubsub.Topic) service.TweetService {
+func NewService(repo Repository, search service.SearchService, userService service.UserService, twitterAPI infra.TweetAPI, log *zap.Logger, topic *pubsub.Topic) service.TweetService {
 	return &serviceImpl{repo, twitterAPI, search, userService, log, topic}
 }
 

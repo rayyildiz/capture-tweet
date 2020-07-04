@@ -1,17 +1,23 @@
 import React, {FC, FormEvent, useState} from 'react';
 import {useMutation} from "@apollo/client";
-import {CONTACT_MUTATION} from "../graph/queries";
+import {CONTACT_US} from "../graph/queries";
 import {Contact, ContactVariables} from "../graph/Contact";
 
 const ContactPage: FC = () => {
   const [name, setName] = useState('');
   const [mail, setMail] = useState('');
   const [message, setMessage] = useState('');
+  const [validation, setValidation] = useState('');
 
-  const [doSent, {data, error}] = useMutation<Contact, ContactVariables>(CONTACT_MUTATION);
+  const [doSent, {data, error}] = useMutation<Contact, ContactVariables>(CONTACT_US);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (name.length < 1 || mail.length < 1 || message.length < 2) {
+      setValidation("please enter all form fields");
+      return
+    }
 
     try {
       await doSent({
@@ -31,8 +37,8 @@ const ContactPage: FC = () => {
 
 
   return (
-      <div className="row  mt-md-5">
-        <div className="col-md-8 offset-md-2 mt-md-5">
+      <div className="row">
+        <div className="col-md-8 offset-md-2">
 
           <form id="contact-form" onSubmit={handleSubmit} action="" role="form" className="mt-md-5">
             <h3>Contact Us</h3>
@@ -42,7 +48,13 @@ const ContactPage: FC = () => {
             {error && <div className="alert alert-warning fade show" role="alert">
               {error.message}
             </div>}
-            <div className="row">
+            {validation.length > 0 && <div className="alert alert-warning fade show alert-dismissible" role="alert">
+              <p className="mb-0">{validation}</p>
+              <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={() => setValidation('')}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>}
+            <div className="row mt-3">
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="form_email">Email *</label>
@@ -56,7 +68,7 @@ const ContactPage: FC = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mt-3">
               <div className="col-md-12">
                 <div className="form-group">
                   <label htmlFor="form_message">Message *</label>
@@ -64,9 +76,9 @@ const ContactPage: FC = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mt-3">
               <div className="col-md-12">
-                <input type="submit" className="btn btn-success btn-send" value="Send message"/>
+                <input className="btn btn-primary btn-lg" value="Send message" onClick={handleSubmit}/>
               </div>
             </div>
           </form>

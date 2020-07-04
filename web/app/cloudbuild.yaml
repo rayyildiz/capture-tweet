@@ -2,16 +2,15 @@ steps:
   - name: 'node:lts'
     args: ['yarn']
     dir: 'web/app'
-#
-#  - name: 'node:lts'
-#    args: ['yarn','test']
-#    dir: 'web/app'
 
+  - name: 'node:lts'
+    args: ['yarn','test']
+    dir: 'web/app'
 
   - name: 'node:lts'
     args: ['yarn', 'build:prod']
     dir: 'web/app'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ['gsutil', '-h','Cache-Control:public,max-age=3600','-m' ,'rsync','-R', 'build','gs://beta.capturetweet.com']
+    args: ['gsutil', '-h','Cache-Control:public,max-age=86400','-m' ,'rsync','-R', 'build','gs://beta.capturetweet.com']
     dir: 'web/app'

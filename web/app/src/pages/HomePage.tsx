@@ -2,14 +2,16 @@ import React, {FC, FormEvent, useState} from "react";
 import './HomePage.css';
 import {useMutation} from "@apollo/client";
 import {Redirect} from "react-router-dom";
-import {CAPTURE_TWEET_GQL} from "../graph/queries";
+import {CAPTURE_TWEET} from "../graph/queries";
 import {Capture, CaptureVariables} from "../graph/Capture";
+import {Helmet} from "react-helmet";
+import {WEB_BASE_URL} from "../Constants";
 
 const HomePage: FC = () => {
   const [url, setUrl] = useState('');
   const [validation, setValidation] = useState('');
 
-  const [doQuery, {data, loading, error}] = useMutation<Capture, CaptureVariables>(CAPTURE_TWEET_GQL)
+  const [doQuery, {data, loading, error}] = useMutation<Capture, CaptureVariables>(CAPTURE_TWEET)
 
   const handleSummit = async (e: FormEvent) => {
     e.preventDefault();
@@ -32,33 +34,38 @@ const HomePage: FC = () => {
   }
 
   return (
-      <div className="wrapper">
-        <div id="formContent">
-          <h3>Enter a twitter URL and click <code>CAPTURE</code> button</h3>
-          {error && <div className="alert alert-warning mt-1 alert-box mx-auto alert-dismissible">
-            <p className="mb-0">{error.message}</p>
-            <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+      <>
+        <Helmet>
+          <meta property="og:title" content="Capture Tweet"/>
+          <meta property="og:url" content={WEB_BASE_URL}/>
+          <meta property="og:image" content={`${WEB_BASE_URL}/logo192.png`}/>
+          <title>Capture Tweet | Home</title>
+        </Helmet>
+        <div className="wrapper">
+          <div id="formContent">
+            <h3>Enter a twitter URL and click <code>CAPTURE</code> button</h3>
+            {error && <div className="alert alert-warning mt-1 alert-box mx-auto">
+              <p className="mb-0">{error.message}</p>
+            </div>
+            }
+            {validation.length > 0 && <div className="alert alert-warning mt-1 alert-box mx-auto alert-dismissible">
+              <p className="mb-0">{validation}</p>
+              <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={() => setValidation('')}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            }
+            <form onSubmit={handleSummit} className="mt-2">
+              <input autoFocus autoComplete="off" type="text" id="url" name="url" placeholder="Enter Twitter URL" onChange={event => setUrl(event.target.value)}/>
+              <input type="submit" value="CAPTURE"/>
+            </form>
+            {loading && <div className="spinner-border" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+            }
           </div>
-          }
-          {validation.length > 0 && <div className="alert alert-warning mt-1 alert-box mx-auto alert-dismissible">
-            <p className="mb-0">{validation}</p>
-            <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={() => setValidation('')}>
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          }
-          <form onSubmit={handleSummit} className="mt-2">
-            <input autoFocus autoComplete="off" type="text" id="url" name="url" placeholder="Enter Twitter URL" onChange={event => setUrl(event.target.value)}/>
-            <input type="submit" value="CAPTURE"/>
-          </form>
-          {loading && <div className="spinner-border" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
-          }
         </div>
-      </div>
+      </>
   )
 };
 
