@@ -24,9 +24,6 @@ type PubSubMessage struct {
 	Subscription string `json:"subscription"`
 }
 
-/*
- { "kind": "storage#object", "id": "beta.capturetweet.com/capture/large//1593520482351183", "selfLink": "https://www.googleapis.com/storage/v1/b/beta.capturetweet.com/o/capture%2Flarge%2F", "name": "capture/large/", "bucket": "beta.capturetweet.com", "generation": "1593520482351183", "metageneration": "1", "contentType": "text/plain", "timeCreated": "2020-06-30T12:34:42.351Z", "updated": "2020-06-30T12:34:42.351Z", "storageClass": "STANDARD", "timeStorageClassUpdated": "2020-06-30T12:34:42.351Z", "size": "11", "md5Hash": "apnFdauH+MfR7R5S5+NJzg==", "mediaLink": "https://www.googleapis.com/download/storage/v1/b/beta.capturetweet.com/o/capture%2Flarge%2F?generation=1593520482351183&alt=media", "crc32c": "XkI+Dw==", "etag": "CM/wq7LGqeoCEAE=", "eventBasedHold": false }
-*/
 type StorageMessage struct {
 	Name        string `json:"name"`
 	Kind        string `json:"kind"`
