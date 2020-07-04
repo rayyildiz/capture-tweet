@@ -32,7 +32,7 @@ func main() {
 			log.Printf("[ERROR] %s/%s error, %v", user, id, err)
 		}
 
-		time.Sleep(time.Second * 3)
+		time.Sleep(time.Millisecond * 100)
 	}
 
 	/*
