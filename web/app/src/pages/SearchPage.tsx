@@ -9,6 +9,7 @@ import notFound from '../assets/not_found.svg';
 import './SearchPage.css';
 import {Helmet} from "react-helmet";
 import {WEB_BASE_URL} from "../Constants";
+import algoliaLogo from '../assets/logo-algolia-nebula-blue-full.svg';
 
 const getQueryStringValue = (key: string, queryString = window.location.search): string => {
   const values = qs.parse(queryString);
@@ -38,7 +39,14 @@ const SearchPage: FC = () => {
     </Helmet>
 
     <div>
-      <h4>Search results for <b>{q} </b></h4>
+      <div className="row">
+        <div className="col-8">
+          <h4>Search results for <b>{q} </b></h4>
+        </div>
+        <div className="col-4 text-right">
+          <span style={{color:'#5468ff'}}>Search by </span><img src={algoliaLogo} alt="" style={{height:'1rem'}}/>
+        </div>
+      </div>
       {error && <div className="alert alert-dismissible alert-warning">
         <p className="mb-0">{error.message}</p>
       </div>}

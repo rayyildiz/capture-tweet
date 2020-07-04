@@ -20,7 +20,7 @@ export const CAPTURE_TWEET = gql`
 
 export const SEARCH_TWEET = gql`
   query Search($input: SearchInput!) {
-    search(input: $input) {
+    search(input: $input, size: 21) {
       id
       fullText
       lang
