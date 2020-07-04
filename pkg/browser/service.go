@@ -38,7 +38,7 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(model *service.CaptureRequestMode
 	}
 
 	if len(originalImage) < 1024*25 {
-		return nil, fmt.Errorf("image size is less than 40Kb. try again")
+		return nil, fmt.Errorf("image size is less than 25 Kb. try again. size is %d", len(originalImage))
 	}
 
 	response, err := s.SaveCapture(originalImage, model)
