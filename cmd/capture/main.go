@@ -4,6 +4,7 @@ import (
 	"com.capturetweet/internal/infra"
 	"com.capturetweet/pkg/browser"
 	"com.capturetweet/pkg/tweet"
+	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
 	"log"
@@ -17,6 +18,10 @@ func init() {
 }
 
 func main() {
+	err := infra.InitSentry()
+	ensureNoError(err, "sentry init")
+	defer sentry.Flush(time.Second * 2)
+
 	start := time.Now()
 	logger := infra.NewLogger()
 	ensureNotNil(logger, "zap:logger")

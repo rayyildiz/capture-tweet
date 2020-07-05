@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/getsentry/sentry-go"
 	"github.com/nfnt/resize"
 	"go.uber.org/zap"
 	"gocloud.dev/blob"
@@ -51,8 +52,9 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	var payload PubSubMessage
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		sentry.CaptureException(err)
 		h.log.Error("bad request", zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 	defer r.Body.Close()
@@ -60,8 +62,9 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	request := StorageMessage{}
 	err = json.Unmarshal(payload.Message.Data, &request)
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		sentry.CaptureException(err)
 		h.log.Error("bad request, decode payload.data", zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
@@ -77,15 +80,17 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 
 	img, err := h.bucket.ReadAll(ctx, request.Name)
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		sentry.CaptureException(err)
 		h.log.Error("open bucket", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
 	attrs, err := h.bucket.Attributes(ctx, request.Name)
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		sentry.CaptureException(err)
 		h.log.Error("read image attributes", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
@@ -95,8 +100,9 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 
 	decoder, _, err := image.Decode(bytes.NewBuffer(img))
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		sentry.CaptureException(err)
 		h.log.Error("image decode", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
@@ -109,8 +115,9 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	buf := new(bytes.Buffer)
 	err = jpeg.Encode(buf, newImage, nil)
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		sentry.CaptureException(err)
 		h.log.Error("jpeg encode image", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
@@ -125,16 +132,18 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		sentry.CaptureException(err)
 		h.log.Error("open bucket for thumbnail", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
 	h.log.Info("image stored successfully", zap.String("image_key", thumbNailKey), zap.String("image_key", request.Name), zap.String("tweet_id", tweetId), zap.String("tweet_user", tweetUser))
 	err = h.service.UpdateThumbImage(tweetId, thumbNailKey)
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		sentry.CaptureException(err)
 		h.log.Error("save in database", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 

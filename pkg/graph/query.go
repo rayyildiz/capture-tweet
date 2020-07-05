@@ -4,6 +4,7 @@ import (
 	"com.capturetweet/internal/convert"
 	"context"
 	"errors"
+	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 	"gocloud.dev/gcerrors"
 )
@@ -24,6 +25,7 @@ func (r queryResolverImpl) Tweet(ctx context.Context, id string) (*Tweet, error)
 	}
 
 	if err != nil {
+		sentry.CaptureException(err)
 		_log.Error("tweet find error", zap.String("id", id), zap.Error(err))
 		return nil, err
 	}
@@ -56,6 +58,7 @@ func (r queryResolverImpl) Search(ctx context.Context, input SearchInput, size i
 
 	models, err := _twitterService.Search(input.Term, size, start, page)
 	if err != nil {
+		sentry.CaptureException(err)
 		_log.Error("search error", zap.String("term", input.Term), zap.Error(err))
 		return nil, errors.New("could not ind any result")
 	}

@@ -3,6 +3,7 @@ package main
 import (
 	"com.capturetweet/pkg/content"
 	"context"
+	"github.com/getsentry/sentry-go"
 	"log"
 	"net/http"
 	"os"
@@ -25,6 +26,10 @@ func init() {
 }
 
 func main() {
+	err := infra.InitSentry()
+	ensureNoError(err, "sentry init")
+
+	defer sentry.Flush(time.Second * 2)
 	start := time.Now()
 
 	port := os.Getenv("PORT")
