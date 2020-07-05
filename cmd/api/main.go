@@ -43,6 +43,10 @@ func main() {
 	ensureNoError(err, "user:docstore collection")
 	defer userColl.Close()
 
+	contactUsColl, err := infra.NewContactUsCollection()
+	ensureNoError(err, "content:ContactUs collection")
+	defer contactUsColl.Close()
+
 	topic, err := infra.NewTopic(os.Getenv("TOPIC_CAPTURE"))
 	ensureNoError(err, "pubsub topic capture")
 	defer topic.Shutdown(context.Background())
@@ -62,7 +66,7 @@ func main() {
 	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), searchService, userService, twitterApi, logger, topic)
 	ensureNotNil(tweetService, "tweet:NewService")
 
-	contentService := content.NewService(os.Getenv("SENDGRID_APIKEY"))
+	contentService := content.NewService(content.NewRepository(contactUsColl))
 	ensureNotNil(contentService, "content service")
 
 	rootResolver := graph.NewResolver()

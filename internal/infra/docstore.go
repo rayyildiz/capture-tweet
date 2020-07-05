@@ -29,3 +29,7 @@ func NewTweetCollection() (*docstore.Collection, error) {
 func NewUserCollection() (*docstore.Collection, error) {
 	return NewDocstore(os.Getenv("DOCSTORE_USERS"))
 }
+
+func NewContactUsCollection() (*docstore.Collection, error) {
+	return NewDocstore(os.Getenv("DOCSTORE_CONTACT_US"))
+}
