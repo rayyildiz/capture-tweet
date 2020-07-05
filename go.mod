@@ -7,7 +7,6 @@ require (
 	github.com/99designs/gqlgen v0.11.3
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
-	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v0.2.0
 	github.com/agnivade/levenshtein v1.1.0 // indirect
 	github.com/algolia/algoliasearch-client-go/v3 v3.8.0
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
@@ -30,7 +29,6 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/vektah/gqlparser/v2 v2.0.1
 	go.opencensus.io v0.22.4 // indirect
-	go.opentelemetry.io/otel v0.7.0
 	go.uber.org/zap v1.15.0
 	gocloud.dev v0.20.0
 	gocloud.dev/docstore/mongodocstore v0.20.0
@@ -40,6 +38,7 @@ require (
 	golang.org/x/text v0.3.3 // indirect
 	golang.org/x/tools v0.0.0-20200702044944-0cc1aa72b347 // indirect
 	google.golang.org/genproto v0.0.0-20200702021140-07506425bd67 // indirect
+	google.golang.org/grpc v1.30.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 )

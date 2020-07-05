@@ -37,9 +37,6 @@ func main() {
 		port = "4000"
 	}
 
-	err = infra.InitTrace()
-	ensureNoError(err, "init tracer")
-
 	logger := infra.NewLogger()
 	ensureNotNil(logger, "zap:logger")
 
