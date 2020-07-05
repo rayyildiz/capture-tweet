@@ -3,11 +3,14 @@ steps:
     args: ['go', 'build', '-a', '-installsuffix','cgo', '-o' ,'tmp/app','.']
     env: ['GO111MODULE=on','CGO_ENABLED=0','GOOS=linux']
     dir: 'cmd/api'
+
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args: ['docker','build', '-f', 'Dockerfile', '--tag=eu.gcr.io/$PROJECT_ID/api:$SHORT_SHA', '.']
     dir: 'cmd/api'
+
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args: ['docker','push', 'eu.gcr.io/$PROJECT_ID/api:$SHORT_SHA']
     dir: 'cmd/api'
+
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args: ['gcloud', 'run','deploy','api','--image','eu.gcr.io/$PROJECT_ID/api:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']

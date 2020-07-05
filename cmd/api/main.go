@@ -80,7 +80,7 @@ func main() {
 	mux.Handle("/api/query", srv)
 
 	h := cors.New(cors.Options{
-		AllowedOrigins:   []string{"https://beta.capturetweet.com", "https://capturetweet.com", "https://www.capturetweet.com", "http://localhost:3000"},
+		AllowedOrigins:   []string{"https://capturetweet.com", "https://www.capturetweet.com", "http://localhost:3000"},
 		AllowedMethods:   []string{"HEAD", "GET", "POST", "OPTIONS"},
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: false,

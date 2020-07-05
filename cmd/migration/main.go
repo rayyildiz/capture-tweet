@@ -34,14 +34,6 @@ func main() {
 
 		time.Sleep(time.Millisecond * 100)
 	}
-
-	/*
-		user, id := "nixcraft", "1279176628690538496"
-		err := doRequest(user, id)
-		if err != nil {
-			log.Printf("[ERROR] %s/%s error, %v", user, id, err)
-		}
-	*/
 }
 
 func readFile() ([]Tweet, error) {

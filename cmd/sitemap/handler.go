@@ -8,6 +8,7 @@ import (
 	"go.uber.org/zap"
 	"gocloud.dev/blob"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -20,7 +21,7 @@ type handlerImpl struct {
 
 func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method != http.MethodPost {
+	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		h.log.Warn("method not allowed", zap.String("method", r.Method))
@@ -29,7 +30,13 @@ func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	start := time.Now()
 
-	tweets, err := h.repo.FindAllOrderByUpdated(50)
+	size, err := strconv.Atoi(r.URL.Query().Get("size"))
+	if err != nil {
+		h.log.Warn("there is no query string param for size", zap.String("path", r.URL.Path))
+		size = 50
+	}
+
+	tweets, err := h.repo.FindAllOrderByUpdated(size)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -97,7 +104,7 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 
 	err = bucket.WriteAll(ctx, "sitemap.xml", newSitemap, &blob.WriterOptions{
 		ContentType:  "application/xml",
-		CacheControl: "public,max-age=86400",
+		CacheControl: "public,max-age=9600",
 	})
 	if err != nil {
 		log.Error("bucket:writeAll", zap.Error(err))
