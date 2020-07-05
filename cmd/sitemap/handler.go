@@ -5,6 +5,7 @@ import (
 	"com.capturetweet/pkg/tweet"
 	"context"
 	"fmt"
+	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 	"gocloud.dev/blob"
 	"net/http"
@@ -38,17 +39,17 @@ func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	tweets, err := h.repo.FindAllOrderByUpdated(size)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		sentry.CaptureException(err)
 		h.log.Warn("could not get repositories", zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
 	err = createSitemap(r.Context(), h.log, h.bucket, tweets)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		sentry.CaptureException(err)
 		h.log.Warn("could not get create sitemap", zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 

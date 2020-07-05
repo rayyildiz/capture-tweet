@@ -3,6 +3,7 @@ package main
 import (
 	"com.capturetweet/pkg/service"
 	"encoding/json"
+	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 	"net/http"
 )
@@ -25,17 +26,17 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		h.log.Warn("method not allowed", zap.String("method", r.Method))
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
 	}
 
 	var payload PubSubMessage
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		sentry.CaptureException(err)
 		h.log.Error("bad request", zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 	defer r.Body.Close()
@@ -43,16 +44,17 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	request := service.CaptureRequestModel{}
 	err = json.Unmarshal(payload.Message.Data, &request)
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		sentry.CaptureException(err)
 		h.log.Error("bad request, decode payload.data", zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
 	respModel, err := h.service.CaptureSaveUpdateDatabase(&request)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		sentry.CaptureException(err)
 		h.log.Error("could not capture", zap.String("tweet_id", request.ID), zap.String("url", request.Url), zap.Error(err))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
