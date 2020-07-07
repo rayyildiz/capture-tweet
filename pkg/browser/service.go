@@ -118,7 +118,7 @@ func (s *serviceImpl) CaptureURL(model *service.CaptureRequestModel) ([]byte, er
 func fullScreenshot(url string, quality int64, res *[]byte) chromedp.Tasks {
 	return chromedp.Tasks{
 		chromedp.Navigate(url),
-		chromedp.Sleep(time.Millisecond * 2000),
+		chromedp.Sleep(time.Millisecond * 3000),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			// get layout metrics
 			_, _, contentSize, err := page.GetLayoutMetrics().Do(ctx)

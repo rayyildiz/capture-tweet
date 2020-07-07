@@ -86,7 +86,7 @@ const TweetImageCard: FC<TweetImageCardProps> = ({id}) => {
   })
 
   useEffect(() => {
-    startPolling(1500);
+    startPolling(1900);
     return () => stopPolling();
   }, [id, startPolling, stopPolling])
 
