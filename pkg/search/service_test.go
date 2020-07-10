@@ -1,8 +1,8 @@
 package search
 
 import (
+	"com.capturetweet/api"
 	"com.capturetweet/internal/infra"
-	"com.capturetweet/pkg/service"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -54,7 +54,7 @@ func TestService_Put(t *testing.T) {
 	defer ctrl.Finish()
 
 	algolia := infra.NewMockIndexInterface(ctrl)
-	algolia.EXPECT().SaveObject(service.SearchModel{
+	algolia.EXPECT().SaveObject(api.SearchModel{
 		TweetID:  "1",
 		FullText: "test",
 		Author:   "RAYYILDIZ",

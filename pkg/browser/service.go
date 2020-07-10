@@ -1,7 +1,7 @@
 package browser
 
 import (
-	"com.capturetweet/pkg/service"
+	"com.capturetweet/api"
 	"context"
 	"fmt"
 	"github.com/chromedp/cdproto/emulation"
@@ -15,7 +15,7 @@ import (
 
 type serviceImpl struct {
 	log          *zap.Logger
-	tweetService service.TweetService
+	tweetService api.TweetService
 	bucket       *blob.Bucket
 	browser      *browserCtx
 }
@@ -25,11 +25,11 @@ type browserCtx struct {
 	cancelFunc     context.CancelFunc
 }
 
-func NewService(log *zap.Logger, tweetService service.TweetService, bucket *blob.Bucket) service.BrowserService {
+func NewService(log *zap.Logger, tweetService api.TweetService, bucket *blob.Bucket) api.BrowserService {
 	return &serviceImpl{log, tweetService, bucket, nil}
 }
 
-func (s serviceImpl) CaptureSaveUpdateDatabase(model *service.CaptureRequestModel) (*service.CaptureResponseModel, error) {
+func (s serviceImpl) CaptureSaveUpdateDatabase(model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
 
 	originalImage, err := s.CaptureURL(model)
 	if err != nil {
@@ -56,7 +56,7 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(model *service.CaptureRequestMode
 	return response, nil
 }
 
-func (s serviceImpl) SaveCapture(originalImage []byte, model *service.CaptureRequestModel) (*service.CaptureResponseModel, error) {
+func (s serviceImpl) SaveCapture(originalImage []byte, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
 	imageKey := fmt.Sprintf("capture/large/%s.jpg", model.ID)
 
 	err := s.bucket.WriteAll(context.Background(), imageKey, originalImage, &blob.WriterOptions{
@@ -74,7 +74,7 @@ func (s serviceImpl) SaveCapture(originalImage []byte, model *service.CaptureReq
 		return nil, err
 	}
 
-	return &service.CaptureResponseModel{
+	return &api.CaptureResponseModel{
 		ID:         model.ID,
 		CaptureURL: imageKey,
 	}, nil
@@ -86,7 +86,7 @@ func (s serviceImpl) Close() {
 	}
 }
 
-func (s *serviceImpl) CaptureURL(model *service.CaptureRequestModel) ([]byte, error) {
+func (s *serviceImpl) CaptureURL(model *api.CaptureRequestModel) ([]byte, error) {
 	if s.browser == nil {
 		opts := []chromedp.ExecAllocatorOption{
 			chromedp.DisableGPU,

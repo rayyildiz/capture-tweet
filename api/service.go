@@ -1,5 +1,5 @@
-//go:generate mockgen -package=service -self_package=com.capturetweet/pkg/service -destination=interfaces_mock.go . UserService,TweetService,SearchService,BrowserService,ContentService
-package service
+//go:generate mockgen -package=api -self_package=com.capturetweet/api -destination=service_mock.go . UserService,TweetService,SearchService,BrowserService,ContentService
+package api
 
 import (
 	"github.com/ChimeraCoder/anaconda"
