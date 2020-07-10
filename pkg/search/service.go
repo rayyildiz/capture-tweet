@@ -1,8 +1,8 @@
 package search
 
 import (
+	"com.capturetweet/api"
 	"com.capturetweet/internal/infra"
-	"com.capturetweet/pkg/service"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/opt"
 )
 
@@ -10,16 +10,16 @@ type serviceImpl struct {
 	index infra.IndexInterface
 }
 
-func NewService(index infra.IndexInterface) service.SearchService {
+func NewService(index infra.IndexInterface) api.SearchService {
 	return &serviceImpl{index}
 }
 
-func (s serviceImpl) Search(term string, size int) ([]service.SearchModel, error) {
+func (s serviceImpl) Search(term string, size int) ([]api.SearchModel, error) {
 	res, err := s.index.Search(term, opt.HitsPerPage(size))
 	if err != nil {
 		return nil, err
 	}
-	var list []service.SearchModel
+	var list []api.SearchModel
 
 	err = res.UnmarshalHits(&list)
 	if err != nil {
@@ -29,7 +29,7 @@ func (s serviceImpl) Search(term string, size int) ([]service.SearchModel, error
 }
 
 func (s serviceImpl) Put(tweetId, fullText, author string) error {
-	_, err := s.index.SaveObject(service.SearchModel{
+	_, err := s.index.SaveObject(api.SearchModel{
 		TweetID:  tweetId,
 		FullText: fullText,
 		Author:   author,

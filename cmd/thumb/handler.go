@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"com.capturetweet/pkg/service"
+	"com.capturetweet/api"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -34,7 +34,7 @@ type StorageMessage struct {
 
 type handlerImpl struct {
 	log     *zap.Logger
-	service service.TweetService
+	service api.TweetService
 	bucket  *blob.Bucket
 }
 

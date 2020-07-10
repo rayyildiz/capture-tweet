@@ -1,7 +1,7 @@
 package main
 
 import (
-	"com.capturetweet/pkg/service"
+	"com.capturetweet/api"
 	"encoding/json"
 	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
@@ -10,7 +10,7 @@ import (
 
 type handlerImpl struct {
 	log     *zap.Logger
-	service service.BrowserService
+	service api.BrowserService
 }
 
 type PubSubMessage struct {
@@ -41,7 +41,7 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	request := service.CaptureRequestModel{}
+	request := api.CaptureRequestModel{}
 	err = json.Unmarshal(payload.Message.Data, &request)
 	if err != nil {
 		sentry.CaptureException(err)

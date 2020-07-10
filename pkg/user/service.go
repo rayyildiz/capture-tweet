@@ -1,8 +1,8 @@
 package user
 
 import (
+	"com.capturetweet/api"
 	"com.capturetweet/internal/convert"
-	"com.capturetweet/pkg/service"
 	"github.com/ChimeraCoder/anaconda"
 	"go.uber.org/zap"
 	"time"
@@ -13,18 +13,18 @@ type serviceImpl struct {
 	log  *zap.Logger
 }
 
-func NewService(repo Repository, log *zap.Logger) service.UserService {
+func NewService(repo Repository, log *zap.Logger) api.UserService {
 	return &serviceImpl{repo, log}
 }
 
-func (s serviceImpl) FindById(id string) (*service.UserModel, error) {
+func (s serviceImpl) FindById(id string) (*api.UserModel, error) {
 	user, err := s.repo.FindById(id)
 	if err != nil {
 		s.log.Error("user:service findById", zap.String("tweet_id", id), zap.Error(err))
 		return nil, err
 	}
 
-	return &service.UserModel{
+	return &api.UserModel{
 		ID:           user.ID,
 		UserName:     user.Username,
 		ScreenName:   user.ScreenName,
@@ -33,12 +33,12 @@ func (s serviceImpl) FindById(id string) (*service.UserModel, error) {
 	}, nil
 }
 
-func (s serviceImpl) FindOrCreate(author *anaconda.User) (*service.UserModel, error) {
+func (s serviceImpl) FindOrCreate(author *anaconda.User) (*api.UserModel, error) {
 	id := author.IdStr
 
 	user, err := s.repo.FindById(id)
 	if user != nil {
-		return &service.UserModel{
+		return &api.UserModel{
 			ID:           user.ID,
 			UserName:     user.Username,
 			ScreenName:   user.ScreenName,
@@ -58,7 +58,7 @@ func (s serviceImpl) FindOrCreate(author *anaconda.User) (*service.UserModel, er
 		return nil, err
 	}
 
-	return &service.UserModel{
+	return &api.UserModel{
 		ID:           id,
 		UserName:     author.ScreenName,
 		ScreenName:   author.Name,

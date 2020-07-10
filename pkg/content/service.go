@@ -1,14 +1,14 @@
 package content
 
 import (
-	"com.capturetweet/pkg/service"
+	"com.capturetweet/api"
 )
 
 type serviceImpl struct {
 	repo Repository
 }
 
-func NewService(repo Repository) service.ContentService {
+func NewService(repo Repository) api.ContentService {
 	return &serviceImpl{repo}
 }
 

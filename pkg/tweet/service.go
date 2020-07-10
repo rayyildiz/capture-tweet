@@ -1,9 +1,9 @@
 package tweet
 
 import (
+	"com.capturetweet/api"
 	"com.capturetweet/internal/convert"
 	"com.capturetweet/internal/infra"
-	"com.capturetweet/pkg/service"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -16,27 +16,27 @@ import (
 type serviceImpl struct {
 	repo       Repository
 	twitterAPI infra.TweetAPI
-	search     service.SearchService
-	user       service.UserService
+	search     api.SearchService
+	user       api.UserService
 	log        *zap.Logger
 	topic      *pubsub.Topic
 }
 
-func NewService(repo Repository, search service.SearchService, userService service.UserService, twitterAPI infra.TweetAPI, log *zap.Logger, topic *pubsub.Topic) service.TweetService {
+func NewService(repo Repository, search api.SearchService, userService api.UserService, twitterAPI infra.TweetAPI, log *zap.Logger, topic *pubsub.Topic) api.TweetService {
 	return &serviceImpl{repo, twitterAPI, search, userService, log, topic}
 }
 
-func (s serviceImpl) FindById(id string) (*service.TweetModel, error) {
+func (s serviceImpl) FindById(id string) (*api.TweetModel, error) {
 	tweet, err := s.repo.FindById(id)
 	if err != nil {
 		s.log.Error("tweet:service findById", zap.String("tweet_id", id), zap.Error(err))
 		return nil, err
 	}
 
-	var resources []service.ResourceModel
+	var resources []api.ResourceModel
 
 	for _, res := range tweet.Resources {
-		resources = append(resources, service.ResourceModel{
+		resources = append(resources, api.ResourceModel{
 			ID:           res.ID,
 			URL:          res.URL,
 			Width:        res.Width,
@@ -45,7 +45,7 @@ func (s serviceImpl) FindById(id string) (*service.TweetModel, error) {
 		})
 	}
 
-	return &service.TweetModel{
+	return &api.TweetModel{
 		ID:              tweet.ID,
 		PostedAt:        convert.Time(tweet.PostedAt),
 		FullText:        tweet.FullText,
@@ -95,7 +95,7 @@ func (s serviceImpl) Store(tweetURL string) (string, error) {
 
 	go func(id, author, url string) {
 
-		data, err := json.Marshal(service.CaptureRequestModel{
+		data, err := json.Marshal(api.CaptureRequestModel{
 			ID:     id,
 			Author: author,
 			Url:    url,
@@ -123,7 +123,7 @@ func (s serviceImpl) Store(tweetURL string) (string, error) {
 	return tweetIdStr, nil
 }
 
-func (s serviceImpl) Search(term string, size, start, page int) ([]service.TweetModel, error) {
+func (s serviceImpl) Search(term string, size, start, page int) ([]api.TweetModel, error) {
 	searchModels, err := s.search.Search(term, size)
 	if err != nil {
 		s.log.Error("tweet:service search, search service call", zap.String("search_term", term), zap.Error(err))
@@ -141,13 +141,13 @@ func (s serviceImpl) Search(term string, size, start, page int) ([]service.Tweet
 		return nil, err
 	}
 
-	var res []service.TweetModel
+	var res []api.TweetModel
 
 	for _, tweet := range tweets {
-		var resources []service.ResourceModel
+		var resources []api.ResourceModel
 
 		for _, res := range tweet.Resources {
-			resources = append(resources, service.ResourceModel{
+			resources = append(resources, api.ResourceModel{
 				ID:           res.ID,
 				URL:          res.URL,
 				Width:        res.Width,
@@ -156,7 +156,7 @@ func (s serviceImpl) Search(term string, size, start, page int) ([]service.Tweet
 			})
 		}
 
-		res = append(res, service.TweetModel{
+		res = append(res, api.TweetModel{
 			ID:              tweet.ID,
 			FullText:        tweet.FullText,
 			Lang:            tweet.Lang,
