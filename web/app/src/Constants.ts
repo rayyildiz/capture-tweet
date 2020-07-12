@@ -1,5 +1,5 @@
 const prod = {
-  enableSW: false,
+  enableSW: true,
   apiURL: 'https://api.capturetweet.com/api/query'
 };
 

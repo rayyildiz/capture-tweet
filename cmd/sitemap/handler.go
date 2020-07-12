@@ -37,7 +37,7 @@ func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 		size = 50
 	}
 
-	tweets, err := h.repo.FindAllOrderByUpdated(size)
+	tweets, err := h.repo.FindAllOrderByUpdated(r.Context(), size)
 	if err != nil {
 		sentry.CaptureException(err)
 		h.log.Warn("could not get repositories", zap.Error(err))
