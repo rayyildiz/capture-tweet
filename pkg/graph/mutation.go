@@ -16,14 +16,14 @@ func newMutationResolver() MutationResolver {
 }
 
 func (r mutationResolverImpl) Capture(ctx context.Context, url string) (*Tweet, error) {
-	id, err := _twitterService.Store(url)
+	id, err := _twitterService.Store(ctx, url)
 	if err != nil {
 		sentry.CaptureException(err)
 		_log.Error("capture error", zap.String("url", url), zap.Error(err))
 		return nil, err
 	}
 
-	model, err := _twitterService.FindById(id)
+	model, err := _twitterService.FindById(ctx, id)
 	if err != nil {
 		sentry.CaptureException(err)
 		_log.Error("capture error, findById", zap.String("id", id), zap.Error(err))
@@ -55,7 +55,7 @@ func (r mutationResolverImpl) Capture(ctx context.Context, url string) (*Tweet, 
 }
 
 func (r mutationResolverImpl) Contact(ctx context.Context, input ContactInput) (string, error) {
-	err := _contentService.SendMail(input.Email, input.FullName, input.Message)
+	err := _contentService.SendMail(ctx, input.Email, input.FullName, input.Message)
 	if err != nil {
 		sentry.CaptureException(err)
 		_log.Error("could not send mail", zap.String("contact_email", input.Email), zap.String("contact_fullName", input.FullName), zap.Error(err))

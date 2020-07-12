@@ -28,10 +28,9 @@ const ContactPage: FC = () => {
             fullName: name
           }
         }
-      })
-
-    } catch (e) {
-      console.error(e);
+      });
+    } catch (ex) {
+      console.error(ex);
     }
   }
 
@@ -40,7 +39,7 @@ const ContactPage: FC = () => {
       <div className="row">
         <div className="col-md-8 offset-md-2">
 
-          <form id="contact-form" onSubmit={handleSubmit} action="" role="form" className="mt-md-5">
+          <form id="contact-form" onSubmit={handleSubmit} className="mt-md-5">
             <h3>Contact Us</h3>
             {data && <div className="alert alert-primary" role="alert">
               {data.contact}
@@ -72,7 +71,7 @@ const ContactPage: FC = () => {
               <div className="col-md-12">
                 <div className="form-group">
                   <label htmlFor="form_message">Message *</label>
-                  <textarea id="form_message" name="message" className="form-control" placeholder="Message for me *" rows={4} required onChange={event => setMessage(event.target.value)}></textarea>
+                  <textarea id="form_message" name="message" className="form-control" placeholder="Message for me *" rows={4} required onChange={event => setMessage(event.target.value)}/>
                 </div>
               </div>
             </div>

@@ -2,39 +2,40 @@
 package api
 
 import (
+	"context"
 	"github.com/ChimeraCoder/anaconda"
 )
 
 type UserService interface {
-	FindById(id string) (*UserModel, error)
-	FindOrCreate(user *anaconda.User) (*UserModel, error)
+	FindById(ctx context.Context, id string) (*UserModel, error)
+	FindOrCreate(ctx context.Context, user *anaconda.User) (*UserModel, error)
 }
 
 type TweetService interface {
-	FindById(id string) (*TweetModel, error)
-	Store(url string) (string, error)
-	Search(term string, size, start, page int) ([]TweetModel, error)
-	UpdateLargeImage(id, captureUrl string) error
-	UpdateThumbImage(id, captureUrl string) error
+	FindById(ctx context.Context, id string) (*TweetModel, error)
+	Store(ctx context.Context, url string) (string, error)
+	Search(ctx context.Context, term string, size, start, page int) ([]TweetModel, error)
+	UpdateLargeImage(ctx context.Context, id, captureUrl string) error
+	UpdateThumbImage(ctx context.Context, id, captureUrl string) error
 }
 
 type SearchService interface {
-	Search(term string, size int) ([]SearchModel, error)
-	Put(tweetId, fullText, author string) error
+	Search(ctx context.Context, term string, size int) ([]SearchModel, error)
+	Put(ctx context.Context, tweetId, fullText, author string) error
 }
 
 type BrowserService interface {
 	// Capture and return a image (PNG)
-	CaptureURL(model *CaptureRequestModel) ([]byte, error)
+	CaptureURL(ctx context.Context, model *CaptureRequestModel) ([]byte, error)
 
 	// Save in a bucket
-	SaveCapture(originalImage []byte, model *CaptureRequestModel) (*CaptureResponseModel, error)
+	SaveCapture(ctx context.Context, originalImage []byte, model *CaptureRequestModel) (*CaptureResponseModel, error)
 
-	CaptureSaveUpdateDatabase(model *CaptureRequestModel) (*CaptureResponseModel, error)
+	CaptureSaveUpdateDatabase(ctx context.Context, model *CaptureRequestModel) (*CaptureResponseModel, error)
 
 	Close()
 }
 
 type ContentService interface {
-	SendMail(senderMail, senderName, message string) error
+	SendMail(ctx context.Context, senderMail, senderName, message string) error
 }

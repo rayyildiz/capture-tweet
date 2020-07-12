@@ -4,17 +4,17 @@
   "private": true,
   "proxy": "http://localhost:4000",
   "dependencies": {
-    "@apollo/client": "^3.0.0-rc.10",
+    "@apollo/client": "^3.0.0-rc.12",
     "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "^24.0.0",
-    "@types/node": "^12.0.0",
-    "@types/react": "^16.9.0",
-    "@types/react-dom": "^16.9.0",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.50",
+    "@types/react": "^16.9.43",
+    "@types/react-dom": "^16.9.8",
     "bootstrap": "^5.0.0-alpha1",
     "bootstrap-icons": "^1.0.0-alpha5",
-    "graphql": "^15.2.0",
+    "graphql": "^15.3.0",
     "moment": "^2.27.0",
     "query-string": "^6.13.1",
     "react": "^16.13.1",
@@ -22,14 +22,15 @@
     "react-helmet": "^6.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.5"
   },
   "scripts": {
     "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "build:prod": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test --watchAll=false",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "packages:upgrade": "yarn upgrade && syncyarnlock -s -k"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -48,6 +49,7 @@
   },
   "devDependencies": {
     "@types/react-helmet": "^6.0.0",
-    "@types/react-router-dom": "^5.1.5"
+    "@types/react-router-dom": "^5.1.5",
+    "syncyarnlock": "^1.0.19"
   }
 }

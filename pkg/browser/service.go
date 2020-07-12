@@ -29,9 +29,9 @@ func NewService(log *zap.Logger, tweetService api.TweetService, bucket *blob.Buc
 	return &serviceImpl{log, tweetService, bucket, nil}
 }
 
-func (s serviceImpl) CaptureSaveUpdateDatabase(model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
+func (s serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
 
-	originalImage, err := s.CaptureURL(model)
+	originalImage, err := s.CaptureURL(ctx, model)
 	if err != nil {
 		s.log.Error("browser CaptureSaveUpdateDatabase, captureURL", zap.String("tweet_id", model.ID), zap.Error(err))
 		return nil, err
@@ -41,13 +41,13 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(model *api.CaptureRequestModel) (
 		return nil, fmt.Errorf("image size is less than 25 Kb. try again. size is %d", len(originalImage))
 	}
 
-	response, err := s.SaveCapture(originalImage, model)
+	response, err := s.SaveCapture(ctx, originalImage, model)
 	if err != nil {
 		s.log.Error("browser CaptureSaveUpdateDatabase, SaveCapture", zap.String("tweet_id", model.ID), zap.Error(err))
 		return nil, err
 	}
 
-	err = s.tweetService.UpdateLargeImage(model.ID, response.CaptureURL)
+	err = s.tweetService.UpdateLargeImage(ctx, model.ID, response.CaptureURL)
 	if err != nil {
 		s.log.Error("browser CaptureSaveUpdateDatabase, service.UpdateLargeImage", zap.String("tweet_id", model.ID), zap.Error(err))
 		return nil, err
@@ -56,10 +56,10 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(model *api.CaptureRequestModel) (
 	return response, nil
 }
 
-func (s serviceImpl) SaveCapture(originalImage []byte, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
+func (s serviceImpl) SaveCapture(ctx context.Context, originalImage []byte, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
 	imageKey := fmt.Sprintf("capture/large/%s.jpg", model.ID)
 
-	err := s.bucket.WriteAll(context.Background(), imageKey, originalImage, &blob.WriterOptions{
+	err := s.bucket.WriteAll(ctx, imageKey, originalImage, &blob.WriterOptions{
 		ContentType:  "image/jpg",
 		CacheControl: "private,max-age=86400",
 		Metadata: map[string]string{
@@ -86,7 +86,7 @@ func (s serviceImpl) Close() {
 	}
 }
 
-func (s *serviceImpl) CaptureURL(model *api.CaptureRequestModel) ([]byte, error) {
+func (s *serviceImpl) CaptureURL(ctx context.Context, model *api.CaptureRequestModel) ([]byte, error) {
 	if s.browser == nil {
 		opts := []chromedp.ExecAllocatorOption{
 			chromedp.DisableGPU,
@@ -98,7 +98,7 @@ func (s *serviceImpl) CaptureURL(model *api.CaptureRequestModel) ([]byte, error)
 			chromedp.Flag("user-data-dir", "/tmp/headless"),
 		}
 
-		allocCtx, _ := chromedp.NewExecAllocator(context.Background(), opts...)
+		allocCtx, _ := chromedp.NewExecAllocator(ctx, opts...)
 		ctx, cancel := chromedp.NewContext(allocCtx)
 		s.browser = &browserCtx{
 			browserContext: ctx,

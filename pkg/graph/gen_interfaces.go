@@ -366,7 +366,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	&ast.Source{Name: "schema.graphqls", Input: `scalar Time
+	&ast.Source{Name: "schema.graphql", Input: `scalar Time
 
 type Tweet {
   id:ID!

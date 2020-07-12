@@ -3,6 +3,7 @@ package search
 import (
 	"com.capturetweet/api"
 	"com.capturetweet/internal/infra"
+	"context"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -32,7 +33,7 @@ func TestService_Search(t *testing.T) {
 
 	svc := NewService(algolia)
 
-	searchModels, err := svc.Search("test", 20)
+	searchModels, err := svc.Search(context.Background(), "test", 20)
 	require.NoError(t, err)
 	require.NotNil(t, searchModels)
 	if assert.Equal(t, 2, len(searchModels)) {
@@ -62,6 +63,6 @@ func TestService_Put(t *testing.T) {
 
 	svc := NewService(algolia)
 
-	err := svc.Put("1", "test", "RAYYILDIZ")
+	err := svc.Put(context.Background(), "1", "test", "RAYYILDIZ")
 	require.NoError(t, err)
 }

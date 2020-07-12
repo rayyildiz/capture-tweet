@@ -3,6 +3,7 @@ package user
 import (
 	"com.capturetweet/api"
 	"com.capturetweet/internal/convert"
+	"context"
 	"github.com/ChimeraCoder/anaconda"
 	"go.uber.org/zap"
 	"time"
@@ -17,8 +18,8 @@ func NewService(repo Repository, log *zap.Logger) api.UserService {
 	return &serviceImpl{repo, log}
 }
 
-func (s serviceImpl) FindById(id string) (*api.UserModel, error) {
-	user, err := s.repo.FindById(id)
+func (s serviceImpl) FindById(ctx context.Context, id string) (*api.UserModel, error) {
+	user, err := s.repo.FindById(ctx, id)
 	if err != nil {
 		s.log.Error("user:service findById", zap.String("tweet_id", id), zap.Error(err))
 		return nil, err
@@ -33,10 +34,10 @@ func (s serviceImpl) FindById(id string) (*api.UserModel, error) {
 	}, nil
 }
 
-func (s serviceImpl) FindOrCreate(author *anaconda.User) (*api.UserModel, error) {
+func (s serviceImpl) FindOrCreate(ctx context.Context, author *anaconda.User) (*api.UserModel, error) {
 	id := author.IdStr
 
-	user, err := s.repo.FindById(id)
+	user, err := s.repo.FindById(ctx, id)
 	if user != nil {
 		return &api.UserModel{
 			ID:           user.ID,
@@ -52,7 +53,7 @@ func (s serviceImpl) FindOrCreate(author *anaconda.User) (*api.UserModel, error)
 		registeredAt = time.Now()
 	}
 
-	err = s.repo.Store(id, author.ScreenName, author.Name, author.Description, author.ProfileImageUrlHttps, registeredAt)
+	err = s.repo.Store(ctx, id, author.ScreenName, author.Name, author.Description, author.ProfileImageUrlHttps, registeredAt)
 	if err != nil {
 		s.log.Error("user:service findOrCreate", zap.String("tweet_id", id), zap.String("tweet_user", author.ScreenName), zap.Error(err))
 		return nil, err

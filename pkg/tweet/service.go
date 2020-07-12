@@ -26,8 +26,8 @@ func NewService(repo Repository, search api.SearchService, userService api.UserS
 	return &serviceImpl{repo, twitterAPI, search, userService, log, topic}
 }
 
-func (s serviceImpl) FindById(id string) (*api.TweetModel, error) {
-	tweet, err := s.repo.FindById(id)
+func (s serviceImpl) FindById(ctx context.Context, id string) (*api.TweetModel, error) {
+	tweet, err := s.repo.FindById(ctx, id)
 	if err != nil {
 		s.log.Error("tweet:service findById", zap.String("tweet_id", id), zap.Error(err))
 		return nil, err
@@ -59,7 +59,7 @@ func (s serviceImpl) FindById(id string) (*api.TweetModel, error) {
 	}, nil
 }
 
-func (s serviceImpl) Store(tweetURL string) (string, error) {
+func (s serviceImpl) Store(ctx context.Context, tweetURL string) (string, error) {
 	tweetID, tweetAuthor, err := parseTweetURL(tweetURL)
 	if err != nil {
 		s.log.Error("tweet:service store, parseTweetUrl", zap.String("url", tweetURL), zap.Error(err))
@@ -67,7 +67,7 @@ func (s serviceImpl) Store(tweetURL string) (string, error) {
 	}
 
 	tweetIdStr := fmt.Sprintf("%d", tweetID)
-	if s.repo.Exist(tweetIdStr) {
+	if s.repo.Exist(ctx, tweetIdStr) {
 		return tweetIdStr, nil
 	}
 
@@ -77,18 +77,18 @@ func (s serviceImpl) Store(tweetURL string) (string, error) {
 		return "", err
 	}
 
-	err = s.repo.Store(&tweet)
+	err = s.repo.Store(ctx, &tweet)
 	if err != nil {
 		s.log.Error("tweet:service store, repo.store", zap.Int64("tweet_id", tweetID), zap.Error(err))
 		return "", err
 	}
 
-	if _, err := s.user.FindOrCreate(&tweet.User); err != nil {
+	if _, err := s.user.FindOrCreate(ctx, &tweet.User); err != nil {
 		s.log.Warn("tweet:service store, user.findOrCreate", zap.String("tweet_user", tweet.User.ScreenName), zap.Error(err))
 	}
 
 	go func(t anaconda.Tweet) {
-		if err := s.search.Put(t.IdStr, t.FullText, t.User.ScreenName); err != nil {
+		if err := s.search.Put(ctx, t.IdStr, t.FullText, t.User.ScreenName); err != nil {
 			s.log.Warn("tweet:service store, search.put", zap.String("tweet_id", t.IdStr), zap.String("tweet_user", t.User.ScreenName), zap.Error(err))
 		}
 	}(tweet)
@@ -105,7 +105,7 @@ func (s serviceImpl) Store(tweetURL string) (string, error) {
 			return
 		}
 
-		err = s.topic.Send(context.Background(), &pubsub.Message{
+		err = s.topic.Send(ctx, &pubsub.Message{
 			Metadata: map[string]string{
 				"tweet_id":   id,
 				"tweet_user": author,
@@ -123,8 +123,8 @@ func (s serviceImpl) Store(tweetURL string) (string, error) {
 	return tweetIdStr, nil
 }
 
-func (s serviceImpl) Search(term string, size, start, page int) ([]api.TweetModel, error) {
-	searchModels, err := s.search.Search(term, size)
+func (s serviceImpl) Search(ctx context.Context, term string, size, start, page int) ([]api.TweetModel, error) {
+	searchModels, err := s.search.Search(ctx, term, size)
 	if err != nil {
 		s.log.Error("tweet:service search, search service call", zap.String("search_term", term), zap.Error(err))
 		return nil, err
@@ -135,7 +135,7 @@ func (s serviceImpl) Search(term string, size, start, page int) ([]api.TweetMode
 		ids = append(ids, model.TweetID)
 	}
 
-	tweets, err := s.repo.FindByIds(ids)
+	tweets, err := s.repo.FindByIds(ctx, ids)
 	if err != nil {
 		s.log.Error("tweet:service search, findByIds", zap.Strings("tweet_ids", ids), zap.Error(err))
 		return nil, err
@@ -173,8 +173,8 @@ func (s serviceImpl) Search(term string, size, start, page int) ([]api.TweetMode
 	return res, nil
 }
 
-func (s serviceImpl) UpdateLargeImage(id, captureUrl string) error {
-	err := s.repo.UpdateLargeImage(id, captureUrl)
+func (s serviceImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {
+	err := s.repo.UpdateLargeImage(ctx, id, captureUrl)
 	if err != nil {
 		s.log.Error("tweet:service updateLargeImage, findById", zap.String("tweet_id", id), zap.Error(err))
 		return err
@@ -183,8 +183,8 @@ func (s serviceImpl) UpdateLargeImage(id, captureUrl string) error {
 	return nil
 }
 
-func (s serviceImpl) UpdateThumbImage(id, captureUrl string) error {
-	err := s.repo.UpdateThumbImage(id, captureUrl)
+func (s serviceImpl) UpdateThumbImage(ctx context.Context, id, captureUrl string) error {
+	err := s.repo.UpdateThumbImage(ctx, id, captureUrl)
 	if err != nil {
 		s.log.Error("tweet:service updateThumbImage, findById", zap.String("tweet_id", id), zap.Error(err))
 		return err

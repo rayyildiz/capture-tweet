@@ -50,7 +50,7 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respModel, err := h.service.CaptureSaveUpdateDatabase(&request)
+	respModel, err := h.service.CaptureSaveUpdateDatabase(r.Context(), &request)
 	if err != nil {
 		sentry.CaptureException(err)
 		h.log.Error("could not capture", zap.String("tweet_id", request.ID), zap.String("url", request.Url), zap.Error(err))

@@ -17,7 +17,7 @@ func newQueryResolver() QueryResolver {
 }
 
 func (r queryResolverImpl) Tweet(ctx context.Context, id string) (*Tweet, error) {
-	model, err := _twitterService.FindById(id)
+	model, err := _twitterService.FindById(ctx, id)
 	code := gcerrors.Code(err)
 	if code == gcerrors.NotFound {
 		_log.Warn("tweet not found", zap.String("id", id))
@@ -55,7 +55,7 @@ func (r queryResolverImpl) Tweet(ctx context.Context, id string) (*Tweet, error)
 }
 
 func (r queryResolverImpl) Search(ctx context.Context, input SearchInput, size int, page int, start int) ([]*Tweet, error) {
-	models, err := _twitterService.Search(input.Term, size, start, page)
+	models, err := _twitterService.Search(ctx, input.Term, size, start, page)
 	if err != nil {
 		sentry.CaptureException(err)
 		_log.Error("search error", zap.String("term", input.Term), zap.Error(err))

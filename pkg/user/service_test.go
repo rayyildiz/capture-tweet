@@ -2,6 +2,7 @@ package user
 
 import (
 	"com.capturetweet/internal/infra"
+	"context"
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -17,8 +18,10 @@ func TestUserService_FindById(t *testing.T) {
 	log := infra.NewLogger()
 	require.NotNil(t, log)
 
+	ctx := context.Background()
+
 	repo := NewMockRepository(ctrl)
-	repo.EXPECT().FindById("testUserIdStr").Return(&User{
+	repo.EXPECT().FindById(ctx, "testUserIdStr").Return(&User{
 		ID:         "testUserIdStr",
 		CreatedAt:  time.Now(),
 		RegisterAt: time.Now(),
@@ -28,7 +31,7 @@ func TestUserService_FindById(t *testing.T) {
 
 	svc := NewService(repo, log)
 
-	userModel, err := svc.FindById("testUserIdStr")
+	userModel, err := svc.FindById(ctx, "testUserIdStr")
 	require.NoError(t, err)
 	if assert.NotNil(t, userModel) {
 		assert.Equal(t, "testUserIdStr", userModel.ID)
@@ -42,9 +45,10 @@ func TestUserService_FindOrCreate_Exist(t *testing.T) {
 	defer ctrl.Finish()
 	log := infra.NewLogger()
 	require.NotNil(t, log)
+	ctx := context.Background()
 
 	repo := NewMockRepository(ctrl)
-	repo.EXPECT().FindById("testId").Return(&User{
+	repo.EXPECT().FindById(ctx, "testId").Return(&User{
 		ID:         "testId",
 		CreatedAt:  time.Now(),
 		RegisterAt: time.Now(),
@@ -54,7 +58,7 @@ func TestUserService_FindOrCreate_Exist(t *testing.T) {
 
 	svc := NewService(repo, log)
 
-	userModel, err := svc.FindOrCreate(&anaconda.User{
+	userModel, err := svc.FindOrCreate(ctx, &anaconda.User{
 		IdStr:      "testId",
 		ScreenName: "rayyildiz",
 		Name:       "Ramazan A.",
@@ -73,6 +77,7 @@ func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 
 	log := infra.NewLogger()
 	require.NotNil(t, log)
+	ctx := context.Background()
 
 	repo := NewMockRepository(ctrl)
 
@@ -80,12 +85,12 @@ func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 	dt, err := time.Parse(time.RubyDate, strDate)
 	require.NoError(t, err)
 
-	repo.EXPECT().FindById("testId").Return(nil, nil)
-	repo.EXPECT().Store("testId", "rayyildiz", "Ramazan A.", "bio", "profile.png", dt).Return(nil)
+	repo.EXPECT().FindById(ctx, "testId").Return(nil, nil)
+	repo.EXPECT().Store(ctx, "testId", "rayyildiz", "Ramazan A.", "bio", "profile.png", dt).Return(nil)
 
 	svc := NewService(repo, log)
 
-	userModel, err := svc.FindOrCreate(&anaconda.User{
+	userModel, err := svc.FindOrCreate(ctx, &anaconda.User{
 		IdStr:                "testId",
 		ScreenName:           "rayyildiz",
 		Name:                 "Ramazan A.",
