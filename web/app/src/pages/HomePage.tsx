@@ -57,12 +57,14 @@ const HomePage: FC = () => {
             }
             <form onSubmit={handleSummit} className="mt-2">
               <input autoFocus autoComplete="off" type="text" id="url" name="url" placeholder="Enter Twitter URL" onChange={event => setUrl(event.target.value)}/>
-              <input type="submit" value="CAPTURE"/>
+              {loading ?
+                  <button className="form-button" type="submit" disabled>
+                    <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+                    Capturing tweet...
+                  </button> :
+                  <button className="form-button" type="submit" onClick={handleSummit}>CAPTURE</button>
+              }
             </form>
-            {loading && <div className="spinner-border" role="status">
-              <span className="sr-only">Loading...</span>
-            </div>
-            }
           </div>
         </div>
       </>

@@ -2,6 +2,7 @@ package graph
 
 import (
 	"com.capturetweet/internal/convert"
+	"context"
 	"time"
 )
 
@@ -38,7 +39,7 @@ func (c *Tweet) Author() *Author {
 	if c.AuthorID == nil {
 		return nil
 	}
-	author, err := _userService.FindById(*c.AuthorID)
+	author, err := _userService.FindById(context.Background(), *c.AuthorID)
 	if err != nil {
 		return nil
 	}

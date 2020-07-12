@@ -9,7 +9,7 @@ import (
 )
 
 type Repository interface {
-	ContactUs(email, fullName, message string) error
+	ContactUs(ctx context.Context, email, fullName, message string) error
 }
 
 type repositoryImpl struct {
@@ -20,10 +20,10 @@ func NewRepository(contactUs *docstore.Collection) Repository {
 	return &repositoryImpl{contactUs}
 }
 
-func (r repositoryImpl) ContactUs(email, fullName, message string) error {
+func (r repositoryImpl) ContactUs(ctx context.Context, email, fullName, message string) error {
 
 	id := uuid.New().String()
-	return r.contactUs.Create(context.Background(), &ContactUs{
+	return r.contactUs.Create(ctx, &ContactUs{
 		ID:        id,
 		CreatedAt: time.Now(),
 		Email:     email,

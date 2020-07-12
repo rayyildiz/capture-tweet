@@ -139,7 +139,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.log.Info("image stored successfully", zap.String("image_key", thumbNailKey), zap.String("image_key", request.Name), zap.String("tweet_id", tweetId), zap.String("tweet_user", tweetUser))
-	err = h.service.UpdateThumbImage(tweetId, thumbNailKey)
+	err = h.service.UpdateThumbImage(ctx, tweetId, thumbNailKey)
 	if err != nil {
 		sentry.CaptureException(err)
 		h.log.Error("save in database", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))

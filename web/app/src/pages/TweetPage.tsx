@@ -87,6 +87,10 @@ const TweetImageCard: FC<TweetImageCardProps> = ({id}) => {
 
   useEffect(() => {
     startPolling(1900);
+    setTimeout(() => {
+      stopPolling();
+    }, 10 * 1900);
+
     return () => stopPolling();
   }, [id, startPolling, stopPolling])
 
@@ -100,10 +104,12 @@ const TweetImageCard: FC<TweetImageCardProps> = ({id}) => {
   return (
       <>
         <img src={folderImage} alt="" className="img-fluid"/>
-        <br/><br/>
-        <div className="spinner-border" role="status">
-          <span className="sr-only">Loading...</span>
+        <br/>
+        <div className="d-flex align-items-start">
+          <div className="spinner-grow text-danger" role="status" aria-hidden="true"></div>
+          <span className="text-muted" style={{paddingLeft:'1rem'}}>Tweet screenshot is capturing, please wait...</span>
         </div>
+
       </>
   );
 }

@@ -11,14 +11,14 @@ import (
 )
 
 type Repository interface {
-	FindById(id string) (*Tweet, error)
-	FindByIds(ids []string) ([]Tweet, error)
-	Store(tweet *anaconda.Tweet) error
-	Exist(id string) bool
-	UpdateLargeImage(id, captureUrl string) error
-	UpdateThumbImage(id, captureUrl string) error
+	FindById(ctx context.Context, id string) (*Tweet, error)
+	FindByIds(ctx context.Context, ids []string) ([]Tweet, error)
+	Store(ctx context.Context, tweet *anaconda.Tweet) error
+	Exist(ctx context.Context, id string) bool
+	UpdateLargeImage(ctx context.Context, id, captureUrl string) error
+	UpdateThumbImage(ctx context.Context, id, captureUrl string) error
 
-	FindAllOrderByUpdated(size int) ([]Tweet, error)
+	FindAllOrderByUpdated(ctx context.Context, size int) ([]Tweet, error)
 }
 
 type repositoryImpl struct {
@@ -29,9 +29,9 @@ func NewRepository(coll *docstore.Collection) Repository {
 	return &repositoryImpl{coll}
 }
 
-func (r repositoryImpl) FindById(id string) (*Tweet, error) {
+func (r repositoryImpl) FindById(ctx context.Context, id string) (*Tweet, error) {
 	tweet := &Tweet{ID: id}
-	err := r.coll.Get(context.Background(), tweet)
+	err := r.coll.Get(ctx, tweet)
 	if err != nil {
 		return nil, err
 	}
@@ -39,10 +39,10 @@ func (r repositoryImpl) FindById(id string) (*Tweet, error) {
 	return tweet, nil
 }
 
-func (r repositoryImpl) Exist(id string) bool {
+func (r repositoryImpl) Exist(ctx context.Context, id string) bool {
 	tweet := &Tweet{ID: id}
 
-	err := r.coll.Get(context.Background(), tweet, "id")
+	err := r.coll.Get(ctx, tweet, "id")
 	code := gcerrors.Code(err)
 	if code == gcerrors.NotFound {
 		return false
@@ -50,7 +50,7 @@ func (r repositoryImpl) Exist(id string) bool {
 	return true
 }
 
-func (r repositoryImpl) Store(tweet *anaconda.Tweet) error {
+func (r repositoryImpl) Store(ctx context.Context, tweet *anaconda.Tweet) error {
 	postedAt, err := tweet.CreatedAtTime()
 	if err != nil {
 		postedAt = time.Now()
@@ -66,7 +66,7 @@ func (r repositoryImpl) Store(tweet *anaconda.Tweet) error {
 		})
 	}
 
-	return r.coll.Create(context.Background(), &Tweet{
+	return r.coll.Create(ctx, &Tweet{
 		ID:              tweet.IdStr,
 		CreatedAt:       time.Now(),
 		UpdatedAt:       time.Now(),
@@ -82,30 +82,30 @@ func (r repositoryImpl) Store(tweet *anaconda.Tweet) error {
 	})
 }
 
-func (r repositoryImpl) FindByIds(ids []string) ([]Tweet, error) {
+func (r repositoryImpl) FindByIds(ctx context.Context, ids []string) ([]Tweet, error) {
 	var list []Tweet
 
 	for _, id := range ids {
-		if tweet, err := r.FindById(id); err == nil {
+		if tweet, err := r.FindById(ctx, id); err == nil {
 			list = append(list, *tweet)
 		}
 	}
 	return list, nil
 }
 
-func (r repositoryImpl) UpdateLargeImage(id, captureUrl string) error {
+func (r repositoryImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {
 	tweet := &Tweet{ID: id}
-	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_url": captureUrl, "updated_at": time.Now()}).Do(context.Background())
+	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_url": captureUrl, "updated_at": time.Now()}).Do(ctx)
 }
 
-func (r repositoryImpl) UpdateThumbImage(id, captureUrl string) error {
+func (r repositoryImpl) UpdateThumbImage(ctx context.Context, id, captureUrl string) error {
 	tweet := &Tweet{ID: id}
-	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_thumb_url": captureUrl, "updated_at": time.Now()}).Do(context.Background())
+	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_thumb_url": captureUrl, "updated_at": time.Now()}).Do(ctx)
 }
 
-func (r repositoryImpl) FindAllOrderByUpdated(size int) ([]Tweet, error) {
+func (r repositoryImpl) FindAllOrderByUpdated(ctx context.Context, size int) ([]Tweet, error) {
 	var tweets []Tweet
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	ctx, cancel := context.WithTimeout(ctx, time.Second*5)
 	defer cancel()
 
 	it := r.coll.Query().Limit(size).OrderBy("updated_at", "desc").Get(ctx)

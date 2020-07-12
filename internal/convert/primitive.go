@@ -5,6 +5,9 @@ import (
 )
 
 func String(s string) *string {
+	if len(s) == 0 {
+		return nil
+	}
 	return &s
 }
 
