@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"com.capturetweet/internal/infra"
-	"com.capturetweet/pkg/graph"
+	"com.capturetweet/pkg/resolver"
 	"com.capturetweet/pkg/search"
 	"com.capturetweet/pkg/tweet"
 	"com.capturetweet/pkg/user"
@@ -74,11 +74,11 @@ func main() {
 	contentService := content.NewService(content.NewRepository(contactUsColl))
 	ensureNotNil(contentService, "content service")
 
-	rootResolver := graph.NewResolver()
+	rootResolver := resolver.NewResolver()
 	ensureNotNil(rootResolver, "graph:NewResolver")
-	graph.InitService(logger, tweetService, userService, contentService)
+	resolver.InitService(logger, tweetService, userService, contentService)
 
-	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: rootResolver}))
+	srv := handler.NewDefaultServer(resolver.NewExecutableSchema(resolver.Config{Resolvers: rootResolver}))
 	srv.Use(infra.ZapLogger{Log: logger})
 
 	mux := http.NewServeMux()

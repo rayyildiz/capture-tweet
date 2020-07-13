@@ -1,6 +1,6 @@
-name: build
+name: pull-request
 on:
-  push:
+  pull_request:
     branches:
       - master
 
@@ -23,12 +23,8 @@ jobs:
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-ci-go-
+            ${{ runner.os }}-pr-go-
       
       - run: go mod download
 
       - run: go test -cover -coverprofile=coverage.txt -covermode=atomic ./...
-
-      - uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
