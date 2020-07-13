@@ -1,9 +1,10 @@
-package graph
+package resolver
 
 import (
 	"com.capturetweet/internal/convert"
 	"context"
 	"errors"
+	"fmt"
 	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 )
@@ -54,12 +55,17 @@ func (r mutationResolverImpl) Capture(ctx context.Context, url string) (*Tweet, 
 	}, nil
 }
 
-func (r mutationResolverImpl) Contact(ctx context.Context, input ContactInput) (string, error) {
-	err := _contentService.SendMail(ctx, input.Email, input.FullName, input.Message)
+func (r mutationResolverImpl) Contact(ctx context.Context, input ContactInput, tweetID *string) (string, error) {
+	msg := input.Message
+	if tweetID != nil {
+		msg = fmt.Sprintf("Tweet ID: %s\n Message: %s", *tweetID, input.Message)
+	}
+
+	err := _contentService.SendMail(ctx, input.Email, input.FullName, msg)
 	if err != nil {
 		sentry.CaptureException(err)
 		_log.Error("could not send mail", zap.String("contact_email", input.Email), zap.String("contact_fullName", input.FullName), zap.Error(err))
 		return "", errors.New("error occurred, please try again or contact from info@capturetweet.com mail address")
 	}
-	return "we saved your message and we will contact you as soon as possible, thanks for feedback", nil
+	return "We saved your message and we will contact you as soon as possible, thanks for feedback", nil
 }
