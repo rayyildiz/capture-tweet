@@ -2,21 +2,21 @@ schema:
   - schema.graphql
 
 exec:
-  filename: pkg/graph/gen_interfaces.go
-  package: graph
+  filename: pkg/resolver/gen_interfaces.go
+  package: resolver
 
 federation:
-  filename: pkg/graph/gen_federation.go
-  package: graph
+  filename: pkg/resolver/gen_federation.go
+  package: resolver
 
 model:
-  filename: pkg/graph/gen_models.go
-  package: graph
+  filename: pkg/resolver/gen_models.go
+  package: resolver
 
 models:
   Author:
-    model: com.capturetweet/pkg/graph.Author
+    model: com.capturetweet/pkg/resolver.Author
   Tweet:
-    model: com.capturetweet/pkg/graph.Tweet
+    model: com.capturetweet/pkg/resolver.Tweet
   Resource:
-    model: com.capturetweet/pkg/graph.Resource
+    model: com.capturetweet/pkg/resolver.Resource

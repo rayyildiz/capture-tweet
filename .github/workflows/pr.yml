@@ -1,6 +1,6 @@
-name: build
+name: pull-request
 on:
-  push:
+  pull_request:
     branches:
       - master
 
@@ -21,7 +21,3 @@ jobs:
       - run: go mod download
 
       - run: go test -cover -coverprofile=coverage.txt -covermode=atomic ./...
-
-      - uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}

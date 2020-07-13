@@ -50,5 +50,5 @@ type Query {
 type Mutation {
   capture(url:String!): Tweet
 
-  contact(input:ContactInput!):String!
+  contact(input:ContactInput!, tweetID:ID):String!
 }

@@ -3,7 +3,11 @@ import {useMutation} from "@apollo/client";
 import {CONTACT_US} from "../graph/queries";
 import {Contact, ContactVariables} from "../graph/Contact";
 
-const ContactPage: FC = () => {
+type ContactPageProps = {
+  tweetID?: string
+}
+
+const ContactPage: FC<ContactPageProps> = ({tweetID}) => {
   const [name, setName] = useState('');
   const [mail, setMail] = useState('');
   const [message, setMessage] = useState('');
@@ -26,7 +30,8 @@ const ContactPage: FC = () => {
             email: mail,
             message: message,
             fullName: name
-          }
+          },
+          id: tweetID
         }
       });
     } catch (ex) {
@@ -34,13 +39,13 @@ const ContactPage: FC = () => {
     }
   }
 
-
   return (
       <div className="row">
         <div className="col-md-8 offset-md-2">
 
           <form id="contact-form" onSubmit={handleSubmit} className="mt-md-5">
-            <h3>Contact Us</h3>
+            {!tweetID && <h3>Contact Us</h3>}
+
             {data && <div className="alert alert-primary" role="alert">
               {data.contact}
             </div>}

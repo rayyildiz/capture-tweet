@@ -72,6 +72,6 @@ export const TWEET_IMAGE = gql`
 
 
 export const CONTACT_US = gql`
-  mutation Contact($input:ContactInput!) {
-    contact(input:$input)
+  mutation Contact($input:ContactInput! $id:ID) {
+    contact(input:$input, tweetID: $id)
   }`;

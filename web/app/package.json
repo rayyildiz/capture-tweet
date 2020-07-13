@@ -4,7 +4,7 @@
   "private": true,
   "proxy": "http://localhost:4000",
   "dependencies": {
-    "@apollo/client": "^3.0.0-rc.12",
+    "@apollo/client": "^3.0.0-rc.13",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
