@@ -105,17 +105,21 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 		return err
 	}
 
-	err = bucket.WriteAll(ctx, "sitemap.xml", newSitemap, &blob.WriterOptions{
-		ContentType:  "application/xml",
-		CacheControl: "public,max-age=9600",
-	})
-	if err != nil {
-		log.Error("bucket:writeAll", zap.Error(err))
-		return err
-	}
-
 	if len(newSitemap) != int(oldSitemapAttrs.Size) {
+
+		log.Info("old and new sitemap NOT equal, write on bucket")
+
+		err = bucket.WriteAll(ctx, "sitemap.xml", newSitemap, &blob.WriterOptions{
+			ContentType:  "application/xml",
+			CacheControl: "public,max-age=9600",
+		})
+		if err != nil {
+			log.Error("bucket:writeAll", zap.Error(err))
+			return err
+		}
+
 		log.Info("old and new sitemap NOT equal, ping search engines.")
+
 		go ping("https://www.google.com/ping?sitemap=https://capturetweet.com/sitemap.xml", log)
 		go ping("https://www.bing.com/ping?sitemap=https%3A%2F%2Fcapturetweet.com/sitemap.xml", log)
 	} else {

@@ -4,13 +4,13 @@ steps:
     env: ['GO111MODULE=on','CGO_ENABLED=0','GOOS=linux']
     dir: 'cmd/server'
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args: ['docker','build', '-f', 'Dockerfile', '--tag=eu.gcr.io/$PROJECT_ID/api:$SHORT_SHA', '.']
     dir: 'cmd/server'
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args: ['docker','push', 'eu.gcr.io/$PROJECT_ID/api:$SHORT_SHA']
     dir: 'cmd/server'
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args: ['gcloud', 'run','deploy','api','--image','eu.gcr.io/$PROJECT_ID/api:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']
