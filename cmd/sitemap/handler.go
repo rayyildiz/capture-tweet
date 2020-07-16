@@ -77,6 +77,8 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 </url>`, tweet.ID, tweet.CreatedAt.Format(time.RFC3339)))
 	}
 
+	content := sb.String()
+
 	xml := fmt.Sprintf(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
@@ -97,7 +99,7 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 		<mobile:mobile/>
 	</url>
 	%s
-</urlset>`, time.Now().Format(time.RFC3339), sb.String())
+</urlset>`, time.Now().Format(time.RFC3339), content)
 
 	newSitemap := []byte(xml)
 
@@ -107,10 +109,10 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 		return err
 	}
 	h := sha256.New()
-	h.Write(newSitemap)
+	h.Write([]byte(content))
 	newHash := base64.StdEncoding.EncodeToString(h.Sum(nil))
 
-	oldHash := oldSitemapAttrs.Metadata["x-checksum"]
+	oldHash := oldSitemapAttrs.Metadata["x-content-sha256"]
 
 	if newHash != oldHash {
 
@@ -120,7 +122,7 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 			ContentType:  "application/xml",
 			CacheControl: "public,max-age=9600",
 			Metadata: map[string]string{
-				"x-checksum": newHash,
+				"x-content-sha256": newHash,
 			},
 		})
 		if err != nil {
