@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"com.capturetweet/pkg/tweet"
 	"context"
 	"fmt"
@@ -29,6 +28,9 @@ func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	defer cancel()
+
 	start := time.Now()
 
 	size, err := strconv.Atoi(r.URL.Query().Get("size"))
@@ -37,7 +39,7 @@ func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 		size = 50
 	}
 
-	tweets, err := h.repo.FindAllOrderByUpdated(r.Context(), size)
+	tweets, err := h.repo.FindAllOrderByUpdated(ctx, size)
 	if err != nil {
 		sentry.CaptureException(err)
 		h.log.Warn("could not get repositories", zap.Error(err))
@@ -45,7 +47,7 @@ func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = createSitemap(r.Context(), h.log, h.bucket, tweets)
+	err = createSitemap(ctx, h.log, h.bucket, tweets)
 	if err != nil {
 		sentry.CaptureException(err)
 		h.log.Warn("could not get create sitemap", zap.Error(err))
@@ -97,7 +99,7 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 
 	newSitemap := []byte(xml)
 
-	oldSitemap, err := bucket.ReadAll(ctx, "sitemap.xml")
+	oldSitemapAttrs, err := bucket.Attributes(ctx, "sitemap.xml")
 	if err != nil {
 		log.Error("bucket:ReadAll", zap.Error(err))
 		return err
@@ -112,12 +114,12 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 		return err
 	}
 
-	if bytes.Compare(newSitemap, oldSitemap) != 0 {
+	if len(newSitemap) != int(oldSitemapAttrs.Size) {
 		log.Info("old and new sitemap NOT equal, ping search engines.")
 		go ping("https://www.google.com/ping?sitemap=https://capturetweet.com/sitemap.xml", log)
 		go ping("https://www.bing.com/ping?sitemap=https%3A%2F%2Fcapturetweet.com/sitemap.xml", log)
 	} else {
-		log.Info("old and new sitemap equals, no need to ping search engines.")
+		log.Info("old and new sitemap equals, no need to ping search engines.", zap.Int64("old_size", oldSitemapAttrs.Size), zap.Int("new_size", len(newSitemap)))
 	}
 	return nil
 }
