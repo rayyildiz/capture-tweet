@@ -3,6 +3,8 @@ package main
 import (
 	"com.capturetweet/pkg/tweet"
 	"context"
+	"crypto/sha256"
+	"encoding/base64"
 	"fmt"
 	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
@@ -104,14 +106,22 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 		log.Error("bucket:ReadAll", zap.Error(err))
 		return err
 	}
+	h := sha256.New()
+	h.Write(newSitemap)
+	newHash := base64.StdEncoding.EncodeToString(h.Sum(nil))
 
-	if len(newSitemap) != int(oldSitemapAttrs.Size) {
+	oldHash := oldSitemapAttrs.Metadata["x-checksum"]
+
+	if newHash != oldHash {
 
 		log.Info("old and new sitemap NOT equal, write on bucket")
 
 		err = bucket.WriteAll(ctx, "sitemap.xml", newSitemap, &blob.WriterOptions{
 			ContentType:  "application/xml",
 			CacheControl: "public,max-age=9600",
+			Metadata: map[string]string{
+				"x-checksum": newHash,
+			},
 		})
 		if err != nil {
 			log.Error("bucket:writeAll", zap.Error(err))
@@ -123,7 +133,7 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 		go ping("https://www.google.com/ping?sitemap=https://capturetweet.com/sitemap.xml", log)
 		go ping("https://www.bing.com/ping?sitemap=https%3A%2F%2Fcapturetweet.com/sitemap.xml", log)
 	} else {
-		log.Info("old and new sitemap equals, no need to ping search engines.", zap.Int64("old_size", oldSitemapAttrs.Size), zap.Int("new_size", len(newSitemap)))
+		log.Info("old and new sitemap equals, no need to ping search engines.", zap.String("old_hash", oldHash), zap.String("new_hash", newHash))
 	}
 	return nil
 }
