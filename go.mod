@@ -8,14 +8,14 @@ require (
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
 	github.com/agnivade/levenshtein v1.1.0 // indirect
-	github.com/algolia/algoliasearch-client-go/v3 v3.8.2
+	github.com/algolia/algoliasearch-client-go/v3 v3.9.0
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
 	github.com/chromedp/cdproto v0.0.0-20200608134039-8a80cdaf865c
 	github.com/chromedp/chromedp v0.5.3
 	github.com/dustin/go-jsonpointer v0.0.0-20160814072949-ba0abeacc3dc // indirect
 	github.com/dustin/gojson v0.0.0-20160307161227-2e71ec9dd5ad // indirect
 	github.com/garyburd/go-oauth v0.0.0-20180319155456-bca2e7f09a17 // indirect
-	github.com/getsentry/sentry-go v0.6.1
+	github.com/getsentry/sentry-go v0.7.0
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gobwas/ws v1.0.3 // indirect
 	github.com/golang/mock v1.4.3
