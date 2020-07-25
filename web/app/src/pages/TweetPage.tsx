@@ -10,6 +10,7 @@ import folderImage from './../assets/folder.svg';
 import {WEB_BASE_URL} from "../Constants";
 import 'bootstrap/js/dist/modal';
 import ContactPage from "./ContactPage";
+import Loading from "../components/Loading";
 
 const TweetPage: FC = () => {
   const {id} = useParams();
@@ -19,7 +20,7 @@ const TweetPage: FC = () => {
   });
 
   if (loading) {
-    return <span className="text-muted">Loading...</span>
+    return <Loading/>
   }
 
   return (
@@ -61,7 +62,7 @@ const TweetDetail: FC<TweetDetailProps> = ({tweet}) => (
             <h4>Tweet by <a target="_blank" rel="noopener noreferrer" className="text-decoration-none" href={`https://twitter.com/${tweet.author?.userName}`}>{tweet.author?.screenName}</a></h4>
           </div>
           <div className="col-4 text-right">
-            <button type="button" className="btn btn-link" data-toggle="modal" data-target="#reportTweetModal" >
+            <button type="button" className="btn btn-link" data-toggle="modal" data-target="#reportTweetModal">
               <span data-toggle="tooltip" data-placement="top" title="Report this tweet">
                  <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -91,7 +92,7 @@ const TweetDetail: FC<TweetDetailProps> = ({tweet}) => (
           ))}
         </div>
       </div>
-      <div className="modal fade" id="reportTweetModal"  aria-labelledby="reportTweet" aria-hidden="true">
+      <div className="modal fade" id="reportTweetModal" aria-labelledby="reportTweet" aria-hidden="true">
         <div className="modal-dialog modal-xl">
           <div className="modal-content">
             <div className="modal-header">
@@ -101,7 +102,7 @@ const TweetDetail: FC<TweetDetailProps> = ({tweet}) => (
               </button>
             </div>
             <div className="modal-body">
-              <ContactPage tweetID={tweet.id} />
+              <ContactPage tweetID={tweet.id}/>
             </div>
           </div>
         </div>
@@ -142,7 +143,7 @@ const TweetImageCard: FC<TweetImageCardProps> = ({id}) => {
         <br/>
         <div className="d-flex align-items-start">
           <div className="spinner-grow text-danger" role="status" aria-hidden="true"></div>
-          <span className="text-muted" style={{paddingLeft:'1rem'}}>Tweet screenshot is capturing, please wait...</span>
+          <span className="text-muted" style={{paddingLeft: '1rem'}}>Tweet screenshot is capturing, please wait...</span>
         </div>
 
       </>
