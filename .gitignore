@@ -5,3 +5,4 @@ node_modules/
 tmp
 .deno_plugins/
 sitemap.xml
+coverage.txt

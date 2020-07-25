@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -109,8 +110,7 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 		return err
 	}
 	h := sha256.New()
-	h.Write([]byte(content))
-	newHash := base64.StdEncoding.EncodeToString(h.Sum(nil))
+	newHash := base64.StdEncoding.EncodeToString(h.Sum([]byte(content)))
 
 	oldHash := oldSitemapAttrs.Metadata["x-content-sha256"]
 
@@ -132,16 +132,37 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 
 		log.Info("old and new sitemap NOT equal, ping search engines.")
 
-		go ping("https://www.google.com/ping?sitemap=https://capturetweet.com/sitemap.xml", log)
-		go ping("https://www.bing.com/ping?sitemap=https%3A%2F%2Fcapturetweet.com/sitemap.xml", log)
+		var wg sync.WaitGroup
+		wg.Add(2)
+
+		go func(ctx context.Context) {
+			defer wg.Done()
+			ping(ctx, "https://www.google.com/ping?sitemap=https://capturetweet.com/sitemap.xml", log)
+		}(ctx)
+
+		go func(ctx context.Context) {
+			defer wg.Done()
+			ping(ctx, "https://www.bing.com/ping?sitemap=https%3A%2F%2Fcapturetweet.com/sitemap.xml", log)
+		}(ctx)
+		wg.Wait()
+
 	} else {
 		log.Info("old and new sitemap equals, no need to ping search engines.", zap.String("old_hash", oldHash), zap.String("new_hash", newHash))
 	}
 	return nil
 }
 
-func ping(pingUrl string, log *zap.Logger) {
-	resp, err := http.Get(pingUrl)
+func ping(ctx context.Context, pingUrl string, log *zap.Logger) {
+	request, err := http.NewRequest(http.MethodGet, pingUrl, nil)
+	if err != nil {
+		log.Error("error creating request", zap.String("url", pingUrl), zap.Error(err))
+		return
+	}
+	request.Header.Add("x-app-name", "go-http")
+	request.Header.Add("x-app-version", "0.3.0")
+	request = request.WithContext(ctx)
+
+	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
 		log.Error("error while ping", zap.String("url", pingUrl), zap.Error(err))
 	} else {
