@@ -3,7 +3,7 @@ package main
 import (
 	"com.capturetweet/pkg/tweet"
 	"context"
-	"crypto/sha256"
+	"crypto/md5"
 	"encoding/base64"
 	"fmt"
 	"github.com/getsentry/sentry-go"
@@ -109,10 +109,10 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 		log.Error("bucket:ReadAll", zap.Error(err))
 		return err
 	}
-	h := sha256.New()
+	h := md5.New()
 	newHash := base64.StdEncoding.EncodeToString(h.Sum([]byte(content)))
 
-	oldHash := oldSitemapAttrs.Metadata["x-content-sha256"]
+	oldHash := oldSitemapAttrs.Metadata["x-content-md5"]
 
 	if newHash != oldHash {
 
@@ -122,7 +122,7 @@ func createSitemap(ctx context.Context, log *zap.Logger, bucket *blob.Bucket, tw
 			ContentType:  "application/xml",
 			CacheControl: "public,max-age=9600",
 			Metadata: map[string]string{
-				"x-content-sha256": newHash,
+				"x-content-md5": newHash,
 			},
 		})
 		if err != nil {
