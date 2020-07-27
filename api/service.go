@@ -37,5 +37,5 @@ type BrowserService interface {
 }
 
 type ContentService interface {
-	SendMail(ctx context.Context, senderMail, senderName, message string) error
+	SendMail(ctx context.Context, senderMail, senderName, message, captcha string) error
 }
