@@ -52,7 +52,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		Capture func(childComplexity int, url string) int
-		Contact func(childComplexity int, input ContactInput, tweetID *string) int
+		Contact func(childComplexity int, input ContactInput, tweetID *string, capthca string) int
 	}
 
 	Query struct {
@@ -85,7 +85,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	Capture(ctx context.Context, url string) (*Tweet, error)
-	Contact(ctx context.Context, input ContactInput, tweetID *string) (string, error)
+	Contact(ctx context.Context, input ContactInput, tweetID *string, capthca string) (string, error)
 }
 type QueryResolver interface {
 	Tweet(ctx context.Context, id string) (*Tweet, error)
@@ -164,7 +164,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.Contact(childComplexity, args["input"].(ContactInput), args["tweetID"].(*string)), true
+		return e.complexity.Mutation.Contact(childComplexity, args["input"].(ContactInput), args["tweetID"].(*string), args["capthca"].(string)), true
 
 	case "Query.search":
 		if e.complexity.Query.Search == nil {
@@ -418,7 +418,7 @@ type Query {
 type Mutation {
   capture(url:String!): Tweet
 
-  contact(input:ContactInput!, tweetID:ID):String!
+  contact(input:ContactInput!, tweetID:ID, capthca:String!):String!
 }
 `, BuiltIn: false},
 	&ast.Source{Name: "federation/directives.graphql", Input: `
@@ -471,6 +471,14 @@ func (ec *executionContext) field_Mutation_contact_args(ctx context.Context, raw
 		}
 	}
 	args["tweetID"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["capthca"]; ok {
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["capthca"] = arg2
 	return args, nil
 }
 
@@ -799,7 +807,7 @@ func (ec *executionContext) _Mutation_contact(ctx context.Context, field graphql
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().Contact(rctx, args["input"].(ContactInput), args["tweetID"].(*string))
+		return ec.resolvers.Mutation().Contact(rctx, args["input"].(ContactInput), args["tweetID"].(*string), args["capthca"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

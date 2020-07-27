@@ -16,4 +16,5 @@ export interface Contact {
 export interface ContactVariables {
   input: ContactInput;
   id?: string | null;
+  captcha: string;
 }

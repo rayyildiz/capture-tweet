@@ -1,7 +1,9 @@
-import React, {FC, FormEvent, useState} from 'react';
+import React, {createRef, FC, FormEvent, useState} from 'react';
 import {useMutation} from "@apollo/client";
 import {CONTACT_US} from "../graph/queries";
 import {Contact, ContactVariables} from "../graph/Contact";
+import ReCAPTCHA from "react-google-recaptcha";
+import {CAPTCHA_KEY} from "../Constants";
 
 type ContactPageProps = {
   tweetID?: string
@@ -12,6 +14,7 @@ const ContactPage: FC<ContactPageProps> = ({tweetID}) => {
   const [mail, setMail] = useState('');
   const [message, setMessage] = useState('');
   const [validation, setValidation] = useState('');
+  const recaptchaRef = createRef<ReCAPTCHA>();
 
   const [doSent, {data, error}] = useMutation<Contact, ContactVariables>(CONTACT_US);
 
@@ -22,8 +25,10 @@ const ContactPage: FC<ContactPageProps> = ({tweetID}) => {
       setValidation("please enter all form fields");
       return
     }
-
     try {
+
+      const token = await recaptchaRef.current?.executeAsync();
+
       await doSent({
         variables: {
           input: {
@@ -31,7 +36,8 @@ const ContactPage: FC<ContactPageProps> = ({tweetID}) => {
             message: message,
             fullName: name
           },
-          id: tweetID
+          id: tweetID,
+          captcha: token ?? ""
         }
       });
     } catch (ex) {
@@ -44,6 +50,12 @@ const ContactPage: FC<ContactPageProps> = ({tweetID}) => {
         <div className="col-md-8 offset-md-2">
 
           <form id="contact-form" onSubmit={handleSubmit} className="mt-md-5">
+            <ReCAPTCHA
+                ref={recaptchaRef}
+                size="invisible"
+                sitekey={CAPTCHA_KEY}
+            />
+
             {!tweetID && <h3>Contact Us</h3>}
 
             {data && <div className="alert alert-primary" role="alert">

@@ -55,13 +55,14 @@ func (r mutationResolverImpl) Capture(ctx context.Context, url string) (*Tweet, 
 	}, nil
 }
 
-func (r mutationResolverImpl) Contact(ctx context.Context, input ContactInput, tweetID *string) (string, error) {
+func (r mutationResolverImpl) Contact(ctx context.Context, input ContactInput, tweetID *string, capthca string) (string, error) {
+
 	msg := input.Message
 	if tweetID != nil {
 		msg = fmt.Sprintf("Tweet ID: %s\n Message: %s", *tweetID, input.Message)
 	}
 
-	err := _contentService.SendMail(ctx, input.Email, input.FullName, msg)
+	err := _contentService.SendMail(ctx, input.Email, input.FullName, msg, capthca)
 	if err != nil {
 		sentry.CaptureException(err)
 		_log.Error("could not send mail", zap.String("contact_email", input.Email), zap.String("contact_fullName", input.FullName), zap.Error(err))

@@ -316,15 +316,15 @@ func (m *MockContentService) EXPECT() *MockContentServiceMockRecorder {
 }
 
 // SendMail mocks base method.
-func (m *MockContentService) SendMail(arg0 context.Context, arg1, arg2, arg3 string) error {
+func (m *MockContentService) SendMail(arg0 context.Context, arg1, arg2, arg3, arg4 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendMail", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "SendMail", arg0, arg1, arg2, arg3, arg4)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // SendMail indicates an expected call of SendMail.
-func (mr *MockContentServiceMockRecorder) SendMail(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockContentServiceMockRecorder) SendMail(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMail", reflect.TypeOf((*MockContentService)(nil).SendMail), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMail", reflect.TypeOf((*MockContentService)(nil).SendMail), arg0, arg1, arg2, arg3, arg4)
 }
