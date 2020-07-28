@@ -9,6 +9,7 @@
 
 export interface Tweet_tweet_author {
   __typename: "Author";
+  id: string;
   userName: string;
   screenName: string | null;
   profileImageURL: string | null;

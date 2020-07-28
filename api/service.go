@@ -15,6 +15,7 @@ type TweetService interface {
 	FindById(ctx context.Context, id string) (*TweetModel, error)
 	Store(ctx context.Context, url string) (string, error)
 	Search(ctx context.Context, term string, size, start, page int) ([]TweetModel, error)
+	SearchByUser(ctx context.Context, userId string) ([]TweetModel, error)
 	UpdateLargeImage(ctx context.Context, id, captureUrl string) error
 	UpdateThumbImage(ctx context.Context, id, captureUrl string) error
 }

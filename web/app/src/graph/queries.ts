@@ -25,7 +25,6 @@ export const SEARCH_TWEET = gql`
       fullText
       lang
       postedAt
-      captureURL
       captureThumbURL
       author {
         userName
@@ -35,6 +34,24 @@ export const SEARCH_TWEET = gql`
     }
   }
 `;
+
+export const SEARCH_BY_USER = gql `
+  query SearchByUser($userID: ID!) {
+    searchByUser(userID: $userID) {
+      id
+      fullText
+      lang
+      postedAt
+      captureThumbURL
+      author {
+        userName
+        screenName
+        profileImageURL
+      }
+    }
+  }
+`;
+
 export const TWEET_BY_ID = gql`
   query Tweet($id:ID!) {
     tweet(id:$id) {
@@ -46,6 +63,7 @@ export const TWEET_BY_ID = gql`
       retweetCount
       favoriteCount
       author {
+        id
         userName
         screenName
         profileImageURL

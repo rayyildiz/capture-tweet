@@ -141,36 +141,13 @@ func (s serviceImpl) Search(ctx context.Context, term string, size, start, page 
 		return nil, err
 	}
 
-	var res []api.TweetModel
+	var list []api.TweetModel
 
 	for _, tweet := range tweets {
-		var resources []api.ResourceModel
-
-		for _, res := range tweet.Resources {
-			resources = append(resources, api.ResourceModel{
-				ID:           res.ID,
-				URL:          res.URL,
-				Width:        res.Width,
-				Height:       res.Height,
-				ResourceType: res.URL,
-			})
-		}
-
-		res = append(res, api.TweetModel{
-			ID:              tweet.ID,
-			FullText:        tweet.FullText,
-			Lang:            tweet.Lang,
-			CaptureURL:      tweet.CaptureURL,
-			CaptureThumbURL: tweet.CaptureThumbURL,
-			FavoriteCount:   tweet.FavoriteCount,
-			RetweetCount:    tweet.RetweetCount,
-			AuthorID:        tweet.AuthorID,
-			PostedAt:        convert.Time(tweet.PostedAt),
-			Resources:       resources,
-		})
+		list = append(list, convertToTweet(tweet))
 	}
 
-	return res, nil
+	return list, nil
 }
 
 func (s serviceImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {
@@ -191,4 +168,47 @@ func (s serviceImpl) UpdateThumbImage(ctx context.Context, id, captureUrl string
 	}
 	s.log.Info("tweet:service updateThumbImage, updated capture images", zap.String("tweet_id", id))
 	return nil
+}
+
+func (s serviceImpl) SearchByUser(ctx context.Context, userId string) ([]api.TweetModel, error) {
+	tweets, err := s.repo.FindByUser(ctx, userId)
+	if err != nil {
+		s.log.Error("tweet:service searchByUser, findById", zap.String("user_id", userId), zap.Error(err))
+		return nil, err
+	}
+
+	var list []api.TweetModel
+
+	for _, tweet := range tweets {
+		list = append(list, convertToTweet(tweet))
+	}
+
+	return list, nil
+}
+
+func convertToTweet(tweet Tweet) api.TweetModel {
+	var resources []api.ResourceModel
+
+	for _, res := range tweet.Resources {
+		resources = append(resources, api.ResourceModel{
+			ID:           res.ID,
+			URL:          res.URL,
+			Width:        res.Width,
+			Height:       res.Height,
+			ResourceType: res.URL,
+		})
+	}
+
+	return api.TweetModel{
+		ID:              tweet.ID,
+		FullText:        tweet.FullText,
+		Lang:            tweet.Lang,
+		CaptureURL:      tweet.CaptureURL,
+		CaptureThumbURL: tweet.CaptureThumbURL,
+		FavoriteCount:   tweet.FavoriteCount,
+		RetweetCount:    tweet.RetweetCount,
+		AuthorID:        tweet.AuthorID,
+		PostedAt:        convert.Time(tweet.PostedAt),
+		Resources:       resources,
+	}
 }

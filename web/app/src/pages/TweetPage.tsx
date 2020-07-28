@@ -1,5 +1,5 @@
 import React, {FC, useEffect} from "react";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useQuery} from "@apollo/client";
 import {TWEET_BY_ID, TWEET_IMAGE} from "../graph/queries";
 import {Tweet, Tweet_tweet, TweetVariables} from "../graph/Tweet";
@@ -59,7 +59,7 @@ const TweetDetail: FC<TweetDetailProps> = ({tweet}) => (
       <div className="col-md-6 col-lg-6 col-sm-12">
         <div className="row">
           <div className="col-8 text-left">
-            <h4>Tweet by <a target="_blank" rel="noopener noreferrer" className="text-decoration-none" href={`https://twitter.com/${tweet.author?.userName}`}>{tweet.author?.screenName}</a></h4>
+            <h4>Tweet by <Link to={`/user/${tweet.author?.id}`} rel="noopener noreferrer" className="text-decoration-none">{tweet.author?.screenName}</Link></h4>
           </div>
           <div className="col-4 text-right">
             <button type="button" className="btn btn-link" data-toggle="modal" data-target="#reportTweetModal">

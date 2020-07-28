@@ -1,5 +1,5 @@
 const prod = {
-  enableSW: true,
+  enableSW: false,
   apiURL: 'https://api.capturetweet.com/api/query',
   captchaKey: '6LeH-rYZAAAAAE23jskkX4U2_oJoXvcreHg2n2ic'
 };

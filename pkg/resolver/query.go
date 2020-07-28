@@ -1,6 +1,7 @@
 package resolver
 
 import (
+	"com.capturetweet/api"
 	"com.capturetweet/internal/convert"
 	"context"
 	"errors"
@@ -54,6 +55,21 @@ func (r queryResolverImpl) Tweet(ctx context.Context, id string) (*Tweet, error)
 	}, nil
 }
 
+func (r queryResolverImpl) SearchByUser(ctx context.Context, userID string) ([]*Tweet, error) {
+	models, err := _twitterService.SearchByUser(ctx, userID)
+	if err != nil {
+		sentry.CaptureException(err)
+		_log.Error("search by user error", zap.String("user_id", userID), zap.Error(err))
+		return nil, errors.New("could not ind any result")
+	}
+	var list []*Tweet
+	for _, model := range models {
+		list = append(list, convertToModel(model))
+	}
+
+	return list, nil
+}
+
 func (r queryResolverImpl) Search(ctx context.Context, input SearchInput, size int, page int, start int) ([]*Tweet, error) {
 	models, err := _twitterService.Search(ctx, input.Term, size, start, page)
 	if err != nil {
@@ -63,31 +79,34 @@ func (r queryResolverImpl) Search(ctx context.Context, input SearchInput, size i
 	}
 	var list []*Tweet
 	for _, model := range models {
-
-		var resources []*Resource
-		for _, res := range model.Resources {
-			resources = append(resources, &Resource{
-				ID:        res.ID,
-				URL:       res.URL,
-				MediaType: convert.String(res.ResourceType),
-				Width:     convert.Int(res.Width),
-				Height:    convert.Int(res.Height),
-			})
-		}
-
-		list = append(list, &Tweet{
-			ID:              model.ID,
-			FullText:        model.FullText,
-			PostedAt:        model.PostedAt,
-			CaptureURL:      model.CaptureURL,
-			CaptureThumbURL: model.CaptureThumbURL,
-			FavoriteCount:   convert.Int(model.FavoriteCount),
-			Lang:            convert.String(model.Lang),
-			RetweetCount:    convert.Int(model.RetweetCount),
-			AuthorID:        convert.String(model.AuthorID),
-			Resources:       resources,
-		})
+		list = append(list, convertToModel(model))
 	}
 
 	return list, nil
+}
+
+func convertToModel(model api.TweetModel) *Tweet {
+	var resources []*Resource
+	for _, res := range model.Resources {
+		resources = append(resources, &Resource{
+			ID:        res.ID,
+			URL:       res.URL,
+			MediaType: convert.String(res.ResourceType),
+			Width:     convert.Int(res.Width),
+			Height:    convert.Int(res.Height),
+		})
+	}
+
+	return &Tweet{
+		ID:              model.ID,
+		FullText:        model.FullText,
+		PostedAt:        model.PostedAt,
+		CaptureURL:      model.CaptureURL,
+		CaptureThumbURL: model.CaptureThumbURL,
+		FavoriteCount:   convert.Int(model.FavoriteCount),
+		Lang:            convert.String(model.Lang),
+		RetweetCount:    convert.Int(model.RetweetCount),
+		AuthorID:        convert.String(model.AuthorID),
+		Resources:       resources,
+	}
 }

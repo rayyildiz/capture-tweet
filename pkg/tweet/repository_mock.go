@@ -93,6 +93,21 @@ func (mr *MockRepositoryMockRecorder) FindByIds(arg0, arg1 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByIds", reflect.TypeOf((*MockRepository)(nil).FindByIds), arg0, arg1)
 }
 
+// FindByUser mocks base method.
+func (m *MockRepository) FindByUser(arg0 context.Context, arg1 string) ([]Tweet, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByUser", arg0, arg1)
+	ret0, _ := ret[0].([]Tweet)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByUser indicates an expected call of FindByUser.
+func (mr *MockRepositoryMockRecorder) FindByUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUser", reflect.TypeOf((*MockRepository)(nil).FindByUser), arg0, arg1)
+}
+
 // Store mocks base method.
 func (m *MockRepository) Store(arg0 context.Context, arg1 *anaconda.Tweet) error {
 	m.ctrl.T.Helper()

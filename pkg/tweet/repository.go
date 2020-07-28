@@ -13,6 +13,7 @@ import (
 type Repository interface {
 	FindById(ctx context.Context, id string) (*Tweet, error)
 	FindByIds(ctx context.Context, ids []string) ([]Tweet, error)
+	FindByUser(ctx context.Context, userId string) ([]Tweet, error)
 	Store(ctx context.Context, tweet *anaconda.Tweet) error
 	Exist(ctx context.Context, id string) bool
 	UpdateLargeImage(ctx context.Context, id, captureUrl string) error
@@ -91,6 +92,26 @@ func (r repositoryImpl) FindByIds(ctx context.Context, ids []string) ([]Tweet, e
 		}
 	}
 	return list, nil
+}
+func (r repositoryImpl) FindByUser(ctx context.Context, userId string) ([]Tweet, error) {
+
+	iterator := r.coll.Query().Where("author_id", "=", userId).Limit(20).Get(ctx)
+	defer iterator.Stop()
+
+	var tweets []Tweet
+	for {
+		var tweet Tweet
+		err := iterator.Next(ctx, &tweet)
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			return nil, err
+		}
+
+		tweets = append(tweets, tweet)
+	}
+
+	return tweets, nil
 }
 
 func (r repositoryImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {

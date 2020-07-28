@@ -7,7 +7,7 @@ const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
 const TweetPage = lazy(() => import("./pages/TweetPage"));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
-
+const UserPage = lazy(() => import('./pages/UserPage'));
 
 export const AppRoutes: FC = () => {
   return (
@@ -17,6 +17,7 @@ export const AppRoutes: FC = () => {
           <Route path='/search' component={SearchPage}/>
           <Route path='/contact' component={ContactPage}/>
           <Route path='/tweet/:id' component={TweetPage}/>
+          <Route path='/user/:id' component={UserPage}/>
           <Route exact={true} path="/" component={HomePage}/>
         </Switch>
       </Suspense>

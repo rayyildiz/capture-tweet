@@ -3,33 +3,31 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SearchInput } from "./globalTypes";
-
 // ====================================================
-// GraphQL query operation: Search
+// GraphQL query operation: SearchByUser
 // ====================================================
 
-export interface Search_search_author {
+export interface SearchByUser_searchByUser_author {
   __typename: "Author";
   userName: string;
   screenName: string | null;
   profileImageURL: string | null;
 }
 
-export interface Search_search {
+export interface SearchByUser_searchByUser {
   __typename: "Tweet";
   id: string;
   fullText: string;
   lang: string | null;
   postedAt: any | null;
   captureThumbURL: string | null;
-  author: Search_search_author | null;
+  author: SearchByUser_searchByUser_author | null;
 }
 
-export interface Search {
-  search: (Search_search | null)[] | null;
+export interface SearchByUser {
+  searchByUser: SearchByUser_searchByUser[] | null;
 }
 
-export interface SearchVariables {
-  input: SearchInput;
+export interface SearchByUserVariables {
+  userID: string;
 }

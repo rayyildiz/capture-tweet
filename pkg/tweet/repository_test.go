@@ -90,3 +90,31 @@ func TestRepository_UpdateThumbImage(t *testing.T) {
 		}
 	}
 }
+
+func TestRepository_FindByUser(t *testing.T) {
+	coll, err := infra.NewDocstore("mem://collection/id")
+	require.NoError(t, err)
+	defer coll.Close()
+
+	ctx := context.Background()
+
+	repo := NewRepository(coll)
+
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "x1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "123"}})
+	require.NoError(t, err)
+
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "ay2", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "123"}})
+	require.NoError(t, err)
+
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "z3", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "123"}})
+	require.NoError(t, err)
+
+	tweets, err := repo.FindByUser(ctx, "123")
+	require.NoError(t, err)
+	if assert.Equal(t, 3, len(tweets)) {
+		ids := []string{tweets[0].ID, tweets[1].ID, tweets[2].ID}
+		assert.Contains(t, ids, "x1")
+		assert.Contains(t, ids, "ay2")
+		assert.Contains(t, ids, "z3")
+	}
+}
