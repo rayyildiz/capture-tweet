@@ -56,8 +56,9 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Search func(childComplexity int, input SearchInput, size int, page int, start int) int
-		Tweet  func(childComplexity int, id string) int
+		Search       func(childComplexity int, input SearchInput, size int, page int, start int) int
+		SearchByUser func(childComplexity int, userID string) int
+		Tweet        func(childComplexity int, id string) int
 	}
 
 	Resource struct {
@@ -90,6 +91,7 @@ type MutationResolver interface {
 type QueryResolver interface {
 	Tweet(ctx context.Context, id string) (*Tweet, error)
 	Search(ctx context.Context, input SearchInput, size int, page int, start int) ([]*Tweet, error)
+	SearchByUser(ctx context.Context, userID string) ([]*Tweet, error)
 }
 
 type executableSchema struct {
@@ -177,6 +179,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Search(childComplexity, args["input"].(SearchInput), args["size"].(int), args["page"].(int), args["start"].(int)), true
+
+	case "Query.searchByUser":
+		if e.complexity.Query.SearchByUser == nil {
+			break
+		}
+
+		args, err := ec.field_Query_searchByUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SearchByUser(childComplexity, args["userID"].(string)), true
 
 	case "Query.tweet":
 		if e.complexity.Query.Tweet == nil {
@@ -413,6 +427,8 @@ type Query {
 
   #  search
   search(input:SearchInput!, size:Int! = 20, page:Int!=0, start:Int!=0):[Tweet]
+
+  searchByUser(userID:ID!): [Tweet!]
 }
 
 type Mutation {
@@ -493,6 +509,20 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_searchByUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["userID"]; ok {
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userID"] = arg0
 	return args, nil
 }
 
@@ -898,6 +928,44 @@ func (ec *executionContext) _Query_search(ctx context.Context, field graphql.Col
 	res := resTmp.([]*Tweet)
 	fc.Result = res
 	return ec.marshalOTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_searchByUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Query",
+		Field:    field,
+		Args:     nil,
+		IsMethod: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_searchByUser_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SearchByUser(rctx, args["userID"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*Tweet)
+	fc.Result = res
+	return ec.marshalOTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweetᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2696,6 +2764,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_search(ctx, field)
 				return res
 			})
+		case "searchByUser":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_searchByUser(ctx, field)
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
@@ -3106,6 +3185,20 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNTweet2comᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx context.Context, sel ast.SelectionSet, v Tweet) graphql.Marshaler {
+	return ec._Tweet(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNTweet2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx context.Context, sel ast.SelectionSet, v *Tweet) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Tweet(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalN_FieldSet2string(ctx context.Context, v interface{}) (string, error) {
@@ -3557,6 +3650,46 @@ func (ec *executionContext) marshalOTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresol
 				defer wg.Done()
 			}
 			ret[i] = ec.marshalOTweet2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalOTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweetᚄ(ctx context.Context, sel ast.SelectionSet, v []*Tweet) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNTweet2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)

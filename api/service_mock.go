@@ -117,6 +117,21 @@ func (mr *MockTweetServiceMockRecorder) Search(arg0, arg1, arg2, arg3, arg4 inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockTweetService)(nil).Search), arg0, arg1, arg2, arg3, arg4)
 }
 
+// SearchByUser mocks base method.
+func (m *MockTweetService) SearchByUser(arg0 context.Context, arg1 string) ([]TweetModel, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchByUser", arg0, arg1)
+	ret0, _ := ret[0].([]TweetModel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchByUser indicates an expected call of SearchByUser.
+func (mr *MockTweetServiceMockRecorder) SearchByUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchByUser", reflect.TypeOf((*MockTweetService)(nil).SearchByUser), arg0, arg1)
+}
+
 // Store mocks base method.
 func (m *MockTweetService) Store(arg0 context.Context, arg1 string) (string, error) {
 	m.ctrl.T.Helper()

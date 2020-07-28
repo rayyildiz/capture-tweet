@@ -1,15 +1,14 @@
-import React, {FC, FormEvent} from 'react';
+import React, {FC} from 'react';
 import * as qs from 'query-string';
 import {useQuery} from "@apollo/client";
 import {SEARCH_TWEET} from "../graph/queries";
-import {Search, Search_search, SearchVariables} from "../graph/Search";
-import {useHistory} from "react-router-dom";
-import moment from 'moment';
+import {Search, SearchVariables} from "../graph/Search";
 import notFound from '../assets/not_found.svg';
 import './SearchPage.css';
 import {Helmet} from "react-helmet";
 import {WEB_BASE_URL} from "../Constants";
 import algoliaLogo from '../assets/search-by-algolia-light-background.svg';
+import {TweetCard} from "./TweetCard";
 
 const getQueryStringValue = (key: string, queryString = window.location.search): string => {
   const values = qs.parse(queryString);
@@ -34,7 +33,7 @@ const SearchPage: FC = () => {
     <Helmet>
       <meta property="og:title" content={`Search results for ${q}`}/>
       <meta property="og:url" content={`${WEB_BASE_URL}/search?q=${q}`}/>
-      <meta property="og:image" content={`${WEB_BASE_URL}${notFound}`} />
+      <meta property="og:image" content={`${WEB_BASE_URL}${notFound}`}/>
       <title>Capture Tweet | Search</title>
     </Helmet>
 
@@ -44,7 +43,7 @@ const SearchPage: FC = () => {
           <h4>Search results for <b>{q} </b></h4>
         </div>
         <div className="col-4 text-right">
-          <img src={algoliaLogo} alt="" style={{height:'1rem'}}/>
+          <img src={algoliaLogo} alt="" style={{height: '1rem'}}/>
         </div>
       </div>
       {error && <div className="alert alert-dismissible alert-warning">
@@ -52,51 +51,17 @@ const SearchPage: FC = () => {
       </div>}
 
       <div className="row">
-        {data && data.search?.map(t => <TweetCard key={t?.id} tweet={t}/>)}
+        {data && data.search?.map(t => (t && <TweetCard key={t.id}
+                                                        author={t.author?.userName}
+                                                        fullText={t.fullText ?? ""}
+                                                        id={t.id ?? ""}
+                                                        captureThumbURL={t.captureThumbURL ?? ""}
+                                                        lang={t.lang ?? ""}
+                                                        postedAt={t.postedAt}/>
+        ))}
       </div>
     </div>
   </>
-}
-
-type TweetCardProps = {
-  tweet: Search_search | null
-}
-
-const TweetCard: FC<TweetCardProps> = ({tweet}) => {
-  const history = useHistory();
-
-  if (!tweet) {
-    return <span>Error</span>
-  }
-
-  const handleClick = (e: FormEvent) => {
-    e.preventDefault();
-    history.push("/tweet/" + tweet.id);
-  }
-
-  return (
-      <div className="col-sm-4">
-        <div className="card mb-3 cursor tweet-card" onClick={handleClick}>
-          <h3 className="card-header">Tweet by {tweet.author?.userName}</h3>
-          <div className="card-body">
-            <h5 className="card-title">Posted at {moment(tweet.postedAt).format("DD-MM-YYYY HH:MM")} </h5>
-            <h6 className="card-subtitle text-muted">Language {tweet.lang}</h6>
-          </div>
-          <div style={{
-            width: '100%',
-            textAlign: 'center',
-            overflow: 'hidden',
-            height: '10rem'
-          }}>
-            {tweet.captureThumbURL ? <img style={{maxWidth: '20rem'}} src={`/${tweet.captureThumbURL}`} alt=""/>
-                : <img style={{maxWidth: '20rem'}} src={notFound} alt=""/>}
-          </div>
-          <div className="card-body">
-            <p className="card-text">{tweet.fullText} </p>
-          </div>
-        </div>
-      </div>
-  )
 }
 
 export default SearchPage;
