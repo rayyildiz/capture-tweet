@@ -49,15 +49,22 @@ const TweetDetail: FC<TweetDetailProps> = ({tweet}) => {
   const [render, setRender] = useState(false);
 
   const modal = useRef<HTMLDivElement>(null);
+  const showModal = () => {
+    if (modal.current != null) {
+      const m = new Modal(modal.current);
+      if (m != null) m.show();
+    }
+  }
 
   const openModal = () => {
-    setRender(true);
-    setTimeout(() => {
-      if (modal.current != null) {
-        const m = new Modal(modal.current);
-        if (m != null) m.show();
-      }
-    }, 1500)
+    if (render) {
+      showModal();
+    } else {
+      setRender(true);
+      setTimeout(() => {
+        showModal();
+      }, 1500);
+    }
   }
 
   return (
