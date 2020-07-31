@@ -20,6 +20,12 @@ type Tweet struct {
 	DocstoreRevision interface{}
 }
 
+type SortByPosted []Tweet
+
+func (a SortByPosted) Len() int           { return len(a) }
+func (a SortByPosted) Less(i, j int) bool { return a[i].PostedAt.After(a[j].PostedAt) }
+func (a SortByPosted) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+
 type Resource struct {
 	ID        string `docstore:"id"`
 	URL       string `docstore:"url"`
