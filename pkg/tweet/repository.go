@@ -7,6 +7,7 @@ import (
 	"gocloud.dev/docstore"
 	"gocloud.dev/gcerrors"
 	"io"
+	"sort"
 	"time"
 )
 
@@ -91,11 +92,14 @@ func (r repositoryImpl) FindByIds(ctx context.Context, ids []string) ([]Tweet, e
 			list = append(list, *tweet)
 		}
 	}
+
+	sort.Sort(SortByPosted(list))
+
 	return list, nil
 }
 func (r repositoryImpl) FindByUser(ctx context.Context, userId string) ([]Tweet, error) {
 
-	iterator := r.coll.Query().Where("author_id", "=", userId).Limit(20).Get(ctx)
+	iterator := r.coll.Query().Where("author_id", "=", userId).Limit(21).Get(ctx)
 	defer iterator.Stop()
 
 	var tweets []Tweet
@@ -110,6 +114,8 @@ func (r repositoryImpl) FindByUser(ctx context.Context, userId string) ([]Tweet,
 
 		tweets = append(tweets, tweet)
 	}
+
+	sort.Sort(SortByPosted(tweets))
 
 	return tweets, nil
 }

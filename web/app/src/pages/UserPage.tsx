@@ -8,7 +8,6 @@ import {WEB_BASE_URL} from "../Constants";
 import {TweetCard} from "./TweetCard";
 import {SearchByUser, SearchByUserVariables} from "../graph/SearchByUser";
 import {useParams} from 'react-router-dom';
-import algoliaLogo from "../assets/search-by-algolia-light-background.svg";
 
 
 const UserPage: FC = () => {
