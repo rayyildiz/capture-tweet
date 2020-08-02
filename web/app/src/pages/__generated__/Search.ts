@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SearchInput } from "./globalTypes";
+import { SearchInput } from "./../../../__generated__/globalTypes";
 
 // ====================================================
 // GraphQL query operation: Search

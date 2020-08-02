@@ -1,9 +1,15 @@
 import React, {createRef, FC, FormEvent, useState} from 'react';
-import {useMutation} from "@apollo/client";
-import {CONTACT_US} from "../graph/queries";
-import {Contact, ContactVariables} from "../graph/Contact";
+import {gql, useMutation} from "@apollo/client";
 import ReCAPTCHA from "react-google-recaptcha";
 import {CAPTCHA_KEY} from "../Constants";
+import {Contact, ContactVariables} from "./__generated__/Contact";
+
+
+const CONTACT_US = gql`
+  mutation Contact($input:ContactInput! $id:ID, $captcha:String!) {
+    contact(input:$input, tweetID: $id, capthca: $captcha)
+  }`;
+
 
 type ContactPageProps = {
   tweetID?: string
