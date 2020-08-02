@@ -1,17 +1,55 @@
 import React, {FC, useEffect, useRef, useState} from "react";
 import {Link, useParams} from "react-router-dom";
-import {useQuery} from "@apollo/client";
-import {TWEET_BY_ID, TWEET_IMAGE} from "../graph/queries";
-import {Tweet, Tweet_tweet, TweetVariables} from "../graph/Tweet";
+import {gql, useQuery} from "@apollo/client";
 import {Helmet} from "react-helmet";
 import moment from "moment";
-import {TweetImage, TweetImageVariables} from "../graph/TweetImage";
 import folderImage from './../assets/folder.svg';
 import {WEB_BASE_URL} from "../Constants";
 import 'bootstrap/js/dist/modal';
 import ContactPage from "./ContactPage";
 import Loading from "../components/Loading";
 import Modal from "bootstrap/js/src/modal";
+import {Tweet, Tweet_tweet, TweetVariables} from "./__generated__/Tweet";
+import {TweetImage, TweetImageVariables} from "./__generated__/TweetImage";
+
+
+const TWEET_IMAGE = gql`
+  query TweetImage($id:ID!) {
+    tweet(id:$id) {
+      id
+      captureURL
+    }
+  }
+`;
+
+
+const TWEET_BY_ID = gql`
+  query Tweet($id:ID!) {
+    tweet(id:$id) {
+      id
+      fullText
+      lang
+      postedAt
+      captureURL
+      retweetCount
+      favoriteCount
+      author {
+        id
+        userName
+        screenName
+        profileImageURL
+      }
+      resources {
+        id
+        url
+        mediaType
+        width
+        height
+      }
+    }
+  }
+`;
+
 
 const TweetPage: FC = () => {
   const {id} = useParams();

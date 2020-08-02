@@ -1,14 +1,30 @@
 import React, {FC} from 'react';
-import {useQuery} from "@apollo/client";
-import {SEARCH_BY_USER} from "../graph/queries";
+import {gql, useQuery} from "@apollo/client";
 import notFound from '../assets/not_found.svg';
 import './SearchPage.css';
 import {Helmet} from "react-helmet";
 import {WEB_BASE_URL} from "../Constants";
 import {TweetCard} from "./TweetCard";
-import {SearchByUser, SearchByUserVariables} from "../graph/SearchByUser";
 import {useParams} from 'react-router-dom';
+import {SearchByUser, SearchByUserVariables} from "./__generated__/SearchByUser";
 
+
+const SEARCH_BY_USER = gql `
+  query SearchByUser($userID: ID!) {
+    searchByUser(userID: $userID) {
+      id
+      fullText
+      lang
+      postedAt
+      captureThumbURL
+      author {
+        userName
+        screenName
+        profileImageURL
+      }
+    }
+  }
+`;
 
 const UserPage: FC = () => {
   let {id} = useParams();

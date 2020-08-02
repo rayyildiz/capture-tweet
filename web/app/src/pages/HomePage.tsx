@@ -1,11 +1,29 @@
 import React, {FC, FormEvent, useState} from "react";
 import './HomePage.css';
-import {useMutation} from "@apollo/client";
+import {gql, useMutation} from "@apollo/client";
 import {Redirect} from "react-router-dom";
-import {CAPTURE_TWEET} from "../graph/queries";
-import {Capture, CaptureVariables} from "../graph/Capture";
 import {Helmet} from "react-helmet";
 import {WEB_BASE_URL} from "../Constants";
+import {Capture, CaptureVariables} from "./__generated__/Capture";
+
+
+const CAPTURE_TWEET = gql`
+  mutation Capture($url:String!) {
+    capture(url:$url) {
+      id
+      fullText
+      favoriteCount
+      retweetCount
+      postedAt
+      author {
+        userName
+        screenName
+        profileImageURL
+      }
+    }
+  }
+`;
+
 
 const HomePage: FC = () => {
   const [url, setUrl] = useState('');

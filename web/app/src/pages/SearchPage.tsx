@@ -1,20 +1,35 @@
 import React, {FC} from 'react';
 import * as qs from 'query-string';
-import {useQuery} from "@apollo/client";
-import {SEARCH_TWEET} from "../graph/queries";
-import {Search, SearchVariables} from "../graph/Search";
+import {gql, useQuery} from "@apollo/client";
 import notFound from '../assets/not_found.svg';
 import './SearchPage.css';
 import {Helmet} from "react-helmet";
 import {WEB_BASE_URL} from "../Constants";
 import algoliaLogo from '../assets/search-by-algolia-light-background.svg';
 import {TweetCard} from "./TweetCard";
+import {Search, SearchVariables} from "./__generated__/Search";
 
 const getQueryStringValue = (key: string, queryString = window.location.search): string => {
   const values = qs.parse(queryString);
   return values[key] as string;
 };
 
+const SEARCH_TWEET = gql`
+  query Search($input: SearchInput!) {
+    search(input: $input, size: 21) {
+      id
+      fullText
+      lang
+      postedAt
+      captureThumbURL
+      author {
+        userName
+        screenName
+        profileImageURL
+      }
+    }
+  }
+`;
 
 const SearchPage: FC = () => {
   const q = getQueryStringValue('q');
