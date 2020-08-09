@@ -6,9 +6,10 @@ package api
 
 import (
 	context "context"
+	reflect "reflect"
+
 	anaconda "github.com/ChimeraCoder/anaconda"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
 // MockUserService is a mock of UserService interface.
