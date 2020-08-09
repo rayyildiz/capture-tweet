@@ -5,9 +5,10 @@
 package infra
 
 import (
+	reflect "reflect"
+
 	search "github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
 // MockIndexInterface is a mock of IndexInterface interface.

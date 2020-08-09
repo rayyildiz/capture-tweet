@@ -6,9 +6,10 @@ package tweet
 
 import (
 	context "context"
+	reflect "reflect"
+
 	anaconda "github.com/ChimeraCoder/anaconda"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
 // MockRepository is a mock of Repository interface.

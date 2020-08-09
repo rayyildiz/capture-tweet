@@ -36,7 +36,8 @@ require (
 	gocloud.dev/pubsub/natspubsub v0.20.0
 	golang.org/x/sys v0.0.0-20200728102440-3e129f6d46b1 // indirect
 	golang.org/x/text v0.3.3 // indirect
-	golang.org/x/tools v0.0.0-20200731060945-b5fad4ed8dd6 // indirect
+	golang.org/x/tools v0.0.0-20200809012840-6f4f008689da // indirect
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/genproto v0.0.0-20200702021140-07506425bd67 // indirect
 	google.golang.org/grpc v1.30.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect

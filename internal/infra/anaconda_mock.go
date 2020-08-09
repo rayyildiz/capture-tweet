@@ -5,10 +5,11 @@
 package infra
 
 import (
-	anaconda "github.com/ChimeraCoder/anaconda"
-	gomock "github.com/golang/mock/gomock"
 	url "net/url"
 	reflect "reflect"
+
+	anaconda "github.com/ChimeraCoder/anaconda"
+	gomock "github.com/golang/mock/gomock"
 )
 
 // MockTweetAPI is a mock of TweetAPI interface.
