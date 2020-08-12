@@ -1,5 +1,5 @@
 steps:
-  - name: 'golang:1.14'
+  - name: 'golang:1.15'
     args: ['go', 'build', '-a', '-installsuffix','cgo', '-o' ,'tmp/app','.']
     env: ['GO111MODULE=on','CGO_ENABLED=0','GOOS=linux']
     dir: 'cmd/sitemap'
