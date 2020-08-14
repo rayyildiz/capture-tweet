@@ -23,7 +23,7 @@ type captchaResponse struct {
 	ErrorCodes []string `json:"error-codes"`
 }
 
-func (s serviceImpl) SendMail(ctx context.Context, senderMail, senderName, message, captcha string) error {
+func (s serviceImpl) StoreContactRequest(ctx context.Context, senderMail, senderName, message, captcha string) error {
 
 	post := url.Values{
 		"secret":   {os.Getenv("CAPTCHA_SECRET")},

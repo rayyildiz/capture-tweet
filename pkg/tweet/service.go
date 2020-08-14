@@ -41,7 +41,7 @@ func (s serviceImpl) FindById(ctx context.Context, id string) (*api.TweetModel, 
 			URL:          res.URL,
 			Width:        res.Width,
 			Height:       res.Height,
-			ResourceType: res.URL,
+			ResourceType: res.MediaType,
 		})
 	}
 
