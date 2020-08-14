@@ -10,10 +10,12 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
+	"os"
 	"testing"
 )
 
 func TestService_CaptureURL(t *testing.T) {
+	os.Setenv("APP_SLEEP_TIME_MS", "6000")
 	ctx := context.Background()
 	req := testcontainers.ContainerRequest{
 		Image:        "chromedp/headless-shell",
@@ -70,6 +72,8 @@ func TestService_SaveCapture(t *testing.T) {
 }
 
 func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
+	os.Setenv("APP_SLEEP_TIME_MS", "6000")
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

@@ -10,6 +10,8 @@ import (
 	"go.uber.org/zap"
 	"gocloud.dev/blob"
 	"math"
+	"os"
+	"strconv"
 	"time"
 )
 
@@ -115,10 +117,18 @@ func (s *serviceImpl) CaptureURL(ctx context.Context, model *api.CaptureRequestM
 	return buf, nil
 }
 
+func getSleep() time.Duration {
+	ms, _ := strconv.Atoi(os.Getenv("APP_SLEEP_TIME_MS"))
+	if ms == 0 {
+		ms = 3000
+	}
+	return time.Duration(ms) * time.Millisecond
+}
+
 func fullScreenshot(url string, quality int64, res *[]byte) chromedp.Tasks {
 	return chromedp.Tasks{
 		chromedp.Navigate(url),
-		chromedp.Sleep(time.Millisecond * 3000),
+		chromedp.Sleep(getSleep()),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			// get layout metrics
 			_, _, contentSize, err := page.GetLayoutMetrics().Do(ctx)
