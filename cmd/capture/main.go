@@ -4,6 +4,7 @@ import (
 	"com.capturetweet/internal/infra"
 	"com.capturetweet/pkg/browser"
 	"com.capturetweet/pkg/tweet"
+	"fmt"
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
@@ -18,27 +19,46 @@ func init() {
 }
 
 func main() {
+	if err := Run(); err != nil {
+		log.Printf("%v", err)
+		os.Exit(1)
+	}
+}
+
+func Run() error {
 	err := infra.InitSentry()
-	ensureNoError(err, "sentry init")
+	if err != nil {
+		return fmt.Errorf("sentry init: %w", err)
+	}
 	defer sentry.Flush(time.Second * 2)
 
 	start := time.Now()
 	logger := infra.NewLogger()
-	ensureNotNil(logger, "zap:logger")
+	if logger == nil {
+		return fmt.Errorf("zap:logger is nil")
+	}
 
 	tweetColl, err := infra.NewTweetCollection()
-	ensureNoError(err, "twitter:docstore collection")
+	if err != nil {
+		return fmt.Errorf("twitter:docstore collection %w", err)
+	}
 	defer tweetColl.Close()
 
 	bucket, err := infra.NewBucketFromEnvironment()
-	ensureNoError(err, "blob bucket")
+	if err != nil {
+		return fmt.Errorf("bloc bucket, %w", err)
+	}
 	defer bucket.Close()
 
 	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), nil, nil, nil, logger, nil)
-	ensureNotNil(tweetService, "tweet service initialize")
+	if tweetService == nil {
+		return fmt.Errorf("tweet service initialize")
+	}
 
 	browserService := browser.NewService(logger, tweetService, bucket)
-	ensureNotNil(browserService, "browser service initialize")
+	if browserService == nil {
+		return fmt.Errorf("browser service initialize")
+	}
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -55,17 +75,9 @@ func main() {
 	logger.Info("initialized objects", zap.Duration("elapsed", diff))
 
 	err = http.ListenAndServe(":"+port, nil)
-	ensureNoError(err, "http:ListenAndServe, port :"+port)
-}
-
-func ensureNoError(err error, msg string) {
 	if err != nil {
-		log.Fatalf("%s, %v", msg, err)
+		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}
-}
 
-func ensureNotNil(obj interface{}, msg string) {
-	if obj == nil {
-		log.Fatalf("object is nil, %s", msg)
-	}
+	return nil
 }

@@ -26,13 +26,10 @@ func NewIndex() (IndexInterface, error) {
 
 type IndexInterface interface {
 	Delete(opts ...interface{}) (res search.DeleteTaskRes, err error)
-	Exists() (exists bool, err error)
 
 	// Indexing
 	GetObject(objectID string, object interface{}, opts ...interface{}) error
-	GetObjects(objectIDs []string, objects interface{}, opts ...interface{}) error
 	SaveObject(object interface{}, opts ...interface{}) (res search.SaveObjectRes, err error)
-	SaveObjects(objects interface{}, opts ...interface{}) (res search.GroupBatchRes, err error)
 
 	// Searching
 	Search(query string, opts ...interface{}) (res search.QueryRes, err error)

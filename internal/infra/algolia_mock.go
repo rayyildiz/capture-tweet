@@ -53,21 +53,6 @@ func (mr *MockIndexInterfaceMockRecorder) Delete(arg0 ...interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIndexInterface)(nil).Delete), arg0...)
 }
 
-// Exists mocks base method.
-func (m *MockIndexInterface) Exists() (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Exists")
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Exists indicates an expected call of Exists.
-func (mr *MockIndexInterfaceMockRecorder) Exists() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Exists", reflect.TypeOf((*MockIndexInterface)(nil).Exists))
-}
-
 // GetObject mocks base method.
 func (m *MockIndexInterface) GetObject(arg0 string, arg1 interface{}, arg2 ...interface{}) error {
 	m.ctrl.T.Helper()
@@ -85,25 +70,6 @@ func (mr *MockIndexInterfaceMockRecorder) GetObject(arg0, arg1 interface{}, arg2
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetObject", reflect.TypeOf((*MockIndexInterface)(nil).GetObject), varargs...)
-}
-
-// GetObjects mocks base method.
-func (m *MockIndexInterface) GetObjects(arg0 []string, arg1 interface{}, arg2 ...interface{}) error {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0, arg1}
-	for _, a := range arg2 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "GetObjects", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// GetObjects indicates an expected call of GetObjects.
-func (mr *MockIndexInterfaceMockRecorder) GetObjects(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetObjects", reflect.TypeOf((*MockIndexInterface)(nil).GetObjects), varargs...)
 }
 
 // SaveObject mocks base method.
@@ -124,26 +90,6 @@ func (mr *MockIndexInterfaceMockRecorder) SaveObject(arg0 interface{}, arg1 ...i
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0}, arg1...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveObject", reflect.TypeOf((*MockIndexInterface)(nil).SaveObject), varargs...)
-}
-
-// SaveObjects mocks base method.
-func (m *MockIndexInterface) SaveObjects(arg0 interface{}, arg1 ...interface{}) (search.GroupBatchRes, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0}
-	for _, a := range arg1 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "SaveObjects", varargs...)
-	ret0, _ := ret[0].(search.GroupBatchRes)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// SaveObjects indicates an expected call of SaveObjects.
-func (mr *MockIndexInterfaceMockRecorder) SaveObjects(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0}, arg1...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveObjects", reflect.TypeOf((*MockIndexInterface)(nil).SaveObjects), varargs...)
 }
 
 // Search mocks base method.

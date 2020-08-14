@@ -3,6 +3,7 @@ package main
 import (
 	"com.capturetweet/pkg/content"
 	"context"
+	"fmt"
 	"github.com/getsentry/sentry-go"
 	"log"
 	"net/http"
@@ -26,8 +27,17 @@ func init() {
 }
 
 func main() {
+	if err := Run(); err != nil {
+		log.Printf("%v", err)
+		os.Exit(1)
+	}
+}
+
+func Run() error {
 	err := infra.InitSentry()
-	ensureNoError(err, "sentry init")
+	if err != nil {
+		return fmt.Errorf("sentry init, %w", err)
+	}
 
 	defer sentry.Flush(time.Second * 2)
 	start := time.Now()
@@ -38,44 +48,68 @@ func main() {
 	}
 
 	logger := infra.NewLogger()
-	ensureNotNil(logger, "zap:logger")
+	if logger == nil {
+		return fmt.Errorf("zap:logger is nil")
+	}
 
 	tweetColl, err := infra.NewTweetCollection()
-	ensureNoError(err, "twitter:docstore collection")
+	if err != nil {
+		return fmt.Errorf("twitter:docstore collection, %w", err)
+	}
 	defer tweetColl.Close()
 
 	userColl, err := infra.NewUserCollection()
-	ensureNoError(err, "user:docstore collection")
+	if err != nil {
+		return fmt.Errorf("user:docstore collection, %w", err)
+	}
 	defer userColl.Close()
 
 	contactUsColl, err := infra.NewContactUsCollection()
-	ensureNoError(err, "content:ContactUs collection")
+	if err != nil {
+		return fmt.Errorf("content:ContactUs collection, %w", err)
+	}
 	defer contactUsColl.Close()
 
 	topic, err := infra.NewTopic(os.Getenv("TOPIC_CAPTURE"))
-	ensureNoError(err, "pubsub topic capture")
+	if err != nil {
+		return fmt.Errorf("pubsub topic capture, %w", err)
+	}
 	defer topic.Shutdown(context.Background())
 
 	searchIndexer, err := infra.NewIndex()
-	ensureNoError(err, "search index, algolia")
+	if err != nil {
+		return fmt.Errorf("search index, algolia, %w", err)
+	}
 
 	twitterApi := infra.NewTwitterClient()
-	ensureNotNil(twitterApi, "anaconda:twitter client")
+	if twitterApi == nil {
+		return fmt.Errorf("anaconda:twitter client is nil")
+	}
 
 	searchService := search.NewService(searchIndexer)
-	ensureNotNil(searchService, "search:NewService")
+	if searchService == nil {
+		return fmt.Errorf("search:NewService is nil")
+	}
 
 	userService := user.NewService(user.NewRepository(userColl), logger)
-	ensureNotNil(userService, "user:NewService")
+	if userService == nil {
+		return fmt.Errorf("user:NewService is nil")
+	}
 
 	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), searchService, userService, twitterApi, logger, topic)
-	ensureNotNil(tweetService, "tweet:NewService")
+	if tweetService == nil {
+		return fmt.Errorf("tweet:NewService is nil")
+	}
 
 	contentService := content.NewService(content.NewRepository(contactUsColl))
-	ensureNotNil(contentService, "content service")
+	if contentService == nil {
+		return fmt.Errorf("content service is nil")
+	}
 
 	rootResolver := resolver.NewResolver()
-	ensureNotNil(rootResolver, "graph:NewResolver")
+	if rootResolver == nil {
+		return fmt.Errorf("graph:NewResolver is nil")
+	}
 	resolver.InitService(logger, tweetService, userService, contentService)
 
 	srv := handler.NewDefaultServer(resolver.NewExecutableSchema(resolver.Config{Resolvers: rootResolver}))
@@ -99,17 +133,9 @@ func main() {
 	logger.Info("initialized objects", zap.Duration("elapsed", diff))
 
 	err = http.ListenAndServe(":"+port, h)
-	ensureNoError(err, "http:ListenAndServe, port :"+port)
-}
-
-func ensureNoError(err error, msg string) {
 	if err != nil {
-		log.Fatalf("%s, %v", msg, err)
+		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}
-}
 
-func ensureNotNil(obj interface{}, msg string) {
-	if obj == nil {
-		log.Fatalf("object is nil, %s", msg)
-	}
+	return nil
 }
