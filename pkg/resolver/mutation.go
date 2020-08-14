@@ -62,7 +62,7 @@ func (r mutationResolverImpl) Contact(ctx context.Context, input ContactInput, t
 		msg = fmt.Sprintf("Tweet ID: %s\n Message: %s", *tweetID, input.Message)
 	}
 
-	err := _contentService.SendMail(ctx, input.Email, input.FullName, msg, capthca)
+	err := _contentService.StoreContactRequest(ctx, input.Email, input.FullName, msg, capthca)
 	if err != nil {
 		sentry.CaptureException(err)
 		_log.Error("could not send mail", zap.String("contact_email", input.Email), zap.String("contact_fullName", input.FullName), zap.Error(err))

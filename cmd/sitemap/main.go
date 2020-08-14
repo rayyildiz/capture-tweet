@@ -3,6 +3,7 @@ package main
 import (
 	"com.capturetweet/internal/infra"
 	"com.capturetweet/pkg/tweet"
+	"fmt"
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
 	. "go.uber.org/zap"
@@ -17,8 +18,17 @@ func init() {
 }
 
 func main() {
+	if err := Run(); err != nil {
+		log.Printf("%v", err)
+		os.Exit(1)
+	}
+}
+
+func Run() error {
 	err := infra.InitSentry()
-	ensureNoError(err, "sentry init")
+	if err != nil {
+		return fmt.Errorf("sentry init, %w", err)
+	}
 	defer sentry.Flush(time.Second * 2)
 
 	start := time.Now()
@@ -29,14 +39,21 @@ func main() {
 	}
 
 	logger := infra.NewLogger()
-	ensureNotNil(logger, "zap:logger")
+	if logger == nil {
+		return fmt.Errorf("zap:logger is nil")
+	}
 
 	tweetColl, err := infra.NewTweetCollection()
-	ensureNoError(err, "twitter:docstore collection")
+	if err != nil {
+		return fmt.Errorf("twitter:docstore collection, %w", err)
+	}
 	defer tweetColl.Close()
 
 	bucket, err := infra.NewBucketFromEnvironment()
-	ensureNoError(err, "blob bucket")
+	if err != nil {
+		return fmt.Errorf("blob bucket, %w", err)
+	}
+
 	defer bucket.Close()
 
 	h := handlerImpl{
@@ -51,17 +68,8 @@ func main() {
 	logger.Info("initialized objects", Duration("elapsed", diff))
 
 	err = http.ListenAndServe(":"+port, nil)
-	ensureNoError(err, "http:ListenAndServe, port :"+port)
-}
-
-func ensureNoError(err error, msg string) {
 	if err != nil {
-		log.Fatalf("%s, %v", msg, err)
+		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}
-}
-
-func ensureNotNil(obj interface{}, msg string) {
-	if obj == nil {
-		log.Fatalf("object is nil, %s", msg)
-	}
+	return nil
 }
