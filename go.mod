@@ -8,7 +8,7 @@ require (
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
 	github.com/agnivade/levenshtein v1.1.0 // indirect
-	github.com/algolia/algoliasearch-client-go/v3 v3.9.0
+	github.com/algolia/algoliasearch-client-go/v3 v3.11.0
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
 	github.com/chromedp/cdproto v0.0.0-20200709115526-d1f6fc58448b
 	github.com/chromedp/chromedp v0.5.3
