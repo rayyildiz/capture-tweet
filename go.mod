@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	cloud.google.com/go v0.60.0 // indirect
-	github.com/99designs/gqlgen v0.11.3
+	github.com/99designs/gqlgen v0.12.1
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
 	github.com/agnivade/levenshtein v1.1.0 // indirect
@@ -21,7 +21,6 @@ require (
 	github.com/gobwas/ws v1.0.3 // indirect
 	github.com/golang/mock v1.4.4
 	github.com/google/uuid v1.1.1
-	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/mailru/easyjson v0.7.3 // indirect
@@ -42,6 +41,5 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/genproto v0.0.0-20200702021140-07506425bd67 // indirect
 	google.golang.org/grpc v1.30.0 // indirect
-	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 )
