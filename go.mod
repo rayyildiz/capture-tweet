@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	cloud.google.com/go v0.60.0 // indirect
-	github.com/99designs/gqlgen v0.12.1
+	github.com/99designs/gqlgen v0.12.2
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
 	github.com/agnivade/levenshtein v1.1.0 // indirect
