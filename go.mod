@@ -20,7 +20,7 @@ require (
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gobwas/ws v1.0.3 // indirect
 	github.com/golang/mock v1.4.4
-	github.com/google/uuid v1.1.1
+	github.com/google/uuid v1.1.2
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/mailru/easyjson v0.7.3 // indirect
