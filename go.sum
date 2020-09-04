@@ -581,6 +581,8 @@ go.uber.org/tools v0.0.0-20190618225709-2cfd321de3ee h1:0mgffUl7nfd+FpvXMVz4IDEa
 go.uber.org/tools v0.0.0-20190618225709-2cfd321de3ee/go.mod h1:vJERXedbb3MVM5f9Ejo0C68/HhF8uaILCdgjnY+goOA=
 go.uber.org/zap v1.15.0 h1:ZZCA22JRF2gQE5FoNmhmrf7jeJJ2uhqDUNRYKm8dvmM=
 go.uber.org/zap v1.15.0/go.mod h1:Mb2vm2krFEG5DV0W9qcHBYFtp/Wku1cvYaqPsS/WYfc=
+go.uber.org/zap v1.16.0 h1:uFRZXykJGK9lLY4HtgSw44DnIcAM+kRBP7x5m+NpAOM=
+go.uber.org/zap v1.16.0/go.mod h1:MA8QOfq0BHJwdXa996Y4dYkAqRKB8/1K1QMMZVaNZjQ=
 gocloud.dev v0.20.0 h1:mbEKMfnyPV7W1Rj35R1xXfjszs9dXkwSOq2KoFr25g8=
 gocloud.dev v0.20.0/go.mod h1:+Y/RpSXrJthIOM8uFNzWp6MRu9pFPNFEEZrQMxpkfIc=
 gocloud.dev/docstore/mongodocstore v0.20.0 h1:WZyyLl3Vd7R9e2oqPeJI57gPR6AC9KGW5yzoR5H9RBc=
