@@ -31,7 +31,7 @@ require (
 	github.com/testcontainers/testcontainers-go v0.7.0
 	github.com/vektah/gqlparser/v2 v2.0.1
 	go.opencensus.io v0.22.4 // indirect
-	go.uber.org/zap v1.15.0
+	go.uber.org/zap v1.16.0
 	gocloud.dev v0.20.0
 	gocloud.dev/docstore/mongodocstore v0.20.0
 	gocloud.dev/pubsub/natspubsub v0.20.0
