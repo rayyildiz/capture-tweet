@@ -29,7 +29,7 @@ require (
 	github.com/rs/cors v1.7.0
 	github.com/stretchr/testify v1.6.1
 	github.com/testcontainers/testcontainers-go v0.7.0
-	github.com/vektah/gqlparser/v2 v2.0.1
+	github.com/vektah/gqlparser/v2 v2.1.0
 	go.opencensus.io v0.22.4 // indirect
 	go.uber.org/zap v1.16.0
 	gocloud.dev v0.20.0
