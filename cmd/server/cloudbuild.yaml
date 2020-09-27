@@ -13,4 +13,4 @@ steps:
     dir: 'cmd/server'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    args: ['gcloud', 'run','deploy','api','--image','eu.gcr.io/$PROJECT_ID/api:$SHORT_SHA', '--platform', 'managed','--region','europe-west1','--set-env-vars=SENTRY_RELEASE=$SHORT_SHA']
+    args: ['gcloud', 'run','deploy','api','--image','eu.gcr.io/$PROJECT_ID/api:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']
