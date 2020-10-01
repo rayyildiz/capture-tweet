@@ -41,4 +41,4 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: production
-          author_email: rayyildiz@gmail.com
+          version: 'v0.4.0'
