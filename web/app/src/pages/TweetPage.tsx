@@ -8,9 +8,9 @@ import {WEB_BASE_URL} from "../Constants";
 import 'bootstrap/js/dist/modal';
 import ContactPage from "./ContactPage";
 import Loading from "../components/Loading";
-import Modal from "bootstrap/js/src/modal";
 import {Tweet, Tweet_tweet, TweetVariables} from "./__generated__/Tweet";
 import {TweetImage, TweetImageVariables} from "./__generated__/TweetImage";
+import {Modal} from "bootstrap";
 
 
 const TWEET_IMAGE = gql`
