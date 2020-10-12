@@ -30,3 +30,8 @@ func TestTime(t *testing.T) {
 	require.Equal(t, &t1, Time(t1))
 	require.Equal(t, &t2, Time(t2))
 }
+
+func TestInt64(t *testing.T) {
+	var actual int64 = 5
+	require.Equal(t, &actual, Int64(actual))
+}
