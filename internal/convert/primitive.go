@@ -18,3 +18,11 @@ func Int(n int) *int {
 func Time(t time.Time) *time.Time {
 	return &t
 }
+
+func Int64(n int64) *int64 {
+	return &n
+}
+
+func Duration(d time.Duration) *time.Duration {
+	return &d
+}
