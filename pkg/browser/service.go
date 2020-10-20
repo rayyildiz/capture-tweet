@@ -1,19 +1,22 @@
 package browser
 
 import (
-	"com.capturetweet/api"
 	"context"
 	"fmt"
+	"math"
+	"os"
+	"strconv"
+	"time"
+
+	"com.capturetweet/api"
 	"github.com/chromedp/cdproto/emulation"
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
 	"go.uber.org/zap"
 	"gocloud.dev/blob"
-	"math"
-	"os"
-	"strconv"
-	"time"
 )
+
+var minImageSize = 1024 * 25
 
 type serviceImpl struct {
 	log          *zap.Logger
@@ -39,7 +42,7 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.C
 		return nil, err
 	}
 
-	if len(originalImage) < 1024*25 {
+	if len(originalImage) < minImageSize {
 		return nil, fmt.Errorf("image size is less than 25 Kb. try again. size is %d", len(originalImage))
 	}
 
