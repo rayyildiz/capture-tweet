@@ -1,17 +1,18 @@
 package browser
 
 import (
+	"context"
+	"os"
+	"testing"
+
 	"com.capturetweet/api"
 	"com.capturetweet/internal/infra"
-	"context"
 	"github.com/docker/go-connections/nat"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
-	"os"
-	"testing"
 )
 
 func TestService_CaptureURL(t *testing.T) {
@@ -34,6 +35,8 @@ func TestService_CaptureURL(t *testing.T) {
 
 	service := NewService(log, nil, nil)
 	require.NotNil(t, service)
+
+	minImageSize = 1024 * 10
 
 	data, err := service.CaptureURL(ctx, &api.CaptureRequestModel{
 		ID:     "20",

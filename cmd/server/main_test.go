@@ -1,18 +1,19 @@
 package main
 
 import (
-	"github.com/stretchr/testify/require"
 	"log"
 	"math/rand"
 	"os"
 	"strconv"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestRun(t *testing.T) {
 	rand.Seed(time.Now().Unix())
-	port := rand.Intn(2000) + 30000
+	port := rand.Intn(2000) + 30010
 	log.Printf("port is %d", port)
 
 	os.Setenv("DOCSTORE_TWEETS", "mem://tweet/ID")
