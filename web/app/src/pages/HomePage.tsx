@@ -66,11 +66,9 @@ const HomePage: FC = () => {
               <p className="mb-0">{error.message}</p>
             </div>
             }
-            {validation.length > 0 && <div className="alert alert-warning mt-1 alert-box mx-auto alert-dismissible">
+            {validation.length > 0 && <div className="alert alert-warning mt-1 alert-box mx-auto alert-dismissible" role="alert">
               <p className="mb-0">{validation}</p>
-              <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={() => setValidation('')}>
-                <span aria-hidden="true">&times;</span>
-              </button>
+              <button type="button" className="btn-close" data-dismiss="alert" aria-label="Close" onClick={() => setValidation('')}> </button>
             </div>
             }
             <form onSubmit={handleSummit} className="mt-2">

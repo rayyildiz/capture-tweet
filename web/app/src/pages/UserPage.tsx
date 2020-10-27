@@ -9,7 +9,7 @@ import {useParams} from 'react-router-dom';
 import {SearchByUser, SearchByUserVariables} from "./__generated__/SearchByUser";
 
 
-const SEARCH_BY_USER = gql `
+const SEARCH_BY_USER = gql`
   query SearchByUser($userID: ID!) {
     searchByUser(userID: $userID) {
       id
@@ -27,7 +27,8 @@ const SEARCH_BY_USER = gql `
 `;
 
 const UserPage: FC = () => {
-  let {id} = useParams();
+  const {id} = useParams<{ id: string }>();
+
   const {data, loading, error} = useQuery<SearchByUser, SearchByUserVariables>(SEARCH_BY_USER, {
     variables: {
       userID: id
