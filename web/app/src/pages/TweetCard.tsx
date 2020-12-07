@@ -1,4 +1,4 @@
-import React, {FC, FormEvent} from "react";
+import {FC, FormEvent} from "react";
 import {useHistory} from "react-router-dom";
 import moment from "moment";
 import notFound from "../assets/not_found.svg";

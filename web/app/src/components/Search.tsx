@@ -1,4 +1,4 @@
-import React, {FC, FormEvent, useState} from "react";
+import {FC, FormEvent, useState} from "react";
 import {useHistory} from "react-router-dom";
 
 export const Search: FC = () => {

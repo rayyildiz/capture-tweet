@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import {FC} from 'react';
 import {gql, useQuery} from "@apollo/client";
 import notFound from '../assets/not_found.svg';
 import './SearchPage.css';

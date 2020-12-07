@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useRef, useState} from "react";
+import {FC, useEffect, useRef, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {gql, useQuery} from "@apollo/client";
 import {Helmet} from "react-helmet";

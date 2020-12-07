@@ -1,4 +1,4 @@
-import React, {createRef, FC, FormEvent, useState} from 'react';
+import {createRef, FC, FormEvent, useState} from 'react';
 import {gql, useMutation} from "@apollo/client";
 import ReCAPTCHA from "react-google-recaptcha";
 import {CAPTCHA_KEY} from "../Constants";

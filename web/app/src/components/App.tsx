@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import {FC} from 'react';
 import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 import {BrowserRouter} from "react-router-dom";
 import {Header} from "./Header";
