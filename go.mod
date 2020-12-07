@@ -10,20 +10,19 @@ require (
 	github.com/agnivade/levenshtein v1.1.0 // indirect
 	github.com/algolia/algoliasearch-client-go/v3 v3.14.0
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
-	github.com/chromedp/cdproto v0.0.0-20200709115526-d1f6fc58448b
-	github.com/chromedp/chromedp v0.5.3
+	github.com/chromedp/cdproto v0.0.0-20201009231348-1c6a710e77de
+	github.com/chromedp/chromedp v0.5.4
 	github.com/docker/go-connections v0.4.0
 	github.com/dustin/go-jsonpointer v0.0.0-20160814072949-ba0abeacc3dc // indirect
 	github.com/dustin/gojson v0.0.0-20160307161227-2e71ec9dd5ad // indirect
 	github.com/garyburd/go-oauth v0.0.0-20180319155456-bca2e7f09a17 // indirect
 	github.com/getsentry/sentry-go v0.8.0
 	github.com/gobwas/pool v0.2.1 // indirect
-	github.com/gobwas/ws v1.0.3 // indirect
 	github.com/golang/mock v1.4.4
 	github.com/google/uuid v1.1.2
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/joho/godotenv v1.3.0
-	github.com/mailru/easyjson v0.7.3 // indirect
+	github.com/knq/sysutil v0.0.0-20191005231841-15668db23d08 // indirect
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/rs/cors v1.7.0
