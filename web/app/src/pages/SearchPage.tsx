@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import {FC} from 'react';
 import * as qs from 'query-string';
 import {gql, useQuery} from "@apollo/client";
 import notFound from '../assets/not_found.svg';

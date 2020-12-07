@@ -1,4 +1,4 @@
-import React, {FC, lazy, Suspense} from "react";
+import {FC, lazy, Suspense} from "react";
 import {Route, Switch} from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Loading from "./components/Loading";

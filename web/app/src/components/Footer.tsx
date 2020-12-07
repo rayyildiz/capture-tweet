@@ -1,4 +1,4 @@
-import React, {FC} from "react";
+import {FC} from "react";
 import './Footer.css';
 
 export const Footer: FC = () => (

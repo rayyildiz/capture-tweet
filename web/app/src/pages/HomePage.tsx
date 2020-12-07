@@ -1,4 +1,4 @@
-import React, {FC, FormEvent, useState} from "react";
+import {FC, FormEvent, useState} from "react";
 import './HomePage.css';
 import {gql, useMutation} from "@apollo/client";
 import {Redirect} from "react-router-dom";
