@@ -118,7 +118,7 @@ func Run() error {
 	mux := http.NewServeMux()
 
 	if os.Getenv("GRAPHQL_ENABLE_PLAYGROUND") == "true" {
-		mux.Handle("/", playground.Handler("GraphQL playground", "/api/query"))
+		mux.Handle("/api/docs", playground.Handler("GraphQL playground", "/api/query"))
 	}
 	mux.Handle("/api/query", srv)
 

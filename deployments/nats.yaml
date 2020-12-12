@@ -2,23 +2,30 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: nats
+  namespace: capturetweet
   labels:
     app: nats
     version: v1
 spec:
   containers:
-    - name: nats-standalone
+    - name: app
       image: nats
       ports:
         - containerPort: 4222
+          name: tcp-nats
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nats
+  name: nats-svc
+  namespace: capturetweet
+  labels:
+    app: nats
+    version: v1
 spec:
   ports:
     - port: 4222
+      name: tcp-nats
   selector:
     app: nats
     version: v1
