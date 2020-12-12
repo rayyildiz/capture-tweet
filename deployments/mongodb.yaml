@@ -2,6 +2,10 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongodb
+  namespace: capturetweet
+  labels:
+    app: mongodb
+    version: v1
 spec:
   selector:
     matchLabels:
@@ -21,26 +25,45 @@ spec:
           image: mongo
           ports:
             - containerPort: 27017
+              name: tcp-mongodb
           volumeMounts:
             - mountPath: /data/db
               name: mongodb-data
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: 300m
+            requests:
+              memory: 128Mi
+              cpu: 150m
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "OVzXseTlsKLu9HVn7zS9t1Wh59bEOe"
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: "XYEbHtCbT97HOETfvbmuIuJToWdzl8"
   volumeClaimTemplates:
     - metadata:
         name: mongodb-data
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: standard
+        storageClassName: linode-block-storage-retain
         resources:
           requests:
-            storage: 5Gi
+            storage: 10Gi
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: mongo-svc
+  namespace: capturetweet
+  labels:
+    app: mongodb
+    version: v1
 spec:
   ports:
     - port: 27017
+      name: tcp-mongodb
   selector:
     app: mongodb
     version: v1

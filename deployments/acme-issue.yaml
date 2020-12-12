@@ -1,0 +1,28 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: capturetweet-issuer
+  namespace: istio-system
+spec:
+  acme:
+    email: rayyildiz+acme@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-secret-prod
+    solvers:
+      - http01:
+          ingress:
+            class: istio
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: capturetweet-certifacate
+  namespace: istio-system
+spec:
+  secretName: ingress-cert-capture
+  commonName: beta.capturetweet.com
+  issuerRef:
+    name: capturetweet-issuer
+  dnsNames:
+    - beta.capturetweet.com

@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: capture-gateway
+  namespace: capturetweet
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 443
+        protocol: HTTPS
+        name: HTTPS
+      hosts:
+        - beta.capturetweet.com
+      tls:
+        mode: SIMPLE
+        credentialName: ingress-cert-capture
+    - port:
+        number: 80
+        protocol: HTTP
+        name: HTTP
+      hosts:
+        - beta.capturetweet.com

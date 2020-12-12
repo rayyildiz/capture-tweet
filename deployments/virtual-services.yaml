@@ -1,0 +1,29 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: capturetweet-virtual-service
+  namespace: capturetweet
+spec:
+  hosts:
+    - beta.capturetweet.com
+  gateways:
+    - capture-gateway
+  http:
+#    - match:
+#        - uri:
+#            exact: /
+#      route:
+#        - destination:
+#            port:
+#              number: 80
+#            host: backend-service
+    - match:
+        - uri:
+            prefix: /api/
+#      rewrite:
+#        uri: /
+      route:
+        - destination:
+            port:
+              number: 4000
+            host: capturetweet-backend-svc

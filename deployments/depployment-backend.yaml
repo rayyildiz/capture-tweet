@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capturetweet-backend
+  namespace: capturetweet
+spec:
+  selector:
+    matchLabels:
+      app: capturetweet-backend
+      version: v1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: capturetweet-backend
+        version: v1
+    spec:
+      containers:
+        - name: app
+          image: rayyildiz.azurecr.io/capturetweet-server:1
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "250Mi"
+              cpu: "250m"
+          ports:
+            - containerPort: 4000
+              name: tcp-http
+          envFrom:
+            - secretRef:
+                name: connection-secrets
+          env:
+            - name: GRAPHQL_ENABLE_PLAYGROUND
+              value: "true"
+      imagePullSecrets:
+        - name: private-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: capturetweet-backend-svc
+  namespace: capturetweet
+spec:
+  selector:
+    app: capturetweet-backend
+    version: v1
+  ports:
+    - port: 4000
+      name: tcp-http
