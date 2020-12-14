@@ -29,6 +29,6 @@ require (
 	go.uber.org/zap v1.16.0
 	gocloud.dev v0.21.0
 	gocloud.dev/docstore/mongodocstore v0.21.0
-	gocloud.dev/pubsub/natspubsub v0.20.0
+	gocloud.dev/pubsub/natspubsub v0.21.0
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 )
