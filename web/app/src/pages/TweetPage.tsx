@@ -190,6 +190,9 @@ const TweetImageCard: FC<TweetImageCardProps> = ({id}) => {
   }, [id, stopPolling])
 
   if (data && data?.tweet && data.tweet.captureURL) {
+    setTimeout(() => {
+      stopPolling();
+    }, 500);
     return (<img src={`/${data.tweet.captureURL}`} alt="" className="img-fluid"/>);
   }
 
