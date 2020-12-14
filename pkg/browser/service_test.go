@@ -39,9 +39,9 @@ func TestService_CaptureURL(t *testing.T) {
 	minImageSize = 1024 * 10
 
 	data, err := service.CaptureURL(ctx, &api.CaptureRequestModel{
-		ID:     "20",
-		Author: "jack",
-		Url:    "https://twitter.com/jack/20",
+		ID:     "1335519471822381056",
+		Author: "rayyildiz",
+		Url:    "https://twitter.com/rayyildiz/status/1335519471822381056",
 	})
 	require.NoError(t, err)
 	if assert.NotNil(t, data) {
