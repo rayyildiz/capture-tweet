@@ -10,7 +10,7 @@ require (
 	github.com/algolia/algoliasearch-client-go/v3 v3.14.0
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
 	github.com/chromedp/cdproto v0.0.0-20201009231348-1c6a710e77de
-	github.com/chromedp/chromedp v0.5.4
+	github.com/chromedp/chromedp v0.5.5
 	github.com/docker/go-connections v0.4.0
 	github.com/dustin/go-jsonpointer v0.0.0-20160814072949-ba0abeacc3dc // indirect
 	github.com/dustin/gojson v0.0.0-20160307161227-2e71ec9dd5ad // indirect
