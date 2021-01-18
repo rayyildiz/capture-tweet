@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
-	. "go.uber.org/zap"
+	"go.uber.org/zap"
 	"log"
 	"net/http"
 	"os"
@@ -38,10 +38,7 @@ func Run() error {
 		port = "4400"
 	}
 
-	logger := infra.NewLogger()
-	if logger == nil {
-		return fmt.Errorf("zap:logger is nil")
-	}
+	infra.RegisterLogger()
 
 	tweetColl, err := infra.NewTweetCollection()
 	if err != nil {
@@ -57,7 +54,6 @@ func Run() error {
 	defer bucket.Close()
 
 	h := handlerImpl{
-		log:    logger,
 		repo:   tweet.NewRepository(tweetColl),
 		bucket: bucket,
 	}
@@ -65,7 +61,7 @@ func Run() error {
 	http.HandleFunc("/sitemap", h.handleRequest)
 
 	diff := time.Now().Sub(start)
-	logger.Info("initialized objects", Duration("elapsed", diff))
+	zap.L().Info("initialized objects", zap.Duration("elapsed", diff))
 
 	err = http.ListenAndServe(":"+port, nil)
 	if err != nil {

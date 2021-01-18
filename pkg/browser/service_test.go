@@ -30,10 +30,9 @@ func TestService_CaptureURL(t *testing.T) {
 	require.NoError(t, err)
 	defer chromeC.Terminate(ctx)
 
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
 
-	service := NewService(log, nil, nil)
+	service := NewService(nil, nil)
 	require.NotNil(t, service)
 
 	minImageSize = 1024 * 10
@@ -52,14 +51,13 @@ func TestService_CaptureURL(t *testing.T) {
 func TestService_SaveCapture(t *testing.T) {
 	ctx := context.Background()
 
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
 
 	bucket, err := infra.NewBucket("mem://test")
 	require.NoError(t, err)
 	require.NotNil(t, bucket)
 
-	service := NewService(log, nil, bucket)
+	service := NewService(nil, bucket)
 	require.NotNil(t, service)
 
 	response, err := service.SaveCapture(ctx, []byte("hello"), &api.CaptureRequestModel{
@@ -97,13 +95,12 @@ func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, bucket)
 
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
 
 	tweetS := api.NewMockTweetService(ctrl)
 	tweetS.EXPECT().UpdateLargeImage(ctx, "20", "capture/large/20.jpg").Return(nil)
 
-	service := NewService(log, tweetS, bucket)
+	service := NewService(tweetS, bucket)
 	require.NotNil(t, service)
 
 	response, err := service.CaptureSaveUpdateDatabase(ctx, &api.CaptureRequestModel{

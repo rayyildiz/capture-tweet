@@ -3,7 +3,6 @@ package resolver
 
 import (
 	"com.capturetweet/api"
-	"go.uber.org/zap"
 )
 
 type resolver struct {
@@ -24,13 +23,11 @@ func (r resolver) Query() QueryResolver {
 var (
 	_twitterService api.TweetService   = nil
 	_userService    api.UserService    = nil
-	_log            *zap.Logger        = nil
 	_contentService api.ContentService = nil
 )
 
-func InitService(log *zap.Logger, twitterService api.TweetService, userService api.UserService, contentService api.ContentService) {
+func InitService(twitterService api.TweetService, userService api.UserService, contentService api.ContentService) {
 	_twitterService = twitterService
 	_userService = userService
-	_log = log
 	_contentService = contentService
 }

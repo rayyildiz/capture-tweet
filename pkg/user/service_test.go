@@ -15,8 +15,7 @@ func TestUserService_FindById(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
 
 	ctx := context.Background()
 
@@ -29,7 +28,7 @@ func TestUserService_FindById(t *testing.T) {
 		ScreenName: "Ramazan A.",
 	}, nil)
 
-	svc := NewService(repo, log)
+	svc := NewService(repo)
 
 	userModel, err := svc.FindById(ctx, "testUserIdStr")
 	require.NoError(t, err)
@@ -43,8 +42,9 @@ func TestUserService_FindById(t *testing.T) {
 func TestUserService_FindOrCreate_Exist(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+
+	infra.RegisterLogger()
+
 	ctx := context.Background()
 
 	repo := NewMockRepository(ctrl)
@@ -56,7 +56,7 @@ func TestUserService_FindOrCreate_Exist(t *testing.T) {
 		ScreenName: "Ramazan A.",
 	}, nil)
 
-	svc := NewService(repo, log)
+	svc := NewService(repo)
 
 	userModel, err := svc.FindOrCreate(ctx, &anaconda.User{
 		IdStr:      "testId",
@@ -75,8 +75,8 @@ func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
+
 	ctx := context.Background()
 
 	repo := NewMockRepository(ctrl)
@@ -88,7 +88,7 @@ func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 	repo.EXPECT().FindById(ctx, "testId").Return(nil, nil)
 	repo.EXPECT().Store(ctx, "testId", "rayyildiz", "Ramazan A.", "bio", "profile.png", dt).Return(nil)
 
-	svc := NewService(repo, log)
+	svc := NewService(repo)
 
 	userModel, err := svc.FindOrCreate(ctx, &anaconda.User{
 		IdStr:                "testId",

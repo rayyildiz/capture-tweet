@@ -33,7 +33,6 @@ type StorageMessage struct {
 }
 
 type handlerImpl struct {
-	log     *zap.Logger
 	service api.TweetService
 	bucket  *blob.Bucket
 }
@@ -45,7 +44,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-		h.log.Warn("method not allowed", zap.String("method", r.Method))
+		zap.L().Warn("method not allowed", zap.String("method", r.Method))
 		return
 	}
 
@@ -53,7 +52,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
 		sentry.CaptureException(err)
-		h.log.Error("bad request", zap.Error(err))
+		zap.L().Error("bad request", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -63,13 +62,13 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(payload.Message.Data, &request)
 	if err != nil {
 		sentry.CaptureException(err)
-		h.log.Error("bad request, decode payload.data", zap.Error(err))
+		zap.L().Error("bad request, decode payload.data", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
 	if request.Kind != "storage#object" {
-		h.log.Warn("expected image kind must be object", zap.String("image_kind", request.Kind), zap.String("image_key", request.Name))
+		zap.L().Warn("expected image kind must be object", zap.String("image_kind", request.Kind), zap.String("image_key", request.Name))
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("it is not an object"))
 		return
@@ -81,7 +80,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	img, err := h.bucket.ReadAll(ctx, request.Name)
 	if err != nil {
 		sentry.CaptureException(err)
-		h.log.Error("open bucket", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		zap.L().Error("open bucket", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -89,7 +88,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	attrs, err := h.bucket.Attributes(ctx, request.Name)
 	if err != nil {
 		sentry.CaptureException(err)
-		h.log.Error("read image attributes", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		zap.L().Error("read image attributes", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -101,7 +100,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	decoder, _, err := image.Decode(bytes.NewBuffer(img))
 	if err != nil {
 		sentry.CaptureException(err)
-		h.log.Error("image decode", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		zap.L().Error("image decode", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -116,7 +115,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	err = jpeg.Encode(buf, newImage, nil)
 	if err != nil {
 		sentry.CaptureException(err)
-		h.log.Error("jpeg encode image", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		zap.L().Error("jpeg encode image", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -133,22 +132,22 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	})
 	if err != nil {
 		sentry.CaptureException(err)
-		h.log.Error("open bucket for thumbnail", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		zap.L().Error("open bucket for thumbnail", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
-	h.log.Info("image stored successfully", zap.String("image_key", thumbNailKey), zap.String("image_key", request.Name), zap.String("tweet_id", tweetId), zap.String("tweet_user", tweetUser))
+	zap.L().Info("image stored successfully", zap.String("image_key", thumbNailKey), zap.String("image_key", request.Name), zap.String("tweet_id", tweetId), zap.String("tweet_user", tweetUser))
 	err = h.service.UpdateThumbImage(ctx, tweetId, thumbNailKey)
 	if err != nil {
 		sentry.CaptureException(err)
-		h.log.Error("save in database", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
+		zap.L().Error("save in database", zap.String("image_key", request.Name), zap.String("image_kind", request.Kind), zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
 	diff := time.Now().Sub(start)
-	h.log.Info("image saved", zap.Duration("elapsed", diff), zap.String("image_thumb", thumbNailKey), zap.String("image_key", request.Name), zap.String("image_kind", request.Kind))
+	zap.L().Info("image saved", zap.Duration("elapsed", diff), zap.String("image_thumb", thumbNailKey), zap.String("image_key", request.Name), zap.String("image_kind", request.Kind))
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("No Content"))

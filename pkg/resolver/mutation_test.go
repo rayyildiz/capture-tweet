@@ -15,8 +15,7 @@ func TestMutationResolver_Capture(t *testing.T) {
 	defer ctrl.Finish()
 	ctx := context.Background()
 
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
 
 	tweetService := api.NewMockTweetService(ctrl)
 	tweetService.EXPECT().Store(ctx, "https://twitter.com/jack/status/20").Return("20", nil)
@@ -26,7 +25,6 @@ func TestMutationResolver_Capture(t *testing.T) {
 		AuthorID: "jack",
 	}, nil)
 
-	_log = log
 	_twitterService = tweetService
 	resolver := newMutationResolver()
 
@@ -44,13 +42,11 @@ func TestMutationResolver_Contact(t *testing.T) {
 	defer ctrl.Finish()
 	ctx := context.Background()
 
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
 
 	contentService := api.NewMockContentService(ctrl)
 	contentService.EXPECT().StoreContactRequest(ctx, "test@example.com", "Ramazan", "hello", "captcha").Return(nil)
 
-	_log = log
 	_contentService = contentService
 	resolver := newMutationResolver()
 

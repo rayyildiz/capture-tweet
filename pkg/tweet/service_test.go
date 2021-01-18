@@ -36,10 +36,9 @@ func TestService_FindById(t *testing.T) {
 			},
 		},
 	}, nil)
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
 
-	svc := NewService(repo, nil, nil, nil, log, nil)
+	svc := NewService(repo, nil, nil, nil, nil)
 	require.NotNil(t, svc)
 
 	model, err := svc.FindById(ctx, "1")
@@ -88,10 +87,9 @@ func TestService_Store(t *testing.T) {
 	topic, err := infra.NewTopic("mem://topicTest")
 	require.NoError(t, err)
 
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
 
-	svc := NewService(repo, searchService, userService, twitterAPI, log, topic)
+	svc := NewService(repo, searchService, userService, twitterAPI, topic)
 	require.NotNil(t, svc)
 
 	signal := make(chan struct{})
@@ -114,10 +112,10 @@ func TestService_UpdateLargeImage(t *testing.T) {
 
 	repo := NewMockRepository(ctrl)
 	repo.EXPECT().UpdateLargeImage(ctx, "1", "capture/large/1.png").Return(nil)
-	log := infra.NewLogger()
-	require.NotNil(t, log)
 
-	svc := NewService(repo, nil, nil, nil, log, nil)
+	infra.RegisterLogger()
+
+	svc := NewService(repo, nil, nil, nil, nil)
 	require.NotNil(t, svc)
 
 	err := svc.UpdateLargeImage(ctx, "1", "capture/large/1.png")
@@ -132,10 +130,10 @@ func TestService_UpdateThumbImage(t *testing.T) {
 
 	repo := NewMockRepository(ctrl)
 	repo.EXPECT().UpdateThumbImage(ctx, "2", "capture/thumb/2.png").Return(nil)
-	log := infra.NewLogger()
-	require.NotNil(t, log)
 
-	svc := NewService(repo, nil, nil, nil, log, nil)
+	infra.RegisterLogger()
+
+	svc := NewService(repo, nil, nil, nil, nil)
 	require.NotNil(t, svc)
 
 	err := svc.UpdateThumbImage(ctx, "2", "capture/thumb/2.png")
@@ -166,10 +164,9 @@ func TestService_SearchByUser(t *testing.T) {
 		},
 	}, nil)
 
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
 
-	svc := NewService(repo, nil, nil, nil, log, nil)
+	svc := NewService(repo, nil, nil, nil, nil)
 	require.NotNil(t, svc)
 
 	tweets, err := svc.SearchByUser(ctx, "user1")

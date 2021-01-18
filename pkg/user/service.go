@@ -11,17 +11,16 @@ import (
 
 type serviceImpl struct {
 	repo Repository
-	log  *zap.Logger
 }
 
-func NewService(repo Repository, log *zap.Logger) api.UserService {
-	return &serviceImpl{repo, log}
+func NewService(repo Repository) api.UserService {
+	return &serviceImpl{repo}
 }
 
 func (s serviceImpl) FindById(ctx context.Context, id string) (*api.UserModel, error) {
 	user, err := s.repo.FindById(ctx, id)
 	if err != nil {
-		s.log.Error("user:service findById", zap.String("tweet_id", id), zap.Error(err))
+		zap.L().Error("user:service findById", zap.String("tweet_id", id), zap.Error(err))
 		return nil, err
 	}
 
@@ -55,7 +54,7 @@ func (s serviceImpl) FindOrCreate(ctx context.Context, author *anaconda.User) (*
 
 	err = s.repo.Store(ctx, id, author.ScreenName, author.Name, author.Description, author.ProfileImageUrlHttps, registeredAt)
 	if err != nil {
-		s.log.Error("user:service findOrCreate", zap.String("tweet_id", id), zap.String("tweet_user", author.ScreenName), zap.Error(err))
+		zap.L().Error("user:service findOrCreate", zap.String("tweet_id", id), zap.String("tweet_user", author.ScreenName), zap.Error(err))
 		return nil, err
 	}
 
