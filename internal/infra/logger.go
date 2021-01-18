@@ -5,11 +5,19 @@ import (
 	"go.uber.org/zap"
 )
 
-func NewLogger() *zap.Logger {
-	logger, err := zap.NewProductionConfig().Build()
+func RegisterLogger() {
+	var config zap.Config
+
+	if IsDebug() {
+		config = zap.NewDevelopmentConfig()
+	} else {
+		config = zap.NewProductionConfig()
+	}
+
+	logger, err := config.Build()
 	if err != nil {
 		fmt.Printf("Coudl not create zap logger, %v\n", err)
-		return nil
+		return
 	}
-	return logger
+	zap.ReplaceGlobals(logger)
 }

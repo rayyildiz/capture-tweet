@@ -33,10 +33,7 @@ func Run() error {
 	defer sentry.Flush(time.Second * 2)
 
 	start := time.Now()
-	logger := infra.NewLogger()
-	if logger == nil {
-		return fmt.Errorf("zap:logger is nil")
-	}
+	infra.RegisterLogger()
 
 	tweetColl, err := infra.NewTweetCollection()
 	if err != nil {
@@ -50,12 +47,12 @@ func Run() error {
 	}
 	defer bucket.Close()
 
-	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), nil, nil, nil, logger, nil)
+	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), nil, nil, nil, nil)
 	if tweetService == nil {
 		return fmt.Errorf("tweet service initialize")
 	}
 
-	browserService := browser.NewService(logger, tweetService, bucket)
+	browserService := browser.NewService(tweetService, bucket)
 	if browserService == nil {
 		return fmt.Errorf("browser service initialize")
 	}
@@ -66,13 +63,12 @@ func Run() error {
 	}
 
 	h := handlerImpl{
-		log:     logger,
 		service: browserService,
 	}
 	http.HandleFunc("/capture", h.handleCapture)
 
 	diff := time.Now().Sub(start)
-	logger.Info("initialized objects", zap.Duration("elapsed", diff))
+	zap.L().Info("initialized objects", zap.Duration("elapsed", diff))
 
 	err = http.ListenAndServe(":"+port, nil)
 	if err != nil {

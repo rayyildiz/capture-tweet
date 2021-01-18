@@ -47,10 +47,7 @@ func Run() error {
 		port = "4000"
 	}
 
-	logger := infra.NewLogger()
-	if logger == nil {
-		return fmt.Errorf("zap:logger is nil")
-	}
+	infra.RegisterLogger()
 
 	tweetColl, err := infra.NewTweetCollection()
 	if err != nil {
@@ -91,12 +88,12 @@ func Run() error {
 		return fmt.Errorf("search:NewService is nil")
 	}
 
-	userService := user.NewService(user.NewRepository(userColl), logger)
+	userService := user.NewService(user.NewRepository(userColl))
 	if userService == nil {
 		return fmt.Errorf("user:NewService is nil")
 	}
 
-	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), searchService, userService, twitterApi, logger, topic)
+	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), searchService, userService, twitterApi, topic)
 	if tweetService == nil {
 		return fmt.Errorf("tweet:NewService is nil")
 	}
@@ -110,10 +107,10 @@ func Run() error {
 	if rootResolver == nil {
 		return fmt.Errorf("graph:NewResolver is nil")
 	}
-	resolver.InitService(logger, tweetService, userService, contentService)
+	resolver.InitService(tweetService, userService, contentService)
 
 	srv := handler.NewDefaultServer(resolver.NewExecutableSchema(resolver.Config{Resolvers: rootResolver}))
-	srv.Use(infra.ZapLogger{Log: logger})
+	srv.Use(infra.ZapLogger{Log: zap.L()})
 
 	mux := http.NewServeMux()
 
@@ -130,7 +127,7 @@ func Run() error {
 	}).Handler(mux)
 
 	diff := time.Now().Sub(start)
-	logger.Info("initialized objects", zap.Duration("elapsed", diff))
+	zap.L().Info("initialized objects", zap.Duration("elapsed", diff))
 
 	err = http.ListenAndServe(":"+port, h)
 	if err != nil {

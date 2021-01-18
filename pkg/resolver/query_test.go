@@ -15,8 +15,7 @@ func TestQueryResolver_Tweet(t *testing.T) {
 	defer ctrl.Finish()
 	ctx := context.Background()
 
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
 
 	tweetService := api.NewMockTweetService(ctrl)
 	tweetService.EXPECT().FindById(ctx, "1234").Return(&api.TweetModel{
@@ -25,7 +24,6 @@ func TestQueryResolver_Tweet(t *testing.T) {
 		PostedAt: nil,
 	}, nil)
 
-	_log = log
 	_twitterService = tweetService
 	resolver := newQueryResolver()
 
@@ -42,8 +40,7 @@ func TestQueryResolver_SearchByUser(t *testing.T) {
 	defer ctrl.Finish()
 	ctx := context.Background()
 
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
 
 	tweetService := api.NewMockTweetService(ctrl)
 	tweetService.EXPECT().SearchByUser(ctx, "user1").Return([]api.TweetModel{
@@ -65,7 +62,6 @@ func TestQueryResolver_SearchByUser(t *testing.T) {
 		},
 	}, nil)
 
-	_log = log
 	_twitterService = tweetService
 	resolver := newQueryResolver()
 
@@ -104,8 +100,7 @@ func TestQueryResolver_Search(t *testing.T) {
 	defer ctrl.Finish()
 	ctx := context.Background()
 
-	log := infra.NewLogger()
-	require.NotNil(t, log)
+	infra.RegisterLogger()
 
 	tweetService := api.NewMockTweetService(ctrl)
 	tweetService.EXPECT().Search(ctx, "test", 10, 0, 0).Return([]api.TweetModel{
@@ -135,7 +130,6 @@ func TestQueryResolver_Search(t *testing.T) {
 		},
 	}, nil)
 
-	_log = log
 	_twitterService = tweetService
 	resolver := newQueryResolver()
 

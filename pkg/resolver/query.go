@@ -21,13 +21,13 @@ func (r queryResolverImpl) Tweet(ctx context.Context, id string) (*Tweet, error)
 	model, err := _twitterService.FindById(ctx, id)
 	code := gcerrors.Code(err)
 	if code == gcerrors.NotFound {
-		_log.Warn("tweet not found", zap.String("id", id))
+		zap.L().Warn("tweet not found", zap.String("id", id))
 		return nil, nil
 	}
 
 	if err != nil {
 		sentry.CaptureException(err)
-		_log.Error("tweet find error", zap.String("id", id), zap.Error(err))
+		zap.L().Error("tweet find error", zap.String("id", id), zap.Error(err))
 		return nil, err
 	}
 	var resources []*Resource
@@ -59,7 +59,7 @@ func (r queryResolverImpl) SearchByUser(ctx context.Context, userID string) ([]*
 	models, err := _twitterService.SearchByUser(ctx, userID)
 	if err != nil {
 		sentry.CaptureException(err)
-		_log.Error("search by user error", zap.String("user_id", userID), zap.Error(err))
+		zap.L().Error("search by user error", zap.String("user_id", userID), zap.Error(err))
 		return nil, errors.New("could not ind any result")
 	}
 	var list []*Tweet
@@ -74,7 +74,7 @@ func (r queryResolverImpl) Search(ctx context.Context, input SearchInput, size i
 	models, err := _twitterService.Search(ctx, input.Term, size, start, page)
 	if err != nil {
 		sentry.CaptureException(err)
-		_log.Error("search error", zap.String("term", input.Term), zap.Error(err))
+		zap.L().Error("search error", zap.String("term", input.Term), zap.Error(err))
 		return nil, errors.New("could not ind any result")
 	}
 	var list []*Tweet

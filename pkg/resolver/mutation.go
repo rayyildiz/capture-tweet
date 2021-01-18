@@ -20,14 +20,14 @@ func (r mutationResolverImpl) Capture(ctx context.Context, url string) (*Tweet, 
 	id, err := _twitterService.Store(ctx, url)
 	if err != nil {
 		sentry.CaptureException(err)
-		_log.Error("capture error", zap.String("url", url), zap.Error(err))
+		zap.L().Error("capture error", zap.String("url", url), zap.Error(err))
 		return nil, err
 	}
 
 	model, err := _twitterService.FindById(ctx, id)
 	if err != nil {
 		sentry.CaptureException(err)
-		_log.Error("capture error, findById", zap.String("id", id), zap.Error(err))
+		zap.L().Error("capture error, findById", zap.String("id", id), zap.Error(err))
 		return nil, err
 	}
 	var resources []*Resource
@@ -55,17 +55,17 @@ func (r mutationResolverImpl) Capture(ctx context.Context, url string) (*Tweet, 
 	}, nil
 }
 
-func (r mutationResolverImpl) Contact(ctx context.Context, input ContactInput, tweetID *string, capthca string) (string, error) {
+func (r mutationResolverImpl) Contact(ctx context.Context, input ContactInput, tweetID *string, captcha string) (string, error) {
 
 	msg := input.Message
 	if tweetID != nil {
 		msg = fmt.Sprintf("Tweet ID: %s\n Message: %s", *tweetID, input.Message)
 	}
 
-	err := _contentService.StoreContactRequest(ctx, input.Email, input.FullName, msg, capthca)
+	err := _contentService.StoreContactRequest(ctx, input.Email, input.FullName, msg, captcha)
 	if err != nil {
 		sentry.CaptureException(err)
-		_log.Error("could not send mail", zap.String("contact_email", input.Email), zap.String("contact_fullName", input.FullName), zap.Error(err))
+		zap.L().Error("could not send mail", zap.String("contact_email", input.Email), zap.String("contact_fullName", input.FullName), zap.Error(err))
 		return "", errors.New("error occurred, please try again or contact from info@capturetweet.com mail address")
 	}
 	return "We saved your message and we will contact you as soon as possible, thanks for feedback", nil

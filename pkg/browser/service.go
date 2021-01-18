@@ -19,7 +19,6 @@ import (
 var minImageSize = 1024 * 25
 
 type serviceImpl struct {
-	log          *zap.Logger
 	tweetService api.TweetService
 	bucket       *blob.Bucket
 	browser      *browserCtx
@@ -30,15 +29,15 @@ type browserCtx struct {
 	cancelFunc     context.CancelFunc
 }
 
-func NewService(log *zap.Logger, tweetService api.TweetService, bucket *blob.Bucket) api.BrowserService {
-	return &serviceImpl{log, tweetService, bucket, nil}
+func NewService(tweetService api.TweetService, bucket *blob.Bucket) api.BrowserService {
+	return &serviceImpl{tweetService, bucket, nil}
 }
 
 func (s serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
 
 	originalImage, err := s.CaptureURL(ctx, model)
 	if err != nil {
-		s.log.Error("browser CaptureSaveUpdateDatabase, captureURL", zap.String("tweet_id", model.ID), zap.Error(err))
+		zap.L().Error("browser CaptureSaveUpdateDatabase, captureURL", zap.String("tweet_id", model.ID), zap.Error(err))
 		return nil, err
 	}
 
@@ -48,13 +47,13 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.C
 
 	response, err := s.SaveCapture(ctx, originalImage, model)
 	if err != nil {
-		s.log.Error("browser CaptureSaveUpdateDatabase, SaveCapture", zap.String("tweet_id", model.ID), zap.Error(err))
+		zap.L().Error("browser CaptureSaveUpdateDatabase, SaveCapture", zap.String("tweet_id", model.ID), zap.Error(err))
 		return nil, err
 	}
 
 	err = s.tweetService.UpdateLargeImage(ctx, model.ID, response.CaptureURL)
 	if err != nil {
-		s.log.Error("browser CaptureSaveUpdateDatabase, service.UpdateLargeImage", zap.String("tweet_id", model.ID), zap.Error(err))
+		zap.L().Error("browser CaptureSaveUpdateDatabase, service.UpdateLargeImage", zap.String("tweet_id", model.ID), zap.Error(err))
 		return nil, err
 	}
 
@@ -75,7 +74,7 @@ func (s serviceImpl) SaveCapture(ctx context.Context, originalImage []byte, mode
 		},
 	})
 	if err != nil {
-		s.log.Error("browser:saveCapture", zap.String("tweet_id", model.ID), zap.Error(err))
+		zap.L().Error("browser:saveCapture", zap.String("tweet_id", model.ID), zap.Error(err))
 		return nil, err
 	}
 
@@ -86,7 +85,7 @@ func (s serviceImpl) SaveCapture(ctx context.Context, originalImage []byte, mode
 }
 func (s serviceImpl) Close() {
 	if s.browser != nil {
-		s.log.Info("closing browser context")
+		zap.L().Info("closing browser context")
 		s.browser.cancelFunc()
 	}
 }
@@ -114,7 +113,7 @@ func (s *serviceImpl) CaptureURL(ctx context.Context, model *api.CaptureRequestM
 	var buf []byte
 	err := chromedp.Run(s.browser.browserContext, fullScreenshot(model.Url, 90, &buf))
 	if err != nil {
-		s.log.Error("could not capture URL", zap.String("tweet_id", model.ID), zap.String("url", model.Url), zap.Error(err))
+		zap.L().Error("could not capture URL", zap.String("tweet_id", model.ID), zap.String("url", model.Url), zap.Error(err))
 		return nil, err
 	}
 	return buf, nil
