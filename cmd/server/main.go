@@ -28,8 +28,7 @@ func init() {
 
 func main() {
 	if err := Run(); err != nil {
-		log.Printf("%v", err)
-		os.Exit(1)
+		log.Fatalf("%v", err)
 	}
 }
 
@@ -110,7 +109,7 @@ func Run() error {
 	resolver.InitService(tweetService, userService, contentService)
 
 	srv := handler.NewDefaultServer(resolver.NewExecutableSchema(resolver.Config{Resolvers: rootResolver}))
-	srv.Use(infra.ZapLogger{Log: zap.L()})
+	srv.Use(infra.ZapLogger{})
 
 	mux := http.NewServeMux()
 
@@ -120,7 +119,7 @@ func Run() error {
 	mux.Handle("/api/query", srv)
 
 	h := cors.New(cors.Options{
-		AllowedOrigins:   []string{"https://capturetweet.com", "https://www.capturetweet.com", "http://localhost:3000"},
+		AllowedOrigins:   []string{"https://capturetweet.com", "https://www.capturetweet.com", "http://localhost:3000", "http://localhost:4000"},
 		AllowedMethods:   []string{"HEAD", "GET", "POST", "OPTIONS"},
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: false,

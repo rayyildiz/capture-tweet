@@ -16,7 +16,7 @@ func RegisterLogger() {
 
 	logger, err := config.Build()
 	if err != nil {
-		fmt.Printf("Coudl not create zap logger, %v\n", err)
+		fmt.Printf("Could not create zap logger, %v\n", err)
 		return
 	}
 	zap.ReplaceGlobals(logger)

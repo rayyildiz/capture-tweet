@@ -8,9 +8,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 )
 
-type ZapLogger struct {
-	Log *zap.Logger
-}
+type ZapLogger struct{}
 
 var _ interface {
 	graphql.HandlerExtension
@@ -31,9 +29,9 @@ func (a ZapLogger) InterceptResponse(ctx context.Context, next graphql.ResponseH
 	response := next(ctx)
 	if oc.OperationName != "IntrospectionQuery" && oc.OperationName != "WatchChange" {
 		if len(response.Errors) > 0 {
-			a.Log.Warn("request:error", zap.Bool("is_error", true), zap.Duration("elapsed", time.Now().Sub(start)), zap.String("operation_name", oc.OperationName), zap.String("error", response.Errors.Error()))
+			zap.L().Warn("request:error", zap.Bool("is_error", true), zap.Duration("elapsed", time.Since(start)), zap.String("operation_name", oc.OperationName), zap.String("error", response.Errors.Error()))
 		} else {
-			a.Log.Info("request:success", zap.Bool("is_error", false), zap.Duration("elapsed", time.Now().Sub(start)), zap.String("operation_name", oc.OperationName))
+			zap.L().Info("request:success", zap.Bool("is_error", false), zap.Duration("elapsed", time.Since(start)), zap.String("operation_name", oc.OperationName))
 		}
 	}
 	return response
