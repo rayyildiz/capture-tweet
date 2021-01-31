@@ -20,8 +20,7 @@ func init() {
 
 func main() {
 	if err := Run(); err != nil {
-		log.Printf("%v", err)
-		os.Exit(1)
+		log.Fatalf("%v", err)
 	}
 }
 
@@ -47,9 +46,9 @@ func Run() error {
 	}
 	defer bucket.Close()
 
-	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), nil, nil, nil, nil)
+	tweetService := tweet.NewServiceWithRepository(tweet.NewRepository(tweetColl))
 	if tweetService == nil {
-		return fmt.Errorf("tweet service initialize")
+		return fmt.Errorf("init tweet service, %w", err)
 	}
 
 	browserService := browser.NewService(tweetService, bucket)

@@ -25,6 +25,10 @@ func NewService(repo Repository, search api.SearchService, userService api.UserS
 	return &serviceImpl{repo, twitterAPI, search, userService, topic}
 }
 
+func NewServiceWithRepository(repo Repository) api.TweetService {
+	return NewService(repo, nil, nil, nil, nil)
+}
+
 func (s serviceImpl) FindById(ctx context.Context, id string) (*api.TweetModel, error) {
 	tweet, err := s.repo.FindById(ctx, id)
 	if err != nil {

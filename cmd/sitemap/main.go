@@ -19,8 +19,7 @@ func init() {
 
 func main() {
 	if err := Run(); err != nil {
-		log.Printf("%v", err)
-		os.Exit(1)
+		log.Fatalf("%v", err)
 	}
 }
 
