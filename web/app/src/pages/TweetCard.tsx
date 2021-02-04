@@ -30,8 +30,7 @@ export const TweetCard: FC<TweetCardProps> = (props) => {
         <div className="card mb-3 cursor tweet-card" onClick={handleClick}>
           <h3 className="card-header">Tweet by {props.author}</h3>
           <div className="card-body">
-            <h5 className="card-title">Posted at {moment(props.postedAt).format("DD-MM-YYYY HH:MM")} </h5>
-            <h6 className="card-subtitle text-muted">Language {props.lang}</h6>
+            <h6 className="card-title">Posted at {moment(props.postedAt).format("DD-MM-YYYY HH:MM")} <span className="badge rounded-pill bg-success">{props.lang}</span></h6>
           </div>
           <div style={{
             width: '100%',
