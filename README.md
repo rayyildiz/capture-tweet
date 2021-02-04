@@ -2,7 +2,7 @@
 
 ![Build status](https://github.com/rayyildiz/capture-tweet/workflows/build/badge.svg)
 ![Build status](https://github.com/rayyildiz/capture-tweet/workflows/pull-request/badge.svg)
-[![codecov](https://codecov.io/gh/rayyildiz/capture-tweet/branch/master/graph/badge.svg?token=58YR43PZFS)](https://codecov.io/gh/rayyildiz/capture-tweet)
+[![codecov](https://codecov.io/gh/rayyildiz/capture-tweet/branch/main/graph/badge.svg?token=58YR43PZFS)](https://codecov.io/gh/rayyildiz/capture-tweet)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=rayyildiz/capture-tweet&identifier=272198663)](https://dependabot.com)
 
 
