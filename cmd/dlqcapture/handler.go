@@ -20,6 +20,7 @@ type PubSubMessage struct {
 		Attributes map[string]string `json:"attributes"`
 	} `json:"message"`
 	Subscription string `json:"subscription"`
+	PublishTime  string `json:"publishTime"`
 }
 
 func (h handlerImpl) handleMessages(w http.ResponseWriter, r *http.Request) {
@@ -47,6 +48,7 @@ func (h handlerImpl) handleMessages(w http.ResponseWriter, r *http.Request) {
 		Metadata: map[string]string{
 			"message-id":   payload.Message.MessageId,
 			"subscription": payload.Subscription,
+			"publish-time": payload.PublishTime,
 		},
 	})
 	if err != nil {
