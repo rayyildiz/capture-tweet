@@ -9,7 +9,7 @@ steps:
     dir: 'cmd/dlqcapture'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    args: ['docker', 'push', 'eu.gcr.io/$PROJECT_ID/thumb:$SHORT_SHA']
+    args: ['docker', 'push', 'eu.gcr.io/$PROJECT_ID/dlqcapture:$SHORT_SHA']
     dir: 'cmd/dlqcapture'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
