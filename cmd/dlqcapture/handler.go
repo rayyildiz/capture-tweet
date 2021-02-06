@@ -7,7 +7,6 @@ import (
 	"go.uber.org/zap"
 	"gocloud.dev/blob"
 	"net/http"
-	"time"
 )
 
 type handlerImpl struct {
@@ -40,7 +39,7 @@ func (h handlerImpl) handleMessages(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	key := fmt.Sprintf("dlq/%s-%d.json", payload.Message.MessageId, time.Now().Unix())
+	key := fmt.Sprintf("dlq/%s.json", payload.Message.MessageId)
 	zap.L().Info("message saving into bucket", zap.String("key", key))
 
 	err = h.bucket.WriteAll(r.Context(), key, payload.Message.Data, &blob.WriterOptions{
