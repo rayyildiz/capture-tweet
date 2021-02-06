@@ -1,0 +1,16 @@
+steps:
+  - name: 'golang:1.15'
+    args: ['go', 'build', '-a', '-installsuffix','cgo', '-o' ,'tmp/app','.']
+    env: ['GO111MODULE=on','CGO_ENABLED=0','GOOS=linux']
+    dir: 'cmd/dlqcapture'
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args: ['docker','build', '-f', 'Dockerfile', '--tag=eu.gcr.io/$PROJECT_ID/dlqcapture:$SHORT_SHA', '.']
+    dir: 'cmd/dlqcapture'
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args: ['docker', 'push', 'eu.gcr.io/$PROJECT_ID/thumb:$SHORT_SHA']
+    dir: 'cmd/dlqcapture'
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args: ['gcloud','run','deploy','dlq-capture','--image','eu.gcr.io/$PROJECT_ID/dlqcapture:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']
