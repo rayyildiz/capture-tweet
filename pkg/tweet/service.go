@@ -8,6 +8,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/ChimeraCoder/anaconda"
+	"go.opentelemetry.io/otel/label"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"gocloud.dev/pubsub"
 	"net/url"
@@ -30,6 +32,11 @@ func NewServiceWithRepository(repo Repository) api.TweetService {
 }
 
 func (s serviceImpl) FindById(ctx context.Context, id string) (*api.TweetModel, error) {
+	span := trace.SpanFromContext(ctx)
+	defer span.End()
+	span.SetAttributes(label.String("tweetId", id))
+	span.AddEvent("svc:findById")
+
 	tweet, err := s.repo.FindById(ctx, id)
 	if err != nil {
 		zap.L().Error("tweet:service findById", zap.String("tweet_id", id), zap.Error(err))
@@ -63,6 +70,9 @@ func (s serviceImpl) FindById(ctx context.Context, id string) (*api.TweetModel, 
 }
 
 func (s serviceImpl) Store(ctx context.Context, tweetURL string) (string, error) {
+	span := trace.SpanFromContext(ctx)
+	defer span.End()
+	span.AddEvent("svc:store")
 	tweetID, tweetAuthor, err := parseTweetURL(tweetURL)
 	if err != nil {
 		zap.L().Error("tweet:service store, parseTweetUrl", zap.String("url", tweetURL), zap.Error(err))
@@ -127,6 +137,10 @@ func (s serviceImpl) Store(ctx context.Context, tweetURL string) (string, error)
 }
 
 func (s serviceImpl) Search(ctx context.Context, term string, size, start, page int) ([]api.TweetModel, error) {
+	span := trace.SpanFromContext(ctx)
+	defer span.End()
+
+	span.AddEvent("svc:search")
 	searchModels, err := s.search.Search(ctx, term, size)
 	if err != nil {
 		zap.L().Error("tweet:service search, search service call", zap.String("search_term", term), zap.Error(err))
@@ -154,6 +168,10 @@ func (s serviceImpl) Search(ctx context.Context, term string, size, start, page 
 }
 
 func (s serviceImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {
+	span := trace.SpanFromContext(ctx)
+	defer span.End()
+	span.AddEvent("svc:updateLargeImage")
+
 	err := s.repo.UpdateLargeImage(ctx, id, captureUrl)
 	if err != nil {
 		zap.L().Error("tweet:service updateLargeImage, findById", zap.String("tweet_id", id), zap.Error(err))
@@ -164,6 +182,9 @@ func (s serviceImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string
 }
 
 func (s serviceImpl) UpdateThumbImage(ctx context.Context, id, captureUrl string) error {
+	span := trace.SpanFromContext(ctx)
+	defer span.End()
+	span.AddEvent("svc:updateThumbImage")
 	err := s.repo.UpdateThumbImage(ctx, id, captureUrl)
 	if err != nil {
 		zap.L().Error("tweet:service updateThumbImage, findById", zap.String("tweet_id", id), zap.Error(err))
@@ -174,6 +195,10 @@ func (s serviceImpl) UpdateThumbImage(ctx context.Context, id, captureUrl string
 }
 
 func (s serviceImpl) SearchByUser(ctx context.Context, userId string) ([]api.TweetModel, error) {
+	span := trace.SpanFromContext(ctx)
+	defer span.End()
+	span.AddEvent("svc:searchByUser")
+
 	tweets, err := s.repo.FindByUser(ctx, userId)
 	if err != nil {
 		zap.L().Error("tweet:service searchByUser, findById", zap.String("user_id", userId), zap.Error(err))

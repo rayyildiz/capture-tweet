@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.opentelemetry.io/otel/trace"
 	"net/http"
 	"net/url"
 	"os"
@@ -24,6 +25,8 @@ type captchaResponse struct {
 }
 
 func (s serviceImpl) StoreContactRequest(ctx context.Context, senderMail, senderName, message, captcha string) error {
+	span := trace.SpanFromContext(ctx)
+	defer span.End()
 
 	post := url.Values{
 		"secret":   {os.Getenv("CAPTCHA_SECRET")},
@@ -32,6 +35,7 @@ func (s serviceImpl) StoreContactRequest(ctx context.Context, senderMail, sender
 
 	resp, err := http.PostForm("https://www.google.com/recaptcha/api/siteverify", post)
 	if err != nil {
+		span.RecordError(err)
 		return err
 	}
 	defer resp.Body.Close()

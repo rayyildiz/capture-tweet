@@ -4,6 +4,7 @@ package content
 import (
 	"context"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel/trace"
 	"gocloud.dev/docstore"
 	"time"
 )
@@ -21,6 +22,8 @@ func NewRepository(contactUs *docstore.Collection) Repository {
 }
 
 func (r repositoryImpl) ContactUs(ctx context.Context, email, fullName, message string) error {
+	span := trace.SpanFromContext(ctx)
+	defer span.End()
 
 	id := uuid.New().String()
 	return r.contactUs.Create(ctx, &ContactUs{
