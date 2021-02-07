@@ -20,15 +20,17 @@ require (
 	github.com/google/uuid v1.2.0
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/joho/godotenv v1.3.0
-	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
+	github.com/kelseyhightower/run v0.0.17
+	github.com/lightstep/otel-launcher-go v0.16.1
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/rs/cors v1.7.0
-	github.com/sirupsen/logrus v1.4.2 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/testcontainers/testcontainers-go v0.9.0
 	github.com/vektah/gqlparser/v2 v2.1.0
+	go.opentelemetry.io/otel v0.16.0
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
 	gocloud.dev v0.21.0
+	gocloud.dev/docstore/mongodocstore v0.21.0
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 )

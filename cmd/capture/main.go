@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
+	"github.com/kelseyhightower/run"
 	"go.uber.org/zap"
 	"log"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -25,14 +25,18 @@ func main() {
 }
 
 func Run() error {
+	infra.RegisterLogger()
+
 	err := infra.InitSentry()
 	if err != nil {
 		return fmt.Errorf("sentry init: %w", err)
 	}
 	defer sentry.Flush(time.Second * 2)
 
+	telemetryClose := infra.NewTelemetry()
+	defer telemetryClose()
+
 	start := time.Now()
-	infra.RegisterLogger()
 
 	tweetColl, err := infra.NewTweetCollection()
 	if err != nil {
@@ -56,19 +60,14 @@ func Run() error {
 		return fmt.Errorf("browser service initialize")
 	}
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "4200"
-	}
-
 	h := handlerImpl{
 		service: browserService,
 	}
 	http.HandleFunc("/capture", h.handleCapture)
 
-	diff := time.Now().Sub(start)
-	zap.L().Info("initialized objects", zap.Duration("elapsed", diff))
+	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start)))
 
+	port := run.Port()
 	err = http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)

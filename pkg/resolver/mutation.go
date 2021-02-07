@@ -17,6 +17,9 @@ func newMutationResolver() MutationResolver {
 }
 
 func (r mutationResolverImpl) Capture(ctx context.Context, url string) (*Tweet, error) {
+	ctx, span := _tracer.Start(ctx, "capture")
+	defer span.End()
+
 	id, err := _twitterService.Store(ctx, url)
 	if err != nil {
 		sentry.CaptureException(err)
@@ -56,6 +59,8 @@ func (r mutationResolverImpl) Capture(ctx context.Context, url string) (*Tweet, 
 }
 
 func (r mutationResolverImpl) Contact(ctx context.Context, input ContactInput, tweetID *string, captcha string) (string, error) {
+	ctx, span := _tracer.Start(ctx, "contact")
+	defer span.End()
 
 	msg := input.Message
 	if tweetID != nil {

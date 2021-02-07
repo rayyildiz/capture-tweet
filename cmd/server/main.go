@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/getsentry/sentry-go"
+	"github.com/kelseyhightower/run"
 	"log"
 	"net/http"
 	"os"
@@ -33,6 +34,8 @@ func main() {
 }
 
 func Run() error {
+	infra.RegisterLogger()
+
 	err := infra.InitSentry()
 	if err != nil {
 		return fmt.Errorf("sentry init, %w", err)
@@ -41,12 +44,8 @@ func Run() error {
 	defer sentry.Flush(time.Second * 2)
 	start := time.Now()
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "4000"
-	}
-
-	infra.RegisterLogger()
+	telemetryClose := infra.NewTelemetry()
+	defer telemetryClose()
 
 	tweetColl, err := infra.NewTweetCollection()
 	if err != nil {
@@ -125,9 +124,9 @@ func Run() error {
 		AllowCredentials: false,
 	}).Handler(mux)
 
-	diff := time.Now().Sub(start)
-	zap.L().Info("initialized objects", zap.Duration("elapsed", diff))
+	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start)))
 
+	port := run.Port()
 	err = http.ListenAndServe(":"+port, h)
 	if err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
