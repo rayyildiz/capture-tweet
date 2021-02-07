@@ -4,12 +4,15 @@ import (
 	"com.capturetweet/api"
 	"encoding/json"
 	"github.com/getsentry/sentry-go"
+	"go.opentelemetry.io/otel/label"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"net/http"
 )
 
 type handlerImpl struct {
 	service api.BrowserService
+	tracer  trace.Tracer
 }
 
 type PubSubMessage struct {
@@ -22,7 +25,8 @@ type PubSubMessage struct {
 }
 
 func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	ctx, span := h.tracer.Start(r.Context(), "handleRequest")
+	defer span.End()
 
 	if r.Method != http.MethodPost {
 		zap.L().Warn("method not allowed", zap.String("method", r.Method))
@@ -33,24 +37,29 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	var payload PubSubMessage
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
+		span.RecordError(err)
 		sentry.CaptureException(err)
 		zap.L().Error("bad request", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 	defer r.Body.Close()
+	span.AddEvent("handleCapture", trace.WithAttributes(label.String("messageId", payload.Message.MessageId)))
 
 	request := api.CaptureRequestModel{}
 	err = json.Unmarshal(payload.Message.Data, &request)
 	if err != nil {
+		span.RecordError(err)
 		sentry.CaptureException(err)
 		zap.L().Error("bad request, decode payload.data", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
+	span.SetAttributes(label.String("tweetId", request.ID))
 
-	respModel, err := h.service.CaptureSaveUpdateDatabase(r.Context(), &request)
+	respModel, err := h.service.CaptureSaveUpdateDatabase(ctx, &request)
 	if err != nil {
+		span.RecordError(err)
 		sentry.CaptureException(err)
 		zap.L().Error("could not capture", zap.String("tweet_id", request.ID), zap.String("url", request.Url), zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -58,7 +67,7 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	}
 
 	zap.L().Info("capture successfully", zap.String("tweet_id", respModel.ID), zap.String("tweet_url", request.Url), zap.String("capture_image", respModel.CaptureURL))
-
+	span.AddEvent("success")
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("No Content"))
 }

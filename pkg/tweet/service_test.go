@@ -16,10 +16,8 @@ func TestService_FindById(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	ctx := context.Background()
-
 	repo := NewMockRepository(ctrl)
-	repo.EXPECT().FindById(ctx, "1").Return(&Tweet{
+	repo.EXPECT().FindById(gomock.Any(), "1").Return(&Tweet{
 		ID:              "1",
 		PostedAt:        time.Now(),
 		FullText:        "text",
@@ -41,7 +39,7 @@ func TestService_FindById(t *testing.T) {
 	svc := NewService(repo, nil, nil, nil, nil)
 	require.NotNil(t, svc)
 
-	model, err := svc.FindById(ctx, "1")
+	model, err := svc.FindById(context.Background(), "1")
 	require.NoError(t, err)
 	if assert.NotNil(t, model) {
 		assert.Equal(t, "1", model.ID)
@@ -63,17 +61,15 @@ func TestService_Store(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	ctx := context.Background()
-
 	repo := NewMockRepository(ctrl)
-	repo.EXPECT().Exist(ctx, "20").Return(false)
-	repo.EXPECT().Store(ctx, gomock.Any()).Return(nil)
+	repo.EXPECT().Exist(gomock.Any(), "20").Return(false)
+	repo.EXPECT().Store(gomock.Any(), gomock.Any()).Return(nil)
 
 	searchService := api.NewMockSearchService(ctrl)
-	searchService.EXPECT().Put(ctx, "20", "test", "jack").Return(nil)
+	searchService.EXPECT().Put(gomock.Any(), "20", "test", "jack").Return(nil)
 
 	userService := api.NewMockUserService(ctrl)
-	userService.EXPECT().FindOrCreate(ctx, gomock.Any()).Return(nil, nil)
+	userService.EXPECT().FindOrCreate(context.Background(), gomock.Any()).Return(nil, nil)
 
 	twitterAPI := infra.NewMockTweetAPI(ctrl)
 	twitterAPI.EXPECT().GetTweet(int64(20), gomock.Any()).Return(anaconda.Tweet{
@@ -98,7 +94,7 @@ func TestService_Store(t *testing.T) {
 		signal <- struct{}{}
 	}()
 
-	id, err := svc.Store(ctx, "https://twitter.com/jack/status/20")
+	id, err := svc.Store(context.Background(), "https://twitter.com/jack/status/20")
 	require.NoError(t, err)
 	require.Equal(t, "20", id)
 	<-signal
@@ -126,17 +122,15 @@ func TestService_UpdateThumbImage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	ctx := context.Background()
-
 	repo := NewMockRepository(ctrl)
-	repo.EXPECT().UpdateThumbImage(ctx, "2", "capture/thumb/2.png").Return(nil)
+	repo.EXPECT().UpdateThumbImage(gomock.Any(), "2", "capture/thumb/2.png").Return(nil)
 
 	infra.RegisterLogger()
 
 	svc := NewService(repo, nil, nil, nil, nil)
 	require.NotNil(t, svc)
 
-	err := svc.UpdateThumbImage(ctx, "2", "capture/thumb/2.png")
+	err := svc.UpdateThumbImage(context.Background(), "2", "capture/thumb/2.png")
 	require.NoError(t, err)
 }
 
@@ -144,10 +138,8 @@ func TestService_SearchByUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	ctx := context.Background()
-
 	repo := NewMockRepository(ctrl)
-	repo.EXPECT().FindByUser(ctx, "user1").Return([]Tweet{
+	repo.EXPECT().FindByUser(gomock.Any(), "user1").Return([]Tweet{
 		{
 			ID:        "1",
 			CreatedAt: time.Now(),
@@ -169,7 +161,7 @@ func TestService_SearchByUser(t *testing.T) {
 	svc := NewService(repo, nil, nil, nil, nil)
 	require.NotNil(t, svc)
 
-	tweets, err := svc.SearchByUser(ctx, "user1")
+	tweets, err := svc.SearchByUser(context.Background(), "user1")
 	require.NoError(t, err)
 	if assert.Equal(t, 2, len(tweets)) {
 		assert.Equal(t, "1", tweets[0].ID)

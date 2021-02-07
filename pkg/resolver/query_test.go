@@ -7,27 +7,28 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.opentelemetry.io/otel"
 	"testing"
 )
 
 func TestQueryResolver_Tweet(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	ctx := context.Background()
 
 	infra.RegisterLogger()
 
 	tweetService := api.NewMockTweetService(ctrl)
-	tweetService.EXPECT().FindById(ctx, "1234").Return(&api.TweetModel{
+	tweetService.EXPECT().FindById(gomock.Any(), "1234").Return(&api.TweetModel{
 		ID:       "1234",
 		FullText: "test",
 		PostedAt: nil,
 	}, nil)
 
 	_twitterService = tweetService
+	_tracer = otel.Tracer("test")
 	resolver := newQueryResolver()
 
-	tweet, err := resolver.Tweet(ctx, "1234")
+	tweet, err := resolver.Tweet(context.Background(), "1234")
 	require.NoError(t, err)
 	if assert.NotNil(t, tweet) {
 		assert.Equal(t, "1234", tweet.ID)
@@ -38,12 +39,11 @@ func TestQueryResolver_Tweet(t *testing.T) {
 func TestQueryResolver_SearchByUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	ctx := context.Background()
 
 	infra.RegisterLogger()
 
 	tweetService := api.NewMockTweetService(ctrl)
-	tweetService.EXPECT().SearchByUser(ctx, "user1").Return([]api.TweetModel{
+	tweetService.EXPECT().SearchByUser(gomock.Any(), "user1").Return([]api.TweetModel{
 		{
 			ID:            "1",
 			FullText:      "test1",
@@ -63,9 +63,10 @@ func TestQueryResolver_SearchByUser(t *testing.T) {
 	}, nil)
 
 	_twitterService = tweetService
+	_tracer = otel.Tracer("test")
 	resolver := newQueryResolver()
 
-	tweets, err := resolver.SearchByUser(ctx, "user1")
+	tweets, err := resolver.SearchByUser(context.Background(), "user1")
 	require.NoError(t, err)
 	if assert.Equal(t, 2, len(tweets)) {
 		assert.Equal(t, "1", tweets[0].ID)
@@ -98,12 +99,11 @@ func TestQueryResolver_SearchByUser(t *testing.T) {
 func TestQueryResolver_Search(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	ctx := context.Background()
 
 	infra.RegisterLogger()
 
 	tweetService := api.NewMockTweetService(ctrl)
-	tweetService.EXPECT().Search(ctx, "test", 10, 0, 0).Return([]api.TweetModel{
+	tweetService.EXPECT().Search(gomock.Any(), "test", 10, 0, 0).Return([]api.TweetModel{
 		{
 			ID:            "1",
 			FullText:      "test1",
@@ -131,9 +131,10 @@ func TestQueryResolver_Search(t *testing.T) {
 	}, nil)
 
 	_twitterService = tweetService
+	_tracer = otel.Tracer("test")
 	resolver := newQueryResolver()
 
-	tweets, err := resolver.Search(ctx, SearchInput{Term: "test"}, 10, 0, 0)
+	tweets, err := resolver.Search(context.Background(), SearchInput{Term: "test"}, 10, 0, 0)
 	require.NoError(t, err)
 	if assert.Equal(t, 3, len(tweets)) {
 		assert.Equal(t, "1", tweets[0].ID)

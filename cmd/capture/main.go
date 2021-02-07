@@ -8,6 +8,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/run"
+	"go.opentelemetry.io/otel"
 	"go.uber.org/zap"
 	"log"
 	"net/http"
@@ -62,6 +63,7 @@ func Run() error {
 
 	h := handlerImpl{
 		service: browserService,
+		tracer:  otel.Tracer("cmd/capture"),
 	}
 	http.HandleFunc("/capture", h.handleCapture)
 
