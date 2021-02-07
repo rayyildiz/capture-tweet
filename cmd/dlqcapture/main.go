@@ -6,6 +6,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/run"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.uber.org/zap"
 	"log"
 	"net/http"
@@ -36,6 +37,8 @@ func Run() error {
 
 	start := time.Now()
 
+	mux := http.NewServeMux()
+
 	bucket, err := infra.NewBucketFromEnvironment()
 	if err != nil {
 		return fmt.Errorf("blob bucket, %w", err)
@@ -45,12 +48,12 @@ func Run() error {
 	h := handlerImpl{
 		bucket: bucket,
 	}
-	http.HandleFunc("/dlq-capture", h.handleMessages)
+	mux.HandleFunc("/dlq-capture", h.handleMessages)
 
 	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start)))
 
 	port := run.Port()
-	err = http.ListenAndServe(":"+port, nil)
+	err = http.ListenAndServe(":"+port, otelhttp.NewHandler(mux, "dql-capture"))
 	if err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}

@@ -1168,6 +1168,8 @@ go.opentelemetry.io/contrib/instrumentation/host v0.16.0 h1:BG+X0yfJzc2DfM3GNka6
 go.opentelemetry.io/contrib/instrumentation/host v0.16.0/go.mod h1:gbq5CdvotFV4HeC3yGVLu4Ve2Jv9AYgw8MeraKNPB2w=
 go.opentelemetry.io/contrib/instrumentation/net/http v0.11.0 h1:ufewgDRmtrrdDpPgm7b4/gr4RXLS7KhDttAhyThtYS4=
 go.opentelemetry.io/contrib/instrumentation/net/http v0.11.0/go.mod h1:SBUSwgw/714EVSKHaAttjlJqbBv1YkUi+qdaN1oxMGE=
+go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.16.0 h1:hPbUH5fugPACtUdBWGL5glNqzowwHvnOdnwvQOATWgM=
+go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.16.0/go.mod h1:dNF4PMGeouMEPAWDwgEjsGFlod9hAU8oj0TU0w2J19g=
 go.opentelemetry.io/contrib/instrumentation/runtime v0.16.0 h1:XYQGkAmuygmIwaIPx72XZBfwJ3qhWaKrEZYvCCaROao=
 go.opentelemetry.io/contrib/instrumentation/runtime v0.16.0/go.mod h1:TgdXfg+SNTRrdPjlql5n6K/WAnG9yxsBuHwZTRZFyzo=
 go.opentelemetry.io/contrib/propagators v0.16.0 h1:6M16whHin+Uz2zMefuxmFG5CITQ2Q1CHnt2vKxWcQ+A=

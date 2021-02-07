@@ -7,6 +7,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/run"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.uber.org/zap"
 	"log"
 	"net/http"
@@ -57,12 +58,14 @@ func Run() error {
 		service: tweetService,
 		bucket:  bucket,
 	}
-	http.HandleFunc("/resize", h.handleResize)
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/resize", h.handleResize)
 
 	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start)))
 
 	port := run.Port()
-	err = http.ListenAndServe(":"+port, nil)
+	err = http.ListenAndServe(":"+port, otelhttp.NewHandler(mux, "thumb"))
 	if err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}

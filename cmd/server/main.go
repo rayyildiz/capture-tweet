@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/getsentry/sentry-go"
 	"github.com/kelseyhightower/run"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"log"
 	"net/http"
 	"os"
@@ -127,7 +128,7 @@ func Run() error {
 	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start)))
 
 	port := run.Port()
-	err = http.ListenAndServe(":"+port, h)
+	err = http.ListenAndServe(":"+port, otelhttp.NewHandler(h, "api"))
 	if err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}

@@ -28,6 +28,7 @@ require (
 	github.com/testcontainers/testcontainers-go v0.9.0
 	github.com/vektah/gqlparser/v2 v2.1.0
 	go.opentelemetry.io/contrib/instrumentation/net/http v0.11.0
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.16.0
 	go.opentelemetry.io/otel v0.16.0
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
