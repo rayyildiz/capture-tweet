@@ -7,28 +7,29 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.opentelemetry.io/otel"
 	"testing"
 )
 
 func TestMutationResolver_Capture(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	ctx := context.Background()
 
 	infra.RegisterLogger()
 
 	tweetService := api.NewMockTweetService(ctrl)
-	tweetService.EXPECT().Store(ctx, "https://twitter.com/jack/status/20").Return("20", nil)
-	tweetService.EXPECT().FindById(ctx, "20").Return(&api.TweetModel{
+	tweetService.EXPECT().Store(gomock.Any(), "https://twitter.com/jack/status/20").Return("20", nil)
+	tweetService.EXPECT().FindById(gomock.Any(), "20").Return(&api.TweetModel{
 		ID:       "20",
 		FullText: "full text",
 		AuthorID: "jack",
 	}, nil)
 
 	_twitterService = tweetService
+	_tracer = otel.Tracer("test")
 	resolver := newMutationResolver()
 
-	tweet, err := resolver.Capture(ctx, "https://twitter.com/jack/status/20")
+	tweet, err := resolver.Capture(context.Background(), "https://twitter.com/jack/status/20")
 	require.NoError(t, err)
 	if assert.NotNil(t, tweet) {
 		assert.Equal(t, "20", tweet.ID)
@@ -40,17 +41,17 @@ func TestMutationResolver_Capture(t *testing.T) {
 func TestMutationResolver_Contact(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	ctx := context.Background()
 
 	infra.RegisterLogger()
 
 	contentService := api.NewMockContentService(ctrl)
-	contentService.EXPECT().StoreContactRequest(ctx, "test@example.com", "Ramazan", "hello", "captcha").Return(nil)
+	contentService.EXPECT().StoreContactRequest(gomock.Any(), "test@example.com", "Ramazan", "hello", "captcha").Return(nil)
 
+	_tracer = otel.Tracer("test")
 	_contentService = contentService
 	resolver := newMutationResolver()
 
-	msg, err := resolver.Contact(ctx, ContactInput{
+	msg, err := resolver.Contact(context.Background(), ContactInput{
 		FullName: "Ramazan",
 		Email:    "test@example.com",
 		Message:  "hello",

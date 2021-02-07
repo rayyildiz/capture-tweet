@@ -91,22 +91,22 @@ func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
 	require.NoError(t, err)
 	defer chromeC.Terminate(ctx)
 
-	bucket, err := infra.NewBucket("mem://mem2")
+	bucket, err := infra.NewBucket("mem://mem")
 	require.NoError(t, err)
 	require.NotNil(t, bucket)
 
 	infra.RegisterLogger()
 
 	tweetS := api.NewMockTweetService(ctrl)
-	tweetS.EXPECT().UpdateLargeImage(ctx, "20", "capture/large/20.jpg").Return(nil)
+	tweetS.EXPECT().UpdateLargeImage(gomock.Any(), "1356685552276434946", "capture/large/1356685552276434946.jpg").Return(nil)
 
 	service := NewService(tweetS, bucket)
 	require.NotNil(t, service)
 
 	response, err := service.CaptureSaveUpdateDatabase(ctx, &api.CaptureRequestModel{
-		ID:     "20",
-		Author: "jack",
-		Url:    "https://twitter.com/jack/20",
+		ID:     "1356685552276434946",
+		Author: "CloudNativeFdn",
+		Url:    "https://twitter.com/CloudNativeFdn/status/1356685552276434946",
 	})
 	require.NoError(t, err)
 	if assert.NotNil(t, response) {

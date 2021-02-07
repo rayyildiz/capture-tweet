@@ -72,7 +72,6 @@ func (s serviceImpl) FindById(ctx context.Context, id string) (*api.TweetModel, 
 func (s serviceImpl) Store(ctx context.Context, tweetURL string) (string, error) {
 	span := trace.SpanFromContext(ctx)
 	defer span.End()
-	span.AddEvent("svc:store")
 	tweetID, tweetAuthor, err := parseTweetURL(tweetURL)
 	if err != nil {
 		zap.L().Error("tweet:service store, parseTweetUrl", zap.String("url", tweetURL), zap.Error(err))
@@ -89,6 +88,7 @@ func (s serviceImpl) Store(ctx context.Context, tweetURL string) (string, error)
 		zap.L().Error("tweet:service store, getTweet", zap.Int64("tweet_id", tweetID), zap.Error(err))
 		return "", err
 	}
+	span.AddEvent("svc:store", trace.WithAttributes(label.String("tweetId", tweetIdStr)))
 
 	err = s.repo.Store(ctx, &tweet)
 	if err != nil {
@@ -106,7 +106,7 @@ func (s serviceImpl) Store(ctx context.Context, tweetURL string) (string, error)
 		}
 	}(tweet)
 
-	go func(id, author, url string) {
+	go func(id, author, url string, span trace.Span) {
 
 		data, err := json.Marshal(api.CaptureRequestModel{
 			ID:     id,
@@ -117,21 +117,24 @@ func (s serviceImpl) Store(ctx context.Context, tweetURL string) (string, error)
 			zap.L().Warn("tweet:service store, send pubsub message", zap.String("tweet_id", id), zap.String("tweet_user", author), zap.String("url", url), zap.Error(err))
 			return
 		}
-
 		err = s.topic.Send(ctx, &pubsub.Message{
 			Metadata: map[string]string{
 				"tweet_id":   id,
 				"tweet_user": author,
-				"version":    "beta",
+				"version":    "prod",
+				"trace-id":   span.SpanContext().SpanID.String(),
+				"parent-id":  span.SpanContext().TraceID.String(),
 			},
 			Body: data,
 		})
+
+		span.AddEvent("topic:sendMessage", trace.WithAttributes(label.String("tweetId", id), label.String("messaging.system", "pubsub")))
 		if err != nil {
 			zap.L().Warn("tweet:service store, send pubsub message", zap.String("tweet_id", id), zap.String("tweet_user", author), zap.String("url", url), zap.Error(err))
 		} else {
 			zap.L().Info("tweet:service store, sent pubsub message", zap.String("tweet_id", id), zap.String("tweet_user", author), zap.String("url", url))
 		}
-	}(tweetIdStr, tweetAuthor, tweetURL)
+	}(tweetIdStr, tweetAuthor, tweetURL, span)
 
 	return tweetIdStr, nil
 }

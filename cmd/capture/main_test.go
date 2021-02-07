@@ -11,8 +11,8 @@ import (
 )
 
 func TestRun(t *testing.T) {
-	rand.Seed(time.Now().Unix())
-	port := rand.Intn(2000) + 30000
+	rand.Seed(time.Now().UnixNano())
+	port := rand.Intn(2000) + 30005
 	log.Printf("port is %d", port)
 
 	os.Setenv("DOCSTORE_TWEETS", "mem://tweet/ID")
