@@ -32,7 +32,7 @@ require (
 	go.opentelemetry.io/otel v0.16.0
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
-	gocloud.dev v0.21.0
+	gocloud.dev v0.22.0
 	gocloud.dev/docstore/mongodocstore v0.21.0
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 )
