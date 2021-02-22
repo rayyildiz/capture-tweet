@@ -28,8 +28,8 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/testcontainers/testcontainers-go v0.9.0
 	github.com/vektah/gqlparser/v2 v2.1.0
-	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.16.0
-	go.opentelemetry.io/otel v0.16.0
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.17.0
+	go.opentelemetry.io/otel v0.17.0
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
 	gocloud.dev v0.22.0
