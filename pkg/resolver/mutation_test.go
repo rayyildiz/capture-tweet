@@ -15,7 +15,7 @@ func TestMutationResolver_Capture(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	infra.RegisterLogger()
+	infra.RegisterLogger("test")
 
 	tweetService := api.NewMockTweetService(ctrl)
 	tweetService.EXPECT().Store(gomock.Any(), "https://twitter.com/jack/status/20").Return("20", nil)
@@ -42,7 +42,7 @@ func TestMutationResolver_Contact(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	infra.RegisterLogger()
+	infra.RegisterLogger("test")
 
 	contentService := api.NewMockContentService(ctrl)
 	contentService.EXPECT().StoreContactRequest(gomock.Any(), "test@example.com", "Ramazan", "hello", "captcha").Return(nil)

@@ -15,7 +15,7 @@ func TestQueryResolver_Tweet(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	infra.RegisterLogger()
+	infra.RegisterLogger("test")
 
 	tweetService := api.NewMockTweetService(ctrl)
 	tweetService.EXPECT().FindById(gomock.Any(), "1234").Return(&api.TweetModel{
@@ -40,7 +40,7 @@ func TestQueryResolver_SearchByUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	infra.RegisterLogger()
+	infra.RegisterLogger("test")
 
 	tweetService := api.NewMockTweetService(ctrl)
 	tweetService.EXPECT().SearchByUser(gomock.Any(), "user1").Return([]api.TweetModel{
@@ -100,7 +100,7 @@ func TestQueryResolver_Search(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	infra.RegisterLogger()
+	infra.RegisterLogger("test")
 
 	tweetService := api.NewMockTweetService(ctrl)
 	tweetService.EXPECT().Search(gomock.Any(), "test", 10, 0, 0).Return([]api.TweetModel{

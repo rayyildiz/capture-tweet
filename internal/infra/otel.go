@@ -11,7 +11,7 @@ func NewTelemetry() func() {
 
 	token := os.Getenv("LIGHSTEP_TOKEN")
 	if len(token) > 0 {
-		zap.L().Info("injection lighstep telemetry", zap.String("service_name", run.ServiceName()))
+		zap.L().Info("injection lighstep telemetry")
 		cfg := launcher.ConfigureOpentelemetry(
 			launcher.WithServiceName(run.ServiceName()),
 			launcher.WithServiceVersion(run.Revision()),

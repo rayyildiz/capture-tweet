@@ -1,16 +1,17 @@
 package main
 
 import (
-	"com.capturetweet/pkg/content"
 	"context"
 	"fmt"
-	"github.com/getsentry/sentry-go"
-	"github.com/kelseyhightower/run"
-	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"com.capturetweet/pkg/content"
+	"github.com/getsentry/sentry-go"
+	"github.com/kelseyhightower/run"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 
 	"com.capturetweet/internal/infra"
 	"com.capturetweet/pkg/resolver"
@@ -24,6 +25,8 @@ import (
 	"go.uber.org/zap"
 )
 
+var version string // do not remove or modify
+
 func init() {
 	godotenv.Load()
 }
@@ -35,7 +38,7 @@ func main() {
 }
 
 func Run() error {
-	infra.RegisterLogger()
+	infra.RegisterLogger(version)
 
 	err := infra.InitSentry()
 	if err != nil {
@@ -111,7 +114,7 @@ func Run() error {
 	srv := handler.NewDefaultServer(resolver.NewExecutableSchema(resolver.Config{Resolvers: rootResolver}))
 	srv.Use(infra.ZapLogger{})
 
-	mux := http.NewServeMux()
+	mux := http.DefaultServeMux
 
 	if os.Getenv("GRAPHQL_ENABLE_PLAYGROUND") == "true" {
 		mux.Handle("/api/docs", playground.Handler("GraphQL playground", "/api/query"))
