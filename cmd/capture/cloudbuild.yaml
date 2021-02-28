@@ -1,16 +1,16 @@
 steps:
   - name: 'golang:1.16'
-    args: ['go', 'build', '-a', '-installsuffix','cgo','-ldflags','"-w -X main.version=$(SHORT_SHA)"', '-o' ,'tmp/app','.']
-    env: ['GO111MODULE=on','CGO_ENABLED=0','GOOS=linux']
+    args: [ 'go', 'build', '-a', '-installsuffix','cgo','-ldflags','-w','-X main.version=$SHORT_SHA', '-o' ,'tmp/app','.' ]
+    env: [ 'GO111MODULE=on','CGO_ENABLED=0','GOOS=linux' ]
     dir: 'cmd/capture'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    args: ['docker','build', '-f', 'Dockerfile', '--tag=eu.gcr.io/$PROJECT_ID/capture:$SHORT_SHA', '.']
+    args: [ 'docker','build', '-f', 'Dockerfile', '--tag=eu.gcr.io/$PROJECT_ID/capture:$SHORT_SHA', '.' ]
     dir: 'cmd/capture'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    args: ['docker','push', 'eu.gcr.io/$PROJECT_ID/capture:$SHORT_SHA']
+    args: [ 'docker','push', 'eu.gcr.io/$PROJECT_ID/capture:$SHORT_SHA' ]
     dir: 'cmd/capture'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    args: ['gcloud','run','deploy','capture','--image','eu.gcr.io/$PROJECT_ID/capture:$SHORT_SHA', '--platform', 'managed','--region','europe-west1']
+    args: [ 'gcloud','run','deploy','capture','--image','eu.gcr.io/$PROJECT_ID/capture:$SHORT_SHA', '--platform', 'managed','--region','europe-west1' ]
