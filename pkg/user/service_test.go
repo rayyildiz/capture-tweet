@@ -15,7 +15,7 @@ func TestUserService_FindById(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	infra.RegisterLogger()
+	infra.RegisterLogger("test")
 
 	ctx := context.Background()
 
@@ -43,7 +43,7 @@ func TestUserService_FindOrCreate_Exist(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	infra.RegisterLogger()
+	infra.RegisterLogger("test")
 
 	ctx := context.Background()
 
@@ -75,7 +75,7 @@ func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	infra.RegisterLogger()
+	infra.RegisterLogger("test")
 
 	ctx := context.Background()
 

@@ -5,8 +5,11 @@
 [![codecov](https://codecov.io/gh/rayyildiz/capture-tweet/branch/main/graph/badge.svg?token=58YR43PZFS)](https://codecov.io/gh/rayyildiz/capture-tweet)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=rayyildiz/capture-tweet&identifier=272198663)](https://dependabot.com)
 
+## How
 
-## Local Config
+![](docs/CaptureTweet.png)
+
+## Configuration
 
 ```dotenv
 DOCSTORE_TWEETS=mongo://capturetweet/tweets?id_field=id
@@ -37,7 +40,9 @@ ALGOLIA_INDEX=tweets-LOCAL
   - [x] Capture and update collection
 - [x] New UI design
 - [x] Apollo client support
-- [ ] Capture tweet 
+- [x] Capture tweet 
   - [ ] Real time image update with firebase js.
-  - [ ] graphql subscribe ??? 
+  - [ ] graphql subscribe ??? '
+  - [x] Report capture
 - [x] Search tweet
+- [x] Contact us

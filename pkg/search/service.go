@@ -1,9 +1,10 @@
 package search
 
 import (
+	"context"
+
 	"com.capturetweet/api"
 	"com.capturetweet/internal/infra"
-	"context"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/opt"
 	"go.opentelemetry.io/otel/label"
 	"go.opentelemetry.io/otel/trace"

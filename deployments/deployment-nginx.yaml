@@ -1,38 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: capturetweet-ui
-  namespace: capturetweet
+  name: nginx
 spec:
   selector:
     matchLabels:
-      app: capturetweet-ui
+      app: nginx
       version: v1
   replicas: 1
   template:
     metadata:
       labels:
-        app: capturetweet-ui
+        app: nginx
         version: v1
     spec:
       containers:
         - name: ui
-          image: rayyildiz/capturetweet-ui
+          image: nginx:alpine
           ports:
             - containerPort: 80
           resources:
             limits:
-              cpu: 200m
-              memory: 200Mi
+              cpu: "250m"
+              memory: "512Mi"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: capturetweet-ui-svc
-  namespace: capturetweet
+  name: nginx-svc
 spec:
   selector:
-    app: capturetweet-ui
+    app: nginx
     version: v1
   ports:
     - port: 80

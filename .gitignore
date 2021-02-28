@@ -6,3 +6,4 @@ tmp
 .deno_plugins/
 sitemap.xml
 coverage.txt
+target/
