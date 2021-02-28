@@ -1,6 +1,6 @@
 steps:
   - name: 'golang:1.16'
-    args: ['go', 'build', '-a', '-installsuffix','cgo','-ldflags','"-w -X main.version=$SHORT_SHA"', '-o' ,'tmp/app','.']
+    args: ['go', 'build', '-a', '-installsuffix','cgo','-ldflags','"-w -X main.version=$(SHORT_SHA)"', '-o' ,'tmp/app','.']
     env: ['GO111MODULE=on','CGO_ENABLED=0','GOOS=linux']
     dir: 'cmd/capture'
 
