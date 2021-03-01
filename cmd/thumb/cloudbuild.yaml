@@ -5,7 +5,7 @@ steps:
       - 'GO111MODULE=on'
       - 'CGO_ENABLED=0'
       - 'GOOS=linux'
-      - 'GOFLAGS="-ldflags=-X=com.capturetweet/internal/infra.Version=$COMMIT_SHA"'
+      - 'GOFLAGS=-ldflags=-X=com.capturetweet/internal/infra.Version=$COMMIT_SHA'
     dir: 'cmd/thumb'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
