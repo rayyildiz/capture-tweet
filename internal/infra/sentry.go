@@ -6,13 +6,16 @@ import (
 	"os"
 )
 
-func InitSentry() error {
+func InitSentry(version string) error {
+	if len(version) < 2 {
+		version = run.Revision()
+	}
 	dsn := os.Getenv("SENTRY_DSN")
 	if len(dsn) > 0 {
 		return sentry.Init(sentry.ClientOptions{
 			Dsn:     dsn,
 			Dist:    run.ServiceName(),
-			Release: run.Revision(),
+			Release: version,
 		})
 	}
 	return nil

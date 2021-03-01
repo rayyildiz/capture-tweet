@@ -21,13 +21,11 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/kelseyhightower/run v0.0.17
 	github.com/lightstep/otel-launcher-go v0.16.1
-	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/rs/cors v1.7.0
 	github.com/stretchr/testify v1.7.0
 	github.com/testcontainers/testcontainers-go v0.9.0
-	github.com/urfave/cli/v2 v2.3.0 // indirect
 	github.com/vektah/gqlparser/v2 v2.1.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.16.0
 	go.opentelemetry.io/otel v0.16.0
@@ -36,7 +34,6 @@ require (
 	gocloud.dev v0.22.0
 	gocloud.dev/docstore/mongodocstore v0.22.0
 	golang.org/x/mod v0.4.1 // indirect
-	golang.org/x/sys v0.0.0-20210220050731-9a76102bfb43 // indirect
 	golang.org/x/tools v0.1.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )

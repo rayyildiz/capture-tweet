@@ -10,7 +10,6 @@ import (
 	"go.uber.org/zap"
 	"log"
 	"net/http"
-	"runtime/debug"
 	"time"
 )
 
@@ -18,16 +17,6 @@ var version string // do not remove or modify
 
 func init() {
 	godotenv.Load()
-}
-
-func init() {
-	if version == "" {
-		i, ok := debug.ReadBuildInfo()
-		if !ok {
-			return
-		}
-		version = i.Main.Version
-	}
 }
 
 func main() {
@@ -39,7 +28,7 @@ func main() {
 func Run() error {
 	infra.RegisterLogger(version)
 
-	err := infra.InitSentry()
+	err := infra.InitSentry(version)
 	if err != nil {
 		return fmt.Errorf("sentry init, %w", err)
 	}
