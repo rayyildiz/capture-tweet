@@ -6,7 +6,8 @@ import (
 	"os"
 )
 
-func InitSentry(version string) error {
+func InitSentry() error {
+	version := Version
 	if len(version) < 2 {
 		version = run.Revision()
 	}

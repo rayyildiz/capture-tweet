@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func RegisterLogger(version string) {
+func RegisterLogger() {
 	var config zap.Config
 
 	if IsDebug() {
@@ -16,7 +16,7 @@ func RegisterLogger(version string) {
 	}
 
 	config.InitialFields = map[string]interface{}{
-		"version":      version,
+		"version":      Version,
 		"service_name": run.ServiceName(),
 	}
 	logger, err := config.Build()
