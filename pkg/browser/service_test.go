@@ -30,7 +30,7 @@ func TestService_CaptureURL(t *testing.T) {
 	require.NoError(t, err)
 	defer chromeC.Terminate(ctx)
 
-	infra.RegisterLogger("test")
+	infra.RegisterLogger()
 
 	service := NewService(nil, nil)
 	require.NotNil(t, service)
@@ -51,7 +51,7 @@ func TestService_CaptureURL(t *testing.T) {
 func TestService_SaveCapture(t *testing.T) {
 	ctx := context.Background()
 
-	infra.RegisterLogger("test")
+	infra.RegisterLogger()
 
 	bucket, err := infra.NewBucket("mem://test")
 	require.NoError(t, err)
@@ -95,7 +95,7 @@ func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, bucket)
 
-	infra.RegisterLogger("test")
+	infra.RegisterLogger()
 
 	tweetS := api.NewMockTweetService(ctrl)
 	tweetS.EXPECT().UpdateLargeImage(gomock.Any(), "1356685552276434946", "capture/large/1356685552276434946.jpg").Return(nil)

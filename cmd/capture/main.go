@@ -16,8 +16,6 @@ import (
 	"time"
 )
 
-var version string // do not remove or modify
-
 func init() {
 	godotenv.Load()
 }
@@ -29,9 +27,9 @@ func main() {
 }
 
 func Run() error {
-	infra.RegisterLogger(version)
+	infra.RegisterLogger()
 
-	err := infra.InitSentry(version)
+	err := infra.InitSentry()
 	if err != nil {
 		return fmt.Errorf("sentry init: %w", err)
 	}
