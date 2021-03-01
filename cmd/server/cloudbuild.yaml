@@ -8,9 +8,9 @@ steps:
       - 'GOFLAGS=-ldflags=-X=com.capturetweet/internal/infra.Version=$SHORT_SHA'
     dir: 'cmd/server'
 
-  - name: 'ko'
-    env:
-      - 'KO_DOCKER_REPO=gcr.io/YOUR_PROJECT/my-app'
+#  - name: 'ko'
+#    env:
+#      - 'KO_DOCKER_REPO=gcr.io/YOUR_PROJECT/my-app'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args: ['docker','build', '-f', 'Dockerfile', '--tag=eu.gcr.io/$PROJECT_ID/api:$SHORT_SHA', '.']
