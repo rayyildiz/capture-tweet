@@ -3,7 +3,6 @@ package main
 import (
 	"com.capturetweet/api"
 	"encoding/json"
-	"github.com/getsentry/sentry-go"
 	"go.opentelemetry.io/otel/label"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
@@ -38,7 +37,6 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
 		span.RecordError(err)
-		sentry.CaptureException(err)
 		zap.L().Error("bad request", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
@@ -50,7 +48,6 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(payload.Message.Data, &request)
 	if err != nil {
 		span.RecordError(err)
-		sentry.CaptureException(err)
 		zap.L().Error("bad request, decode payload.data", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
@@ -60,7 +57,6 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 	respModel, err := h.service.CaptureSaveUpdateDatabase(ctx, &request)
 	if err != nil {
 		span.RecordError(err)
-		sentry.CaptureException(err)
 		zap.L().Error("could not capture", zap.String("tweet_id", request.ID), zap.String("url", request.Url), zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return

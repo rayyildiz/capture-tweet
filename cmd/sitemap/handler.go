@@ -6,7 +6,6 @@ import (
 	"crypto/md5"
 	"encoding/base64"
 	"fmt"
-	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 	"gocloud.dev/blob"
 	"net/http"
@@ -43,7 +42,6 @@ func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	tweets, err := h.repo.FindAllOrderByUpdated(ctx, size)
 	if err != nil {
-		sentry.CaptureException(err)
 		zap.L().Warn("could not get repositories", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
@@ -51,7 +49,6 @@ func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	err = createSitemap(ctx, h.bucket, tweets)
 	if err != nil {
-		sentry.CaptureException(err)
 		zap.L().Warn("could not get create sitemap", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
