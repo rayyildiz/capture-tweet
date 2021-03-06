@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 	"gocloud.dev/blob"
 	"net/http"
@@ -33,7 +32,6 @@ func (h handlerImpl) handleMessages(w http.ResponseWriter, r *http.Request) {
 	var payload PubSubMessage
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
-		sentry.CaptureException(err)
 		zap.L().Error("bad request", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
@@ -52,7 +50,6 @@ func (h handlerImpl) handleMessages(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 	if err != nil {
-		sentry.CaptureException(err)
 		zap.L().Error("could not create a write", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return

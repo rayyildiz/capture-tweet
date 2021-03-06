@@ -5,7 +5,6 @@ import (
 	"com.capturetweet/internal/convert"
 	"context"
 	"errors"
-	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 	"gocloud.dev/gcerrors"
 )
@@ -29,7 +28,6 @@ func (r queryResolverImpl) Tweet(ctx context.Context, id string) (*Tweet, error)
 	}
 
 	if err != nil {
-		sentry.CaptureException(err)
 		zap.L().Error("tweet find error", zap.String("id", id), zap.Error(err))
 		return nil, err
 	}
@@ -64,7 +62,6 @@ func (r queryResolverImpl) SearchByUser(ctx context.Context, userID string) ([]*
 
 	models, err := _twitterService.SearchByUser(ctx, userID)
 	if err != nil {
-		sentry.CaptureException(err)
 		zap.L().Error("search by user error", zap.String("user_id", userID), zap.Error(err))
 		return nil, errors.New("could not ind any result")
 	}
@@ -82,7 +79,6 @@ func (r queryResolverImpl) Search(ctx context.Context, input SearchInput, size i
 
 	models, err := _twitterService.Search(ctx, input.Term, size, start, page)
 	if err != nil {
-		sentry.CaptureException(err)
 		zap.L().Error("search error", zap.String("term", input.Term), zap.Error(err))
 		return nil, errors.New("could not ind any result")
 	}

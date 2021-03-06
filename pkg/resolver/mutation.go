@@ -5,7 +5,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 )
 
@@ -22,14 +21,12 @@ func (r mutationResolverImpl) Capture(ctx context.Context, url string) (*Tweet, 
 
 	id, err := _twitterService.Store(ctx, url)
 	if err != nil {
-		sentry.CaptureException(err)
 		zap.L().Error("capture error", zap.String("url", url), zap.Error(err))
 		return nil, err
 	}
 
 	model, err := _twitterService.FindById(ctx, id)
 	if err != nil {
-		sentry.CaptureException(err)
 		zap.L().Error("capture error, findById", zap.String("id", id), zap.Error(err))
 		return nil, err
 	}
@@ -69,7 +66,6 @@ func (r mutationResolverImpl) Contact(ctx context.Context, input ContactInput, t
 
 	err := _contentService.StoreContactRequest(ctx, input.Email, input.FullName, msg, captcha)
 	if err != nil {
-		sentry.CaptureException(err)
 		zap.L().Error("could not send mail", zap.String("contact_email", input.Email), zap.String("contact_fullName", input.FullName), zap.Error(err))
 		return "", errors.New("error occurred, please try again or contact from info@capturetweet.com mail address")
 	}
