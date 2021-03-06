@@ -1,21 +1,21 @@
 package infra
 
 import (
-	"github.com/getsentry/sentry-go"
-	"github.com/kelseyhightower/run"
 	"os"
+
+	"github.com/getsentry/sentry-go"
 )
 
 func InitSentry() error {
 	version := Version
 	if len(version) < 2 {
-		version = run.Revision()
+		version = Revision()
 	}
 	dsn := os.Getenv("SENTRY_DSN")
 	if len(dsn) > 0 {
 		return sentry.Init(sentry.ClientOptions{
 			Dsn:     dsn,
-			Dist:    run.ServiceName(),
+			Dist:    ServiceName(),
 			Release: version,
 		})
 	}

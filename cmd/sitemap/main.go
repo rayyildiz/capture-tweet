@@ -1,17 +1,17 @@
 package main
 
 import (
-	"com.capturetweet/internal/infra"
-	"com.capturetweet/pkg/tweet"
 	"fmt"
-	"github.com/getsentry/sentry-go"
-	"github.com/joho/godotenv"
-	"github.com/kelseyhightower/run"
-	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
-	"go.uber.org/zap"
 	"log"
 	"net/http"
 	"time"
+
+	"com.capturetweet/internal/infra"
+	"com.capturetweet/pkg/tweet"
+	"github.com/getsentry/sentry-go"
+	"github.com/joho/godotenv"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"go.uber.org/zap"
 )
 
 func init() {
@@ -61,7 +61,7 @@ func Run() error {
 
 	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start)))
 
-	port := run.Port()
+	port := infra.Port()
 	err = http.ListenAndServe(":"+port, otelhttp.NewHandler(mux, "sitemap"))
 	if err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)

@@ -1,10 +1,10 @@
 package infra
 
 import (
-	"github.com/kelseyhightower/run"
+	"os"
+
 	"github.com/lightstep/otel-launcher-go/launcher"
 	"go.uber.org/zap"
-	"os"
 )
 
 func NewTelemetry() func() {
@@ -13,8 +13,8 @@ func NewTelemetry() func() {
 	if len(token) > 0 {
 		zap.L().Info("injection lighstep telemetry")
 		cfg := launcher.ConfigureOpentelemetry(
-			launcher.WithServiceName(run.ServiceName()),
-			launcher.WithServiceVersion(run.Revision()),
+			launcher.WithServiceName(ServiceName()),
+			launcher.WithServiceVersion(Revision()),
 			launcher.WithAccessToken(token),
 		)
 		return func() {
