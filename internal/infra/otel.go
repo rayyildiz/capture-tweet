@@ -1,24 +1,30 @@
 package infra
 
 import (
-	"os"
-
-	"github.com/lightstep/otel-launcher-go/launcher"
+	"context"
+	texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
+	"github.com/getsentry/sentry-go"
+	"go.opentelemetry.io/otel"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.uber.org/zap"
+	"log"
 )
 
 func NewTelemetry() func() {
+	projectId := ProjectID()
+	if len(projectId) > 0 {
+		zap.L().Info("injection google telemetry telemetry", zap.String("projectId", projectId))
+		exporter, err := texporter.NewExporter(texporter.WithProjectID(projectId))
+		if err != nil {
+			sentry.CaptureException(err)
+			log.Fatalf("could not create exportter")
+		}
 
-	token := os.Getenv("LIGHSTEP_TOKEN")
-	if len(token) > 0 {
-		zap.L().Info("injection lighstep telemetry")
-		cfg := launcher.ConfigureOpentelemetry(
-			launcher.WithServiceName(ServiceName()),
-			launcher.WithServiceVersion(Revision()),
-			launcher.WithAccessToken(token),
-		)
+		tp := sdktrace.NewTracerProvider(sdktrace.WithSyncer(exporter))
+		otel.SetTracerProvider(tp)
+
 		return func() {
-			cfg.Shutdown()
+			exporter.Shutdown(context.Background())
 		}
 	}
 	return func() {}
