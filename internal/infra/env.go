@@ -21,3 +21,12 @@ func Configuration() string {
 func ServiceName() string {
 	return os.Getenv("K_SERVICE")
 }
+
+// ProjectID returns teh project id of GCP.
+func ProjectID() string {
+	return os.Getenv("GOOGLE_CLOUD_PROJECT")
+}
+
+func SentryDSN() string {
+	return os.Getenv("SENTRY_DSN")
+}

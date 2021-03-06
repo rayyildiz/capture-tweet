@@ -72,7 +72,8 @@ func (s serviceImpl) SaveCapture(ctx context.Context, originalImage []byte, mode
 	defer span.End()
 
 	imageKey := fmt.Sprintf("capture/large/%s.jpg", model.ID)
-	span.SetAttributes(label.String("tweetId", model.ID))
+	span.AddEvent("saveCapture:upload", trace.WithAttributes(label.String("tweetId", model.ID)))
+
 	err := s.bucket.WriteAll(ctx, imageKey, originalImage, &blob.WriterOptions{
 		ContentType:  "image/jpg",
 		CacheControl: "private,max-age=86400",

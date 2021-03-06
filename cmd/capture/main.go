@@ -28,11 +28,6 @@ func main() {
 
 func Run() error {
 	infra.RegisterLogger()
-
-	err := infra.InitSentry()
-	if err != nil {
-		return fmt.Errorf("sentry init: %w", err)
-	}
 	defer sentry.Flush(time.Second * 2)
 
 	telemetryClose := infra.NewTelemetry()
