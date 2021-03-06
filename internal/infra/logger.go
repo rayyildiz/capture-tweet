@@ -2,7 +2,7 @@ package infra
 
 import (
 	"fmt"
-	"github.com/kelseyhightower/run"
+
 	"go.uber.org/zap"
 )
 
@@ -17,7 +17,7 @@ func RegisterLogger() {
 
 	config.InitialFields = map[string]interface{}{
 		"version":      Version,
-		"service_name": run.ServiceName(),
+		"service_name": ServiceName(),
 	}
 	logger, err := config.Build()
 	if err != nil {
