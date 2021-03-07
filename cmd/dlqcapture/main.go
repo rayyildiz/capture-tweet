@@ -45,7 +45,7 @@ func Run() error {
 	}
 	mux.HandleFunc("/dlq-capture", h.handleMessages)
 
-	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start)))
+	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 
 	port := infra.Port()
 	err = http.ListenAndServe(":"+port, otelhttp.NewHandler(mux, "dql-capture"))
