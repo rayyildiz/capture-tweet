@@ -2,6 +2,7 @@ package search
 
 import (
 	"context"
+	"go.opentelemetry.io/otel"
 
 	"com.capturetweet/api"
 	"com.capturetweet/internal/infra"
@@ -11,15 +12,19 @@ import (
 )
 
 type serviceImpl struct {
-	index infra.IndexInterface
+	index  infra.IndexInterface
+	tracer trace.Tracer
 }
 
 func NewService(index infra.IndexInterface) api.SearchService {
-	return &serviceImpl{index}
+	return &serviceImpl{
+		index:  index,
+		tracer: otel.GetTracerProvider().Tracer("com.capturetweet/pkg/search"),
+	}
 }
 
 func (s serviceImpl) Search(ctx context.Context, term string, size int) ([]api.SearchModel, error) {
-	span := trace.SpanFromContext(ctx)
+	ctx, span := s.tracer.Start(ctx, "service:search")
 	defer span.End()
 
 	res, err := s.index.Search(term, opt.HitsPerPage(size))
@@ -37,8 +42,9 @@ func (s serviceImpl) Search(ctx context.Context, term string, size int) ([]api.S
 }
 
 func (s serviceImpl) Put(ctx context.Context, tweetId, fullText, author string) error {
-	span := trace.SpanFromContext(ctx)
+	ctx, span := s.tracer.Start(ctx, "service:put")
 	defer span.End()
+
 	span.SetAttributes(label.String("tweetId", tweetId))
 
 	_, err := s.index.SaveObject(api.SearchModel{

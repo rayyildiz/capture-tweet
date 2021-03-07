@@ -3,6 +3,7 @@ package browser
 import (
 	"context"
 	"fmt"
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/label"
 	"go.opentelemetry.io/otel/trace"
 	"math"
@@ -24,6 +25,7 @@ type serviceImpl struct {
 	tweetService api.TweetService
 	bucket       *blob.Bucket
 	browser      *browserCtx
+	tracer       trace.Tracer
 }
 
 type browserCtx struct {
@@ -32,11 +34,16 @@ type browserCtx struct {
 }
 
 func NewService(tweetService api.TweetService, bucket *blob.Bucket) api.BrowserService {
-	return &serviceImpl{tweetService, bucket, nil}
+	return &serviceImpl{
+		tweetService: tweetService,
+		bucket:       bucket,
+		browser:      nil,
+		tracer:       otel.GetTracerProvider().Tracer("com.capturetweet/pkg/browser"),
+	}
 }
 
 func (s serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
-	span := trace.SpanFromContext(ctx)
+	ctx, span := s.tracer.Start(ctx, "service:captureSaveUpdateDatabase")
 	defer span.End()
 
 	originalImage, err := s.CaptureURL(ctx, model)
@@ -68,7 +75,7 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.C
 }
 
 func (s serviceImpl) SaveCapture(ctx context.Context, originalImage []byte, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
-	span := trace.SpanFromContext(ctx)
+	ctx, span := s.tracer.Start(ctx, "service:saveCapture")
 	defer span.End()
 
 	imageKey := fmt.Sprintf("capture/large/%s.jpg", model.ID)
@@ -103,7 +110,7 @@ func (s serviceImpl) Close() {
 }
 
 func (s *serviceImpl) CaptureURL(ctx context.Context, model *api.CaptureRequestModel) ([]byte, error) {
-	span := trace.SpanFromContext(ctx)
+	ctx, span := s.tracer.Start(ctx, "service:captureUrl")
 	defer span.End()
 
 	if s.browser == nil {
