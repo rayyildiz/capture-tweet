@@ -92,7 +92,7 @@ func (s serviceImpl) Store(ctx context.Context, tweetURL string) (string, error)
 	if s.repo.Exist(ctx, tweetIdStr) {
 		return tweetIdStr, nil
 	}
-	_, childSpan := s.tracer.Start(ctx, "twitter-api")
+	_, childSpan := s.tracer.Start(ctx, "twitter")
 	tweet, err := s.twitterAPI.GetTweet(tweetID, url.Values{})
 	childSpan.End()
 
@@ -114,11 +114,14 @@ func (s serviceImpl) Store(ctx context.Context, tweetURL string) (string, error)
 		zap.L().Warn("tweet:service store, user.findOrCreate", zap.String("tweet_user", tweet.User.ScreenName), zap.Error(err))
 	}
 
-	go func(t anaconda.Tweet) {
+	go func(ctx context.Context, t anaconda.Tweet) {
+		ctx, span := s.tracer.Start(ctx, "search")
+		defer span.End()
+
 		if err := s.search.Put(ctx, t.IdStr, t.FullText, t.User.ScreenName); err != nil {
 			zap.L().Warn("tweet:service store, search.put", zap.String("tweet_id", t.IdStr), zap.String("tweet_user", t.User.ScreenName), zap.Error(err))
 		}
-	}(tweet)
+	}(ctx, tweet)
 
 	go func(ctx context.Context, id, author, url string, span trace.Span) {
 
