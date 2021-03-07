@@ -54,7 +54,7 @@ func (r repositoryImpl) FindById(ctx context.Context, id string) (*Tweet, error)
 }
 
 func (r repositoryImpl) Exist(ctx context.Context, id string) bool {
-	ctx, span := r.tracer.Start(ctx, "repo-findById")
+	ctx, span := r.tracer.Start(ctx, "repo-exist")
 	defer span.End()
 
 	span.AddEvent("exist", trace.WithAttributes(label.String("tweetId", id)))
