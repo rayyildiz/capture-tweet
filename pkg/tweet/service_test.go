@@ -69,7 +69,7 @@ func TestService_Store(t *testing.T) {
 	searchService.EXPECT().Put(gomock.Any(), "20", "test", "jack").Return(nil)
 
 	userService := api.NewMockUserService(ctrl)
-	userService.EXPECT().FindOrCreate(context.Background(), gomock.Any()).Return(nil, nil)
+	userService.EXPECT().FindOrCreate(gomock.Any(), gomock.Any()).Return(nil, nil)
 
 	twitterAPI := infra.NewMockTweetAPI(ctrl)
 	twitterAPI.EXPECT().GetTweet(int64(20), gomock.Any()).Return(anaconda.Tweet{
@@ -107,7 +107,7 @@ func TestService_UpdateLargeImage(t *testing.T) {
 	ctx := context.Background()
 
 	repo := NewMockRepository(ctrl)
-	repo.EXPECT().UpdateLargeImage(ctx, "1", "capture/large/1.png").Return(nil)
+	repo.EXPECT().UpdateLargeImage(gomock.Any(), "1", "capture/large/1.png").Return(nil)
 
 	infra.RegisterLogger()
 

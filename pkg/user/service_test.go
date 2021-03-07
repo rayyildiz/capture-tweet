@@ -20,7 +20,7 @@ func TestUserService_FindById(t *testing.T) {
 	ctx := context.Background()
 
 	repo := NewMockRepository(ctrl)
-	repo.EXPECT().FindById(ctx, "testUserIdStr").Return(&User{
+	repo.EXPECT().FindById(gomock.Any(), "testUserIdStr").Return(&User{
 		ID:         "testUserIdStr",
 		CreatedAt:  time.Now(),
 		RegisterAt: time.Now(),
@@ -48,7 +48,7 @@ func TestUserService_FindOrCreate_Exist(t *testing.T) {
 	ctx := context.Background()
 
 	repo := NewMockRepository(ctrl)
-	repo.EXPECT().FindById(ctx, "testId").Return(&User{
+	repo.EXPECT().FindById(gomock.Any(), "testId").Return(&User{
 		ID:         "testId",
 		CreatedAt:  time.Now(),
 		RegisterAt: time.Now(),
@@ -85,8 +85,8 @@ func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 	dt, err := time.Parse(time.RubyDate, strDate)
 	require.NoError(t, err)
 
-	repo.EXPECT().FindById(ctx, "testId").Return(nil, nil)
-	repo.EXPECT().Store(ctx, "testId", "rayyildiz", "Ramazan A.", "bio", "profile.png", dt).Return(nil)
+	repo.EXPECT().FindById(gomock.Any(), "testId").Return(nil, nil)
+	repo.EXPECT().Store(gomock.Any(), "testId", "rayyildiz", "Ramazan A.", "bio", "profile.png", dt).Return(nil)
 
 	svc := NewService(repo)
 
