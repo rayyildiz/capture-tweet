@@ -3,6 +3,8 @@ package user
 
 import (
 	"context"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/trace"
 	"gocloud.dev/docstore"
 	"time"
 )
@@ -15,14 +17,20 @@ type Repository interface {
 }
 
 type repositoryImpl struct {
-	coll *docstore.Collection
+	coll   *docstore.Collection
+	tracer trace.Tracer
 }
 
 func NewRepository(coll *docstore.Collection) Repository {
-	return &repositoryImpl{coll}
+	return &repositoryImpl{
+		coll:   coll,
+		tracer: otel.GetTracerProvider().Tracer("com.capturetweet/pkg/user"),
+	}
 }
 
 func (r repositoryImpl) FindByUserName(ctx context.Context, userName string) (*User, error) {
+	ctx, span := r.tracer.Start(ctx, "repo:findByUsername")
+	defer span.End()
 
 	user := &User{}
 	it := r.coll.Query().Where("username", "=", userName).Limit(1).Get(ctx)
@@ -35,6 +43,9 @@ func (r repositoryImpl) FindByUserName(ctx context.Context, userName string) (*U
 }
 
 func (r repositoryImpl) FindById(ctx context.Context, id string) (*User, error) {
+	ctx, span := r.tracer.Start(ctx, "repo:findById")
+	defer span.End()
+
 	user := &User{ID: id}
 	err := r.coll.Get(ctx, user)
 	if err != nil {
@@ -44,6 +55,9 @@ func (r repositoryImpl) FindById(ctx context.Context, id string) (*User, error) 
 }
 
 func (r repositoryImpl) Store(ctx context.Context, userIdStr, userName, screenName, bio, profileImage string, registeredAt time.Time) error {
+	ctx, span := r.tracer.Start(ctx, "repo:store")
+	defer span.End()
+
 	return r.coll.Put(ctx, &User{
 		ID:              userIdStr,
 		CreatedAt:       time.Now(),

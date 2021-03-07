@@ -33,5 +33,5 @@ func InitService(twitterService api.TweetService, userService api.UserService, c
 	_twitterService = twitterService
 	_userService = userService
 	_contentService = contentService
-	_tracer = otel.GetTracerProvider().Tracer("com.capturetweet/trace")
+	_tracer = otel.GetTracerProvider().Tracer("com.capturetweet/pkg/resolver")
 }

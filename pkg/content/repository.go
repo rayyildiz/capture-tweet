@@ -4,6 +4,7 @@ package content
 import (
 	"context"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/trace"
 	"gocloud.dev/docstore"
 	"time"
@@ -15,14 +16,18 @@ type Repository interface {
 
 type repositoryImpl struct {
 	contactUs *docstore.Collection
+	tracer    trace.Tracer
 }
 
 func NewRepository(contactUs *docstore.Collection) Repository {
-	return &repositoryImpl{contactUs}
+	return &repositoryImpl{
+		contactUs: contactUs,
+		tracer:    otel.GetTracerProvider().Tracer("com.capturetweet/pkg/content"),
+	}
 }
 
 func (r repositoryImpl) ContactUs(ctx context.Context, email, fullName, message string) error {
-	span := trace.SpanFromContext(ctx)
+	ctx, span := r.tracer.Start(ctx, "repo:contactUs")
 	defer span.End()
 
 	id := uuid.New().String()
