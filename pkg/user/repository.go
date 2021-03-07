@@ -29,7 +29,7 @@ func NewRepository(coll *docstore.Collection) Repository {
 }
 
 func (r repositoryImpl) FindByUserName(ctx context.Context, userName string) (*User, error) {
-	ctx, span := r.tracer.Start(ctx, "repo:findByUsername")
+	ctx, span := r.tracer.Start(ctx, "repo-findByUsername")
 	defer span.End()
 
 	user := &User{}
@@ -43,7 +43,7 @@ func (r repositoryImpl) FindByUserName(ctx context.Context, userName string) (*U
 }
 
 func (r repositoryImpl) FindById(ctx context.Context, id string) (*User, error) {
-	ctx, span := r.tracer.Start(ctx, "repo:findById")
+	ctx, span := r.tracer.Start(ctx, "repo-findById")
 	defer span.End()
 
 	user := &User{ID: id}
@@ -55,7 +55,7 @@ func (r repositoryImpl) FindById(ctx context.Context, id string) (*User, error) 
 }
 
 func (r repositoryImpl) Store(ctx context.Context, userIdStr, userName, screenName, bio, profileImage string, registeredAt time.Time) error {
-	ctx, span := r.tracer.Start(ctx, "repo:store")
+	ctx, span := r.tracer.Start(ctx, "repo-store")
 	defer span.End()
 
 	return r.coll.Put(ctx, &User{

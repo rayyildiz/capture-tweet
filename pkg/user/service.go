@@ -24,7 +24,7 @@ func NewService(repo Repository) api.UserService {
 }
 
 func (s serviceImpl) FindById(ctx context.Context, id string) (*api.UserModel, error) {
-	ctx, span := s.tracer.Start(ctx, "service:findById")
+	ctx, span := s.tracer.Start(ctx, "service-findById")
 	defer span.End()
 
 	user, err := s.repo.FindById(ctx, id)
@@ -43,7 +43,7 @@ func (s serviceImpl) FindById(ctx context.Context, id string) (*api.UserModel, e
 }
 
 func (s serviceImpl) FindOrCreate(ctx context.Context, author *anaconda.User) (*api.UserModel, error) {
-	ctx, span := s.tracer.Start(ctx, "service:findOrCreate")
+	ctx, span := s.tracer.Start(ctx, "service-findOrCreate")
 	defer span.End()
 
 	id := author.IdStr

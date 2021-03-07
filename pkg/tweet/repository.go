@@ -39,7 +39,7 @@ func NewRepository(coll *docstore.Collection) Repository {
 }
 
 func (r repositoryImpl) FindById(ctx context.Context, id string) (*Tweet, error) {
-	ctx, span := r.tracer.Start(ctx, "repo:findById")
+	ctx, span := r.tracer.Start(ctx, "repo-findById")
 	defer span.End()
 
 	span.AddEvent("findById", trace.WithAttributes(label.String("tweetId", id)))
@@ -54,7 +54,7 @@ func (r repositoryImpl) FindById(ctx context.Context, id string) (*Tweet, error)
 }
 
 func (r repositoryImpl) Exist(ctx context.Context, id string) bool {
-	ctx, span := r.tracer.Start(ctx, "repo:findById")
+	ctx, span := r.tracer.Start(ctx, "repo-findById")
 	defer span.End()
 
 	span.AddEvent("exist", trace.WithAttributes(label.String("tweetId", id)))
@@ -70,7 +70,7 @@ func (r repositoryImpl) Exist(ctx context.Context, id string) bool {
 }
 
 func (r repositoryImpl) Store(ctx context.Context, tweet *anaconda.Tweet) error {
-	ctx, span := r.tracer.Start(ctx, "repo:store")
+	ctx, span := r.tracer.Start(ctx, "repo-store")
 	defer span.End()
 
 	span.AddEvent("store", trace.WithAttributes(label.String("tweetId", tweet.IdStr)))
@@ -106,7 +106,7 @@ func (r repositoryImpl) Store(ctx context.Context, tweet *anaconda.Tweet) error 
 }
 
 func (r repositoryImpl) FindByIds(ctx context.Context, ids []string) ([]Tweet, error) {
-	ctx, span := r.tracer.Start(ctx, "repo:findByIds")
+	ctx, span := r.tracer.Start(ctx, "repo-findByIds")
 	defer span.End()
 
 	span.AddEvent("findByIds")
@@ -124,7 +124,7 @@ func (r repositoryImpl) FindByIds(ctx context.Context, ids []string) ([]Tweet, e
 	return list, nil
 }
 func (r repositoryImpl) FindByUser(ctx context.Context, userId string) ([]Tweet, error) {
-	ctx, span := r.tracer.Start(ctx, "repo:findByUser")
+	ctx, span := r.tracer.Start(ctx, "repo-findByUser")
 	defer span.End()
 	span.AddEvent("findByUser", trace.WithAttributes(label.String("userId", userId)))
 
@@ -150,7 +150,7 @@ func (r repositoryImpl) FindByUser(ctx context.Context, userId string) ([]Tweet,
 }
 
 func (r repositoryImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {
-	ctx, span := r.tracer.Start(ctx, "repo:updateLargeImage")
+	ctx, span := r.tracer.Start(ctx, "repo-updateLargeImage")
 	defer span.End()
 
 	span.AddEvent("updateLargeImage", trace.WithAttributes(label.String("tweetId", id)))
@@ -160,7 +160,7 @@ func (r repositoryImpl) UpdateLargeImage(ctx context.Context, id, captureUrl str
 }
 
 func (r repositoryImpl) UpdateThumbImage(ctx context.Context, id, captureUrl string) error {
-	ctx, span := r.tracer.Start(ctx, "repo:updateThumbImage")
+	ctx, span := r.tracer.Start(ctx, "repo-updateThumbImage")
 	defer span.End()
 	span.AddEvent("updateThumbImage", trace.WithAttributes(label.String("tweetId", id)))
 
@@ -169,7 +169,7 @@ func (r repositoryImpl) UpdateThumbImage(ctx context.Context, id, captureUrl str
 }
 
 func (r repositoryImpl) FindAllOrderByUpdated(ctx context.Context, size int) ([]Tweet, error) {
-	ctx, span := r.tracer.Start(ctx, "repo:findAllOrderByUpdated")
+	ctx, span := r.tracer.Start(ctx, "repo-findAllOrderByUpdated")
 	defer span.End()
 	span.AddEvent("findAllOrderByUpdated")
 

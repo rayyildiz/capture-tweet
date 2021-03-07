@@ -27,7 +27,7 @@ func NewRepository(contactUs *docstore.Collection) Repository {
 }
 
 func (r repositoryImpl) ContactUs(ctx context.Context, email, fullName, message string) error {
-	ctx, span := r.tracer.Start(ctx, "repo:contactUs")
+	ctx, span := r.tracer.Start(ctx, "repo-contactUs")
 	defer span.End()
 
 	id := uuid.New().String()
