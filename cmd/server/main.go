@@ -111,7 +111,7 @@ func Run() error {
 	if os.Getenv("GRAPHQL_ENABLE_PLAYGROUND") == "true" {
 		mux.Handle("/api/docs", playground.Handler("GraphQL playground", "/api/query"))
 	}
-	mux.Handle("/api/query", srv)
+	mux.Handle("/api/query", infra.VersionHandler(srv))
 
 	h := cors.New(cors.Options{
 		AllowedOrigins:   []string{"https://capturetweet.com", "https://www.capturetweet.com", "http://localhost:3000", "http://localhost:4000"},
@@ -120,7 +120,7 @@ func Run() error {
 		AllowCredentials: false,
 	}).Handler(mux)
 
-	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start)))
+	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 
 	port := infra.Port()
 	err = http.ListenAndServe(":"+port, otelhttp.NewHandler(h, "api"))
