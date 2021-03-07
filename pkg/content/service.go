@@ -30,7 +30,7 @@ type captchaResponse struct {
 }
 
 func (s serviceImpl) StoreContactRequest(ctx context.Context, senderMail, senderName, message, captcha string) error {
-	ctx, span := s.tracer.Start(ctx, "service:storeContactRequest")
+	ctx, span := s.tracer.Start(ctx, "service-storeContactRequest")
 	defer span.End()
 
 	post := url.Values{

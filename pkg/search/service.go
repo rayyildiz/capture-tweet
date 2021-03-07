@@ -24,7 +24,7 @@ func NewService(index infra.IndexInterface) api.SearchService {
 }
 
 func (s serviceImpl) Search(ctx context.Context, term string, size int) ([]api.SearchModel, error) {
-	ctx, span := s.tracer.Start(ctx, "service:search")
+	ctx, span := s.tracer.Start(ctx, "service-search")
 	defer span.End()
 
 	res, err := s.index.Search(term, opt.HitsPerPage(size))
@@ -42,7 +42,7 @@ func (s serviceImpl) Search(ctx context.Context, term string, size int) ([]api.S
 }
 
 func (s serviceImpl) Put(ctx context.Context, tweetId, fullText, author string) error {
-	ctx, span := s.tracer.Start(ctx, "service:put")
+	ctx, span := s.tracer.Start(ctx, "service-put")
 	defer span.End()
 
 	span.SetAttributes(label.String("tweetId", tweetId))
