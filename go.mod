@@ -12,7 +12,8 @@ require (
 	github.com/agnivade/levenshtein v1.1.0 // indirect
 	github.com/algolia/algoliasearch-client-go/v3 v3.16.0
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
-	github.com/chromedp/cdproto v0.0.0-20210318231247-733a37e2c059
+	//github.com/chromedp/cdproto v0.0.0-20210318231247-733a37e2c059
+	github.com/chromedp/cdproto v0.0.0-20210305224431-50b9f457e822
 	github.com/chromedp/chromedp v0.6.8
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/go-connections v0.4.0
