@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/label"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 	"math"
 	"os"
@@ -79,7 +79,7 @@ func (s serviceImpl) SaveCapture(ctx context.Context, originalImage []byte, mode
 	defer span.End()
 
 	imageKey := fmt.Sprintf("capture/large/%s.jpg", model.ID)
-	span.AddEvent("saveCapture:upload", trace.WithAttributes(label.String("tweetId", model.ID)))
+	span.AddEvent("saveCapture:upload", trace.WithAttributes(attribute.String("tweetId", model.ID)))
 
 	err := s.bucket.WriteAll(ctx, imageKey, originalImage, &blob.WriterOptions{
 		ContentType:  "image/jpg",

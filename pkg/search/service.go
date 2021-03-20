@@ -3,11 +3,11 @@ package search
 import (
 	"context"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 
 	"com.capturetweet/api"
 	"com.capturetweet/internal/infra"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/opt"
-	"go.opentelemetry.io/otel/label"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -45,7 +45,7 @@ func (s serviceImpl) Put(ctx context.Context, tweetId, fullText, author string) 
 	ctx, span := s.tracer.Start(ctx, "service-put")
 	defer span.End()
 
-	span.SetAttributes(label.String("tweetId", tweetId))
+	span.SetAttributes(attribute.String("tweetId", tweetId))
 
 	_, err := s.index.SaveObject(api.SearchModel{
 		TweetID:  tweetId,

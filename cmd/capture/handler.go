@@ -3,7 +3,7 @@ package main
 import (
 	"com.capturetweet/api"
 	"encoding/json"
-	"go.opentelemetry.io/otel/label"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"net/http"
@@ -42,7 +42,7 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-	span.AddEvent("handleCapture", trace.WithAttributes(label.String("messageId", payload.Message.MessageId)))
+	span.AddEvent("handleCapture", trace.WithAttributes(attribute.String("messageId", payload.Message.MessageId)))
 
 	request := api.CaptureRequestModel{}
 	err = json.Unmarshal(payload.Message.Data, &request)
@@ -52,7 +52,7 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
-	span.SetAttributes(label.String("tweetId", request.ID))
+	span.SetAttributes(attribute.String("tweetId", request.ID))
 
 	respModel, err := h.service.CaptureSaveUpdateDatabase(ctx, &request)
 	if err != nil {
