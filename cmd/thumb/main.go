@@ -10,7 +10,6 @@ import (
 	"com.capturetweet/pkg/tweet"
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
-	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.uber.org/zap"
 )
 
@@ -28,9 +27,6 @@ func Run() error {
 	infra.RegisterLogger()
 	defer sentry.Flush(time.Second * 2)
 	start := time.Now()
-
-	telemetryClose := infra.NewTelemetry()
-	defer telemetryClose()
 
 	tweetColl, err := infra.NewTweetCollection()
 	if err != nil {
@@ -60,7 +56,7 @@ func Run() error {
 	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 
 	port := infra.Port()
-	err = http.ListenAndServe(":"+port, otelhttp.NewHandler(mux, "thumb"))
+	err = http.ListenAndServe(":"+port, mux)
 	if err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}

@@ -8,17 +8,15 @@ import (
 	"os"
 	"time"
 
-	"com.capturetweet/pkg/content"
-	"github.com/getsentry/sentry-go"
-	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
-
 	"com.capturetweet/internal/infra"
+	"com.capturetweet/pkg/content"
 	"com.capturetweet/pkg/resolver"
 	"com.capturetweet/pkg/search"
 	"com.capturetweet/pkg/tweet"
 	"com.capturetweet/pkg/user"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 	"go.uber.org/zap"
@@ -39,9 +37,6 @@ func Run() error {
 	defer sentry.Flush(time.Second * 2)
 
 	start := time.Now()
-
-	telemetryClose := infra.NewTelemetry()
-	defer telemetryClose()
 
 	tweetColl, err := infra.NewTweetCollection()
 	if err != nil {
@@ -123,7 +118,7 @@ func Run() error {
 	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 
 	port := infra.Port()
-	err = http.ListenAndServe(":"+port, otelhttp.NewHandler(h, "api"))
+	err = http.ListenAndServe(":"+port, h)
 	if err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}

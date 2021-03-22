@@ -4,9 +4,6 @@ package tweet
 import (
 	"context"
 	"github.com/ChimeraCoder/anaconda"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 	"gocloud.dev/docstore"
 	"gocloud.dev/gcerrors"
 	"io"
@@ -27,23 +24,16 @@ type Repository interface {
 }
 
 type repositoryImpl struct {
-	coll   *docstore.Collection
-	tracer trace.Tracer
+	coll *docstore.Collection
 }
 
 func NewRepository(coll *docstore.Collection) Repository {
 	return &repositoryImpl{
-		coll:   coll,
-		tracer: otel.GetTracerProvider().Tracer("com.capturetweet/pkg/tweet"),
+		coll: coll,
 	}
 }
 
 func (r repositoryImpl) FindById(ctx context.Context, id string) (*Tweet, error) {
-	ctx, span := r.tracer.Start(ctx, "repo-findById")
-	defer span.End()
-
-	span.AddEvent("findById", trace.WithAttributes(attribute.String("tweetId", id)))
-
 	tweet := &Tweet{ID: id}
 	err := r.coll.Get(ctx, tweet)
 	if err != nil {
@@ -54,11 +44,6 @@ func (r repositoryImpl) FindById(ctx context.Context, id string) (*Tweet, error)
 }
 
 func (r repositoryImpl) Exist(ctx context.Context, id string) bool {
-	ctx, span := r.tracer.Start(ctx, "repo-exist")
-	defer span.End()
-
-	span.AddEvent("exist", trace.WithAttributes(attribute.String("tweetId", id)))
-
 	tweet := &Tweet{ID: id}
 
 	err := r.coll.Get(ctx, tweet, "id")
@@ -70,11 +55,6 @@ func (r repositoryImpl) Exist(ctx context.Context, id string) bool {
 }
 
 func (r repositoryImpl) Store(ctx context.Context, tweet *anaconda.Tweet) error {
-	ctx, span := r.tracer.Start(ctx, "repo-store")
-	defer span.End()
-
-	span.AddEvent("store", trace.WithAttributes(attribute.String("tweetId", tweet.IdStr)))
-
 	postedAt, err := tweet.CreatedAtTime()
 	if err != nil {
 		postedAt = time.Now()
@@ -106,11 +86,6 @@ func (r repositoryImpl) Store(ctx context.Context, tweet *anaconda.Tweet) error 
 }
 
 func (r repositoryImpl) FindByIds(ctx context.Context, ids []string) ([]Tweet, error) {
-	ctx, span := r.tracer.Start(ctx, "repo-findByIds")
-	defer span.End()
-
-	span.AddEvent("findByIds")
-
 	var list []Tweet
 
 	for _, id := range ids {
@@ -124,10 +99,6 @@ func (r repositoryImpl) FindByIds(ctx context.Context, ids []string) ([]Tweet, e
 	return list, nil
 }
 func (r repositoryImpl) FindByUser(ctx context.Context, userId string) ([]Tweet, error) {
-	ctx, span := r.tracer.Start(ctx, "repo-findByUser")
-	defer span.End()
-	span.AddEvent("findByUser", trace.WithAttributes(attribute.String("userId", userId)))
-
 	iterator := r.coll.Query().Where("author_id", "=", userId).Limit(24).Get(ctx)
 	defer iterator.Stop()
 
@@ -150,29 +121,16 @@ func (r repositoryImpl) FindByUser(ctx context.Context, userId string) ([]Tweet,
 }
 
 func (r repositoryImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {
-	ctx, span := r.tracer.Start(ctx, "repo-updateLargeImage")
-	defer span.End()
-
-	span.AddEvent("updateLargeImage", trace.WithAttributes(attribute.String("tweetId", id)))
-
 	tweet := &Tweet{ID: id}
 	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_url": captureUrl, "updated_at": time.Now()}).Do(ctx)
 }
 
 func (r repositoryImpl) UpdateThumbImage(ctx context.Context, id, captureUrl string) error {
-	ctx, span := r.tracer.Start(ctx, "repo-updateThumbImage")
-	defer span.End()
-	span.AddEvent("updateThumbImage", trace.WithAttributes(attribute.String("tweetId", id)))
-
 	tweet := &Tweet{ID: id}
 	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_thumb_url": captureUrl, "updated_at": time.Now()}).Do(ctx)
 }
 
 func (r repositoryImpl) FindAllOrderByUpdated(ctx context.Context, size int) ([]Tweet, error) {
-	ctx, span := r.tracer.Start(ctx, "repo-findAllOrderByUpdated")
-	defer span.End()
-	span.AddEvent("findAllOrderByUpdated")
-
 	var tweets []Tweet
 	ctx, cancel := context.WithTimeout(ctx, time.Second*5)
 	defer cancel()

@@ -7,7 +7,6 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.opentelemetry.io/otel"
 	"testing"
 )
 
@@ -26,7 +25,6 @@ func TestMutationResolver_Capture(t *testing.T) {
 	}, nil)
 
 	_twitterService = tweetService
-	_tracer = otel.Tracer("test")
 	resolver := newMutationResolver()
 
 	tweet, err := resolver.Capture(context.Background(), "https://twitter.com/jack/status/20")
@@ -47,7 +45,6 @@ func TestMutationResolver_Contact(t *testing.T) {
 	contentService := api.NewMockContentService(ctrl)
 	contentService.EXPECT().StoreContactRequest(gomock.Any(), "test@example.com", "Ramazan", "hello", "captcha").Return(nil)
 
-	_tracer = otel.Tracer("test")
 	_contentService = contentService
 	resolver := newMutationResolver()
 
