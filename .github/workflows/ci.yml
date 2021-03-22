@@ -10,8 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CGO_ENABLED: "1"
-      SHA8: ${GITHUB_SHA:8}
-      
+
     steps:
       - uses: actions/checkout@v1
         
@@ -34,8 +33,14 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
-      - run: echo ${SHA8}
-      - run: echo $SHA8
+      - name: Set outputs
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: Check outputs
+        run: echo ${{ steps.vars.outputs.sha_short }}
+
+      - run: echo ${{ steps.vars.outputs.sha_short }}
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1.1.5
@@ -44,4 +49,4 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
-          version: ${SHA8}
+          version: ${{ steps.vars.outputs.sha_short }}
