@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CGO_ENABLED: "1"
-      SHA8: ${GITHUB_SHA::8}
+      SHA8: ${GITHUB_SHA:8}
       
     steps:
       - uses: actions/checkout@v1
