@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CGO_ENABLED: "1"
+      SHA8: ${GITHUB_SHA::8}
       
     steps:
       - uses: actions/checkout@v1
@@ -33,9 +34,14 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
+      - run: echo ${SHA8}
+      - run: echo $SHA8
+
       - name: Create Sentry release
         uses: getsentry/action-release@v1.1.5
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          version: ${SHA8}
