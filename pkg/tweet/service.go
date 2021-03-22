@@ -8,9 +8,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/ChimeraCoder/anaconda"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"gocloud.dev/pubsub"
 	"net/url"
@@ -22,7 +19,6 @@ type serviceImpl struct {
 	search     api.SearchService
 	user       api.UserService
 	topic      *pubsub.Topic
-	tracer     trace.Tracer
 }
 
 func NewService(repo Repository, search api.SearchService, userService api.UserService, twitterAPI infra.TweetAPI, topic *pubsub.Topic) api.TweetService {
@@ -32,7 +28,6 @@ func NewService(repo Repository, search api.SearchService, userService api.UserS
 		search:     search,
 		user:       userService,
 		topic:      topic,
-		tracer:     otel.GetTracerProvider().Tracer("com.capturetweet/pkg/tweet"),
 	}
 }
 
@@ -41,11 +36,6 @@ func NewServiceWithRepository(repo Repository) api.TweetService {
 }
 
 func (s serviceImpl) FindById(ctx context.Context, id string) (*api.TweetModel, error) {
-	ctx, span := s.tracer.Start(ctx, "service-findById")
-	defer span.End()
-
-	span.AddEvent("findById", trace.WithAttributes(attribute.String("tweetId", id)))
-
 	tweet, err := s.repo.FindById(ctx, id)
 	if err != nil {
 		zap.L().Error("tweet:service findById", zap.String("tweet_id", id), zap.Error(err))
@@ -79,9 +69,6 @@ func (s serviceImpl) FindById(ctx context.Context, id string) (*api.TweetModel, 
 }
 
 func (s serviceImpl) Store(ctx context.Context, tweetURL string) (string, error) {
-	ctx, span := s.tracer.Start(ctx, "service-store")
-	defer span.End()
-
 	tweetID, tweetAuthor, err := parseTweetURL(tweetURL)
 	if err != nil {
 		zap.L().Error("tweet:service store, parseTweetUrl", zap.String("url", tweetURL), zap.Error(err))
@@ -92,38 +79,30 @@ func (s serviceImpl) Store(ctx context.Context, tweetURL string) (string, error)
 	if s.repo.Exist(ctx, tweetIdStr) {
 		return tweetIdStr, nil
 	}
-	_, childSpan := s.tracer.Start(ctx, "twitter")
 	tweet, err := s.twitterAPI.GetTweet(tweetID, url.Values{})
-	childSpan.End()
 
 	if err != nil {
 		zap.L().Error("tweet:service store, getTweet", zap.Int64("tweet_id", tweetID), zap.Error(err))
 		return "", err
 	}
-	span.AddEvent("store", trace.WithAttributes(attribute.String("tweetId", tweetIdStr)))
 
 	err = s.repo.Store(ctx, &tweet)
 	if err != nil {
-		span.RecordError(err)
 		zap.L().Error("tweet:service store, repo.store", zap.Int64("tweet_id", tweetID), zap.Error(err))
 		return "", err
 	}
 
 	if _, err := s.user.FindOrCreate(ctx, &tweet.User); err != nil {
-		span.RecordError(err)
 		zap.L().Warn("tweet:service store, user.findOrCreate", zap.String("tweet_user", tweet.User.ScreenName), zap.Error(err))
 	}
 
 	go func(ctx context.Context, t anaconda.Tweet) {
-		ctx, span := s.tracer.Start(ctx, "search")
-		defer span.End()
-
 		if err := s.search.Put(ctx, t.IdStr, t.FullText, t.User.ScreenName); err != nil {
 			zap.L().Warn("tweet:service store, search.put", zap.String("tweet_id", t.IdStr), zap.String("tweet_user", t.User.ScreenName), zap.Error(err))
 		}
 	}(ctx, tweet)
 
-	go func(ctx context.Context, id, author, url string, span trace.Span) {
+	go func(ctx context.Context, id, author, url string) {
 
 		data, err := json.Marshal(api.CaptureRequestModel{
 			ID:     id,
@@ -139,31 +118,23 @@ func (s serviceImpl) Store(ctx context.Context, tweetURL string) (string, error)
 				"tweet_id":            id,
 				"tweet_user":          author,
 				"version":             "prod",
-				"trace-id":            span.SpanContext().TraceID.String(),
-				"parent-id":           span.SpanContext().SpanID.String(),
 				"messaging.system":    "pubsub",
 				"messaging.operation": "send",
 			},
 			Body: data,
 		})
 
-		span.AddEvent("topic:sendMessage", trace.WithAttributes(attribute.String("tweetId", id), attribute.String("messaging.system", "pubsub")))
 		if err != nil {
 			zap.L().Warn("tweet:service store, send pubsub message", zap.String("tweet_id", id), zap.String("tweet_user", author), zap.String("url", url), zap.Error(err))
 		} else {
 			zap.L().Info("tweet:service store, sent pubsub message", zap.String("tweet_id", id), zap.String("tweet_user", author), zap.String("url", url))
 		}
-	}(ctx, tweetIdStr, tweetAuthor, tweetURL, span)
+	}(ctx, tweetIdStr, tweetAuthor, tweetURL)
 
 	return tweetIdStr, nil
 }
 
 func (s serviceImpl) Search(ctx context.Context, term string, size, start, page int) ([]api.TweetModel, error) {
-	ctx, span := s.tracer.Start(ctx, "service-search")
-	defer span.End()
-
-	span.AddEvent("search")
-
 	searchModels, err := s.search.Search(ctx, term, size)
 	if err != nil {
 		zap.L().Error("tweet:service search, search service call", zap.String("search_term", term), zap.Error(err))
@@ -177,7 +148,6 @@ func (s serviceImpl) Search(ctx context.Context, term string, size, start, page 
 
 	tweets, err := s.repo.FindByIds(ctx, ids)
 	if err != nil {
-		span.RecordError(err)
 		zap.L().Error("tweet:service search, findByIds", zap.Strings("tweet_ids", ids), zap.Error(err))
 		return nil, err
 	}
@@ -192,14 +162,8 @@ func (s serviceImpl) Search(ctx context.Context, term string, size, start, page 
 }
 
 func (s serviceImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {
-	ctx, span := s.tracer.Start(ctx, "service-updateLargeImage")
-	defer span.End()
-
-	span.AddEvent("updateLargeImage")
-
 	err := s.repo.UpdateLargeImage(ctx, id, captureUrl)
 	if err != nil {
-		span.RecordError(err)
 		zap.L().Error("tweet:service updateLargeImage, findById", zap.String("tweet_id", id), zap.Error(err))
 		return err
 	}
@@ -208,14 +172,8 @@ func (s serviceImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string
 }
 
 func (s serviceImpl) UpdateThumbImage(ctx context.Context, id, captureUrl string) error {
-	ctx, span := s.tracer.Start(ctx, "service-updateThumbImage")
-	defer span.End()
-
-	span.AddEvent("updateThumbImage", trace.WithAttributes(attribute.String("tweetId", id)))
-
 	err := s.repo.UpdateThumbImage(ctx, id, captureUrl)
 	if err != nil {
-		span.RecordError(err)
 		zap.L().Error("tweet:service updateThumbImage, findById", zap.String("tweet_id", id), zap.Error(err))
 		return fmt.Errorf("update thumnmail,%w", err)
 	}
@@ -224,15 +182,9 @@ func (s serviceImpl) UpdateThumbImage(ctx context.Context, id, captureUrl string
 }
 
 func (s serviceImpl) SearchByUser(ctx context.Context, userId string) ([]api.TweetModel, error) {
-	ctx, span := s.tracer.Start(ctx, "service-searchByUser")
-	defer span.End()
-
-	span.AddEvent("searchByUser", trace.WithAttributes(attribute.String("userId", userId)))
-
 	tweets, err := s.repo.FindByUser(ctx, userId)
 	if err != nil {
 		zap.L().Error("tweet:service searchByUser, findById", zap.String("user_id", userId), zap.Error(err))
-		span.RecordError(err)
 		return nil, err
 	}
 

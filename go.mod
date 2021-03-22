@@ -6,7 +6,6 @@ require (
 	github.com/99designs/gqlgen v0.13.0
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
-	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v0.18.0
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/TheZeroSlave/zapsentry v1.6.0
 	github.com/agnivade/levenshtein v1.1.0 // indirect
@@ -38,10 +37,6 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/testcontainers/testcontainers-go v0.9.0
 	github.com/vektah/gqlparser/v2 v2.1.0
-	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.18.0
-	go.opentelemetry.io/otel v0.18.0
-	go.opentelemetry.io/otel/sdk v0.18.0
-	go.opentelemetry.io/otel/trace v0.18.0
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
 	gocloud.dev v0.22.0

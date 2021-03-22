@@ -3,9 +3,6 @@ package browser
 import (
 	"context"
 	"fmt"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 	"math"
 	"os"
 	"strconv"
@@ -25,7 +22,6 @@ type serviceImpl struct {
 	tweetService api.TweetService
 	bucket       *blob.Bucket
 	browser      *browserCtx
-	tracer       trace.Tracer
 }
 
 type browserCtx struct {
@@ -38,18 +34,13 @@ func NewService(tweetService api.TweetService, bucket *blob.Bucket) api.BrowserS
 		tweetService: tweetService,
 		bucket:       bucket,
 		browser:      nil,
-		tracer:       otel.GetTracerProvider().Tracer("com.capturetweet/pkg/browser"),
 	}
 }
 
 func (s serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
-	ctx, span := s.tracer.Start(ctx, "service-captureSaveUpdateDatabase")
-	defer span.End()
-
 	originalImage, err := s.CaptureURL(ctx, model)
 	if err != nil {
 		zap.L().Error("browser CaptureSaveUpdateDatabase, captureURL", zap.String("tweet_id", model.ID), zap.Error(err))
-		span.RecordError(err)
 		return nil, err
 	}
 
@@ -60,14 +51,12 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.C
 	response, err := s.SaveCapture(ctx, originalImage, model)
 	if err != nil {
 		zap.L().Error("browser CaptureSaveUpdateDatabase, SaveCapture", zap.String("tweet_id", model.ID), zap.Error(err))
-		span.RecordError(err)
 		return nil, err
 	}
 
 	err = s.tweetService.UpdateLargeImage(ctx, model.ID, response.CaptureURL)
 	if err != nil {
 		zap.L().Error("browser CaptureSaveUpdateDatabase, service.UpdateLargeImage", zap.String("tweet_id", model.ID), zap.Error(err))
-		span.RecordError(err)
 		return nil, err
 	}
 
@@ -75,11 +64,7 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.C
 }
 
 func (s serviceImpl) SaveCapture(ctx context.Context, originalImage []byte, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
-	ctx, span := s.tracer.Start(ctx, "service-saveCapture")
-	defer span.End()
-
 	imageKey := fmt.Sprintf("capture/large/%s.jpg", model.ID)
-	span.AddEvent("saveCapture:upload", trace.WithAttributes(attribute.String("tweetId", model.ID)))
 
 	err := s.bucket.WriteAll(ctx, imageKey, originalImage, &blob.WriterOptions{
 		ContentType:  "image/jpg",
@@ -93,7 +78,6 @@ func (s serviceImpl) SaveCapture(ctx context.Context, originalImage []byte, mode
 	})
 	if err != nil {
 		zap.L().Error("browser:saveCapture", zap.String("tweet_id", model.ID), zap.Error(err))
-		span.RecordError(err)
 		return nil, err
 	}
 
@@ -110,9 +94,6 @@ func (s serviceImpl) Close() {
 }
 
 func (s *serviceImpl) CaptureURL(ctx context.Context, model *api.CaptureRequestModel) ([]byte, error) {
-	ctx, span := s.tracer.Start(ctx, "service-captureUrl")
-	defer span.End()
-
 	if s.browser == nil {
 		opts := []chromedp.ExecAllocatorOption{
 			chromedp.DisableGPU,
@@ -136,7 +117,6 @@ func (s *serviceImpl) CaptureURL(ctx context.Context, model *api.CaptureRequestM
 	err := chromedp.Run(s.browser.browserContext, fullScreenshot(model.Url, 90, &buf))
 	if err != nil {
 		zap.L().Error("could not capture URL", zap.String("tweet_id", model.ID), zap.String("url", model.Url), zap.Error(err))
-		span.RecordError(err)
 		return nil, err
 	}
 	return buf, nil

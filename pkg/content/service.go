@@ -5,22 +5,18 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/trace"
 	"net/http"
 	"net/url"
 	"os"
 )
 
 type serviceImpl struct {
-	repo   Repository
-	tracer trace.Tracer
+	repo Repository
 }
 
 func NewService(repo Repository) api.ContentService {
 	return &serviceImpl{
-		repo:   repo,
-		tracer: otel.GetTracerProvider().Tracer("com.capturetweet/pkg/content"),
+		repo: repo,
 	}
 }
 
@@ -30,9 +26,6 @@ type captchaResponse struct {
 }
 
 func (s serviceImpl) StoreContactRequest(ctx context.Context, senderMail, senderName, message, captcha string) error {
-	ctx, span := s.tracer.Start(ctx, "service-storeContactRequest")
-	defer span.End()
-
 	post := url.Values{
 		"secret":   {os.Getenv("CAPTCHA_SECRET")},
 		"response": {captcha},
@@ -40,7 +33,6 @@ func (s serviceImpl) StoreContactRequest(ctx context.Context, senderMail, sender
 
 	resp, err := http.PostForm("https://www.google.com/recaptcha/api/siteverify", post)
 	if err != nil {
-		span.RecordError(err)
 		return err
 	}
 	defer resp.Body.Close()

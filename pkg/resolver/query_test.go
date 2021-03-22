@@ -7,7 +7,6 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.opentelemetry.io/otel"
 	"testing"
 )
 
@@ -25,7 +24,6 @@ func TestQueryResolver_Tweet(t *testing.T) {
 	}, nil)
 
 	_twitterService = tweetService
-	_tracer = otel.Tracer("test")
 	resolver := newQueryResolver()
 
 	tweet, err := resolver.Tweet(context.Background(), "1234")
@@ -63,7 +61,6 @@ func TestQueryResolver_SearchByUser(t *testing.T) {
 	}, nil)
 
 	_twitterService = tweetService
-	_tracer = otel.Tracer("test")
 	resolver := newQueryResolver()
 
 	tweets, err := resolver.SearchByUser(context.Background(), "user1")
@@ -131,7 +128,6 @@ func TestQueryResolver_Search(t *testing.T) {
 	}, nil)
 
 	_twitterService = tweetService
-	_tracer = otel.Tracer("test")
 	resolver := newQueryResolver()
 
 	tweets, err := resolver.Search(context.Background(), SearchInput{Term: "test"}, 10, 0, 0)
