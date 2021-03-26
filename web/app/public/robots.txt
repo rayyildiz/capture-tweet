@@ -1,3 +1,5 @@
-# https://www.robotstxt.org/robotstxt.html
+Sitemap: https://capturetweet.com/sitemap.xml
+
 User-agent: *
-Disallow:
+Disallow: /privacy
+Disallow: /contact
