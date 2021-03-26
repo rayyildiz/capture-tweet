@@ -86,16 +86,15 @@ func createSitemap(ctx context.Context, bucket *blob.Bucket, tweets []tweet.Twee
 		xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
 		xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
 		xmlns:pagemap="http://www.google.com/schemas/sitemap-pagemap/1.0"
-		xmlns:xhtml="http://www.w3.org/1999/xhtml"
-	>
-	<url>
-		<loc>https://capturetweet.com/</loc>
-		<lastmod>%s</lastmod>
-		<changefreq>daily</changefreq>
-		<priority>0.5</priority>
-		<mobile:mobile/>
-	</url>
-	%s
+		xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<url>
+	<loc>https://capturetweet.com/</loc>
+	<lastmod>%s</lastmod>
+	<changefreq>daily</changefreq>
+	<priority>0.5</priority>
+	<mobile:mobile/>
+</url>
+%s
 </urlset>`, time.Now().Format(time.RFC3339), content)
 
 	newSitemap := []byte(xml)
