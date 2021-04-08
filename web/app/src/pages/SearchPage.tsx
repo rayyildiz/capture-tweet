@@ -24,8 +24,6 @@ const SEARCH_TWEET = gql`
       captureThumbURL
       author {
         userName
-        screenName
-        profileImageURL
       }
     }
   }

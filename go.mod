@@ -9,11 +9,10 @@ require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/TheZeroSlave/zapsentry v1.6.0
 	github.com/agnivade/levenshtein v1.1.0 // indirect
-	github.com/algolia/algoliasearch-client-go/v3 v3.16.0
+	github.com/algolia/algoliasearch-client-go/v3 v3.18.1
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
-	//github.com/chromedp/cdproto v0.0.0-20210318231247-733a37e2c059
-	github.com/chromedp/cdproto v0.0.0-20210305224431-50b9f457e822
-	github.com/chromedp/chromedp v0.6.8
+	github.com/chromedp/cdproto v0.0.0-20210323015217-0942afbea50e
+	github.com/chromedp/chromedp v0.6.10
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/go-connections v0.4.0
 	github.com/docker/go-units v0.4.0 // indirect
@@ -41,9 +40,9 @@ require (
 	go.uber.org/zap v1.16.0
 	gocloud.dev v0.22.0
 	gocloud.dev/docstore/mongodocstore v0.22.0
-	golang.org/x/mod v0.4.1 // indirect
+	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/net v0.0.0-20210119194325-5f4716e94777 // indirect
-	golang.org/x/sys v0.0.0-20210320140829-1e4c9ba3b0c4 // indirect
+	golang.org/x/sys v0.0.0-20210403161142-5e06dd20ab57 // indirect
 	golang.org/x/text v0.3.5 // indirect
 	golang.org/x/tools v0.1.0 // indirect
 	google.golang.org/genproto v0.0.0-20210122163508-8081c04a3579 // indirect
