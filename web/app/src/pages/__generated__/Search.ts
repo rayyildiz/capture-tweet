@@ -12,8 +12,6 @@ import { SearchInput } from "./../../../__generated__/globalTypes";
 export interface Search_search_author {
   __typename: "Author";
   userName: string;
-  screenName: string | null;
-  profileImageURL: string | null;
 }
 
 export interface Search_search {
