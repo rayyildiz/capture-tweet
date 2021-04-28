@@ -4,15 +4,15 @@
   "private": true,
   "proxy": "http://localhost:4000",
   "dependencies": {
-    "@apollo/client": "^3.3.14",
+    "@apollo/client": "^3.3.15",
     "@popperjs/core": "^2.9.2",
-    "@testing-library/jest-dom": "^5.11.10",
+    "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
     "@types/bootstrap": "5.0.0",
-    "@types/jest": "^26.0.22",
-    "@types/node": "^12.20.7",
-    "@types/react": "^17.0.3",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^12.20.11",
+    "@types/react": "^17.0.4",
     "@types/react-dom": "^16.9.12",
     "bootstrap": "^5.0.0-beta3",
     "bootstrap-icons": "^1.4.1",
@@ -55,9 +55,9 @@
   },
   "devDependencies": {
     "@types/react-google-recaptcha": "^2.1.0",
-    "@types/react-helmet": "^6.1.0",
+    "@types/react-helmet": "^6.1.1",
     "@types/react-router-dom": "^5.1.7",
-    "apollo": "^2.32.5",
+    "apollo": "^2.32.10",
     "node-sass": "^5.0.0",
     "syncyarnlock": "^1.0.19"
   }
