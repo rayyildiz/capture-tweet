@@ -1,4 +1,3 @@
-import {FC} from 'react';
 import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 import {BrowserRouter} from "react-router-dom";
 import {Header} from "./Header";
@@ -11,7 +10,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const App: FC = () => {
+const App = () => {
   return (
       <ApolloProvider client={client}>
         <BrowserRouter>

@@ -1,4 +1,3 @@
-import {FC} from 'react';
 import {gql, useQuery} from "@apollo/client";
 import notFound from '../assets/not_found.svg';
 import './SearchPage.css';
@@ -26,7 +25,7 @@ const SEARCH_BY_USER = gql`
   }
 `;
 
-const UserPage: FC = () => {
+const UserPage = () => {
   const {id} = useParams<{ id: string }>();
 
   const {data, loading, error} = useQuery<SearchByUser, SearchByUserVariables>(SEARCH_BY_USER, {
@@ -34,7 +33,6 @@ const UserPage: FC = () => {
       userID: id
     }
   });
-  console.log("id", id);
   if (loading) {
     return <span>Loading</span>
   }

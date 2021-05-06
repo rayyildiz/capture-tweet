@@ -1,4 +1,4 @@
-import {FC, FormEvent, useState} from "react";
+import {FormEvent, useState} from "react";
 import './HomePage.css';
 import {gql, useMutation} from "@apollo/client";
 import {Redirect} from "react-router-dom";
@@ -25,7 +25,7 @@ const CAPTURE_TWEET = gql`
 `;
 
 
-const HomePage: FC = () => {
+const HomePage = () => {
   const [url, setUrl] = useState('');
   const [validation, setValidation] = useState('');
 
