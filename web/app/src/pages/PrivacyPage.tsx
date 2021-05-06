@@ -1,6 +1,4 @@
-import {FC} from 'react';
-
-const PrivacyPage: FC = () => (
+const PrivacyPage = () => (
     <div>
       <h3>What are cookies?</h3>
 

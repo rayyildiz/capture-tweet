@@ -1,4 +1,3 @@
-import {FC} from 'react';
 import * as qs from 'query-string';
 import {gql, useQuery} from "@apollo/client";
 import notFound from '../assets/not_found.svg';
@@ -29,7 +28,7 @@ const SEARCH_TWEET = gql`
   }
 `;
 
-const SearchPage: FC = () => {
+const SearchPage = () => {
   const q = getQueryStringValue('q');
   const {data, loading, error} = useQuery<Search, SearchVariables>(SEARCH_TWEET, {
     variables: {

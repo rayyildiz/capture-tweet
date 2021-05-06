@@ -51,7 +51,7 @@ const TWEET_BY_ID = gql`
 `;
 
 
-const TweetPage: FC = () => {
+const TweetPage = () => {
   const {id} = useParams<{ id: string }>();
 
   const {data, loading, error} = useQuery<Tweet, TweetVariables>(TWEET_BY_ID, {
@@ -156,7 +156,7 @@ const TweetDetail: FC<TweetDetailProps> = ({tweet}) => {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="reportTweetModalLabel"> Report Tweet </h5>
-                <button type="button" className="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                <button type="button" className="btn-close" data-dismiss="modal" aria-label="Close"/>
               </div>
               <div className="modal-body">
                 <ContactPage tweetID={tweet.id}/>
@@ -202,7 +202,7 @@ const TweetImageCard: FC<TweetImageCardProps> = ({id}) => {
         <img src={folderImage} alt="" className="img-fluid"/>
         <br/>
         <div className="d-flex align-items-start">
-          <div className="spinner-grow text-danger" role="status" aria-hidden="true"></div>
+          <div className="spinner-grow text-danger" role="status" aria-hidden="true"/>
           <span className="text-muted" style={{paddingLeft: '1rem'}}>Tweet screenshot is capturing, please wait...</span>
         </div>
 

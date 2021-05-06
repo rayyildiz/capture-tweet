@@ -1,7 +1,7 @@
-import {FC, FormEvent, useState} from "react";
+import {FormEvent, useState} from "react";
 import {useHistory} from "react-router-dom";
 
-export const Search: FC = () => {
+export const Search = () => {
   const [term, setTerm] = useState<string>('');
   const history = useHistory();
   const handleSummit = (event: FormEvent) => {
