@@ -31,7 +31,7 @@ require (
 	github.com/vektah/gqlparser/v2 v2.2.0
 	go.uber.org/zap v1.16.0
 	gocloud.dev v0.23.0
-	gocloud.dev/docstore/mongodocstore v0.22.0
+	gocloud.dev/docstore/mongodocstore v0.23.0
 	gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	honnef.co/go/tools v0.0.1-2020.1.6 // indirect
