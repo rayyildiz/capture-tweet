@@ -25,7 +25,7 @@ export interface SearchByUser_searchByUser {
 }
 
 export interface SearchByUser {
-  searchByUser: SearchByUser_searchByUser[] | null;
+  searchByUser: SearchByUser_searchByUser[];
 }
 
 export interface SearchByUserVariables {

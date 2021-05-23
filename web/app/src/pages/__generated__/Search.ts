@@ -25,7 +25,7 @@ export interface Search_search {
 }
 
 export interface Search {
-  search: (Search_search | null)[] | null;
+  search: Search_search[];
 }
 
 export interface SearchVariables {
