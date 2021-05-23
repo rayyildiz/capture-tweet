@@ -1,13 +1,14 @@
 package content
 
 import (
-	"com.capturetweet/api"
 	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
 	"os"
+
+	"com.capturetweet/api"
 )
 
 type serviceImpl struct {
