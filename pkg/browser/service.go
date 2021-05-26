@@ -136,7 +136,7 @@ func fullScreenshot(url string, quality int64, res *[]byte) chromedp.Tasks {
 		chromedp.Sleep(getSleep()),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			// get layout metrics
-			_, _, contentSize, err := page.GetLayoutMetrics().Do(ctx)
+			_, _, contentSize, _, _, _, err := page.GetLayoutMetrics().Do(ctx)
 			if err != nil {
 				return err
 			}

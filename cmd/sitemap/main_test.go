@@ -12,6 +12,8 @@ import (
 )
 
 func TestRun(t *testing.T) {
+	//defer goleak.VerifyNone(t)
+
 	rand.Seed(time.Now().Unix())
 	port := rand.Intn(2000) + 30020
 	log.Printf("port is %d", port)
