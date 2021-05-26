@@ -11,6 +11,7 @@ func TestNewBucketFromEnvironment(t *testing.T) {
 	os.Setenv("BLOB_BUCKET", "mem://bucket/to/memory")
 	bucket, err := NewBucketFromEnvironment()
 	require.NoError(t, err)
+	defer bucket.Close()
 	require.NotNil(t, bucket)
 
 	err = bucket.WriteAll(context.Background(), "test", []byte("hello world"), nil)

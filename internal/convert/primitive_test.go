@@ -2,11 +2,14 @@ package convert
 
 import (
 	"github.com/stretchr/testify/require"
+	"go.uber.org/goleak"
 	"testing"
 	"time"
 )
 
 func TestString(t *testing.T) {
+	defer goleak.VerifyNone(t)
+
 	t1 := "test"
 	t2 := "hello"
 
@@ -16,6 +19,8 @@ func TestString(t *testing.T) {
 }
 
 func TestInt(t *testing.T) {
+	defer goleak.VerifyNone(t)
+
 	t1 := 1
 	t2 := 2
 
@@ -24,6 +29,8 @@ func TestInt(t *testing.T) {
 }
 
 func TestTime(t *testing.T) {
+	defer goleak.VerifyNone(t)
+
 	t1 := time.Now()
 	t2 := time.Now().Add(20 * time.Hour)
 
@@ -32,6 +39,8 @@ func TestTime(t *testing.T) {
 }
 
 func TestInt64(t *testing.T) {
+	defer goleak.VerifyNone(t)
+
 	var actual int64 = 5
 	require.Equal(t, &actual, Int64(actual))
 }

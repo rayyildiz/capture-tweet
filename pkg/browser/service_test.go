@@ -73,7 +73,7 @@ func TestService_SaveCapture(t *testing.T) {
 }
 
 func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
-	os.Setenv("APP_SLEEP_TIME_MS", "6000")
+	os.Setenv("APP_SLEEP_TIME_MS", "9000")
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -82,7 +82,7 @@ func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
 	req := testcontainers.ContainerRequest{
 		Image:        "chromedp/headless-shell",
 		ExposedPorts: []string{"9222/tcp"},
-		WaitingFor:   wait.ForListeningPort(nat.Port("9222")),
+		WaitingFor:   wait.ForListeningPort("9222"),
 	}
 	chromeC, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: req,

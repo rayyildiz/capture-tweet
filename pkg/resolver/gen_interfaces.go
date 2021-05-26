@@ -431,9 +431,9 @@ type Query {
   tweet(id:ID!):Tweet
 
   #  search
-  search(input:SearchInput!, size:Int! = 20, page:Int!=0, start:Int!=0):[Tweet!]!
+  search(input:SearchInput!, size:Int! = 20, page:Int!=0, start:Int!=0):[Tweet!]
 
-  searchByUser(userID:ID!): [Tweet!]!
+  searchByUser(userID:ID!): [Tweet!]
 }
 
 type Mutation {
@@ -950,14 +950,11 @@ func (ec *executionContext) _Query_search(ctx context.Context, field graphql.Col
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.([]*Tweet)
 	fc.Result = res
-	return ec.marshalNTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweetᚄ(ctx, field.Selections, res)
+	return ec.marshalOTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweetᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_searchByUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -992,14 +989,11 @@ func (ec *executionContext) _Query_searchByUser(ctx context.Context, field graph
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.([]*Tweet)
 	fc.Result = res
-	return ec.marshalNTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweetᚄ(ctx, field.Selections, res)
+	return ec.marshalOTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweetᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2889,9 +2883,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_search(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			})
 		case "searchByUser":
@@ -2903,9 +2894,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_searchByUser(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			})
 		case "__type":
@@ -3340,43 +3328,6 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweetᚄ(ctx context.Context, sel ast.SelectionSet, v []*Tweet) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNTweet2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-	return ret
-}
-
 func (ec *executionContext) marshalNTweet2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx context.Context, sel ast.SelectionSet, v *Tweet) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -3776,6 +3727,46 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 		return graphql.Null
 	}
 	return graphql.MarshalTime(*v)
+}
+
+func (ec *executionContext) marshalOTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweetᚄ(ctx context.Context, sel ast.SelectionSet, v []*Tweet) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNTweet2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) marshalOTweet2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx context.Context, sel ast.SelectionSet, v *Tweet) graphql.Marshaler {
