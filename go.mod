@@ -31,12 +31,11 @@ require (
 	github.com/vektah/gqlparser/v2 v2.2.0
 	go.uber.org/goleak v1.1.10
 	go.uber.org/multierr v1.7.0 // indirect
-	go.uber.org/zap v1.16.0
+	go.uber.org/zap v1.17.0
 	gocloud.dev v0.23.0
 	gocloud.dev/docstore/mongodocstore v0.23.0
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea // indirect
 	golang.org/x/tools v0.1.2 // indirect
 	gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b // indirect
-	honnef.co/go/tools v0.0.1-2020.1.6 // indirect
 )
