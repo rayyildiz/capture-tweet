@@ -10,8 +10,8 @@ require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/algolia/algoliasearch-client-go/v3 v3.18.1
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
-	github.com/chromedp/cdproto v0.0.0-20210526005521-9e51b9051fd0
-	github.com/chromedp/chromedp v0.7.2
+	github.com/chromedp/cdproto v0.0.0-20210610012203-ae0add727b87
+	github.com/chromedp/chromedp v0.7.3
 	github.com/docker/go-connections v0.4.0
 	github.com/dustin/go-jsonpointer v0.0.0-20160814072949-ba0abeacc3dc // indirect
 	github.com/dustin/gojson v0.0.0-20160307161227-2e71ec9dd5ad // indirect
@@ -35,7 +35,7 @@ require (
 	gocloud.dev v0.23.0
 	gocloud.dev/docstore/mongodocstore v0.23.0
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
-	golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea // indirect
+	golang.org/x/sys v0.0.0-20210611083646-a4fc73990273 // indirect
 	golang.org/x/tools v0.1.2 // indirect
 	gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b // indirect
 )
