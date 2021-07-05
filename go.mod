@@ -30,7 +30,7 @@ require (
 	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/opencontainers/runc v1.0.0 // indirect
-	github.com/rs/cors v1.7.0
+	github.com/rs/cors v1.8.0
 	github.com/stretchr/testify v1.7.0
 	github.com/testcontainers/testcontainers-go v0.11.1
 	github.com/vektah/gqlparser/v2 v2.2.0
