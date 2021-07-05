@@ -36,10 +36,9 @@ require (
 	github.com/vektah/gqlparser/v2 v2.2.0
 	go.uber.org/goleak v1.1.10
 	go.uber.org/multierr v1.7.0 // indirect
-	go.uber.org/zap v1.17.0
+	go.uber.org/zap v1.18.1
 	gocloud.dev v0.23.0
 	gocloud.dev/docstore/mongodocstore v0.23.0
-	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
 	google.golang.org/genproto v0.0.0-20210624195500-8bfb893ecb84 // indirect
 	google.golang.org/protobuf v1.27.0 // indirect
