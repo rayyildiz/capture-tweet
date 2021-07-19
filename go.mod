@@ -21,7 +21,7 @@ require (
 	github.com/garyburd/go-oauth v0.0.0-20180319155456-bca2e7f09a17 // indirect
 	github.com/getsentry/sentry-go v0.11.0
 	github.com/golang/mock v1.6.0
-	github.com/google/uuid v1.2.0
+	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/joho/godotenv v1.3.0
