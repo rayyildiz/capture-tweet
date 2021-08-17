@@ -22,7 +22,8 @@ const SEARCH_TWEET = gql`
       postedAt
       captureThumbURL
       author {
-        userName
+          userName
+          screenName
       }
     }
   }
@@ -64,7 +65,7 @@ const SearchPage = () => {
 
       <div className="row">
         {data && data.search?.map(t => (t && <TweetCard key={t.id}
-                                                        author={t.author?.userName}
+                                                        author={t.author?.screenName || t.author?.userName}
                                                         fullText={t.fullText ?? ""}
                                                         id={t.id ?? ""}
                                                         captureThumbURL={t.captureThumbURL ?? ""}
