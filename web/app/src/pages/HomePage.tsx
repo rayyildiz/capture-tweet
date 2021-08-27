@@ -5,6 +5,7 @@ import {Redirect} from "react-router-dom";
 import {Helmet} from "react-helmet";
 import {WEB_BASE_URL} from "../Constants";
 import {Capture, CaptureVariables} from "./__generated__/Capture";
+import { ApolloError } from 'apollo-server-errors';
 
 
 const CAPTURE_TWEET = gql`
@@ -41,8 +42,11 @@ const HomePage = () => {
         await doQuery({
           variables: {url: url}
         });
-      } catch (ex) {
-        console.log(ex.toString());
+      } catch (ex:unknown) {
+        if ( ex instanceof Error) {
+          console.log(ex.toString());
+        }
+        
       }
     }
   }
