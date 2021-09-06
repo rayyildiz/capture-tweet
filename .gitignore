@@ -7,3 +7,5 @@ tmp
 sitemap.xml
 coverage.txt
 target/
+.metals/
+.vscode/
