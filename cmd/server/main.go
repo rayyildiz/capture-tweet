@@ -118,6 +118,7 @@ func Run() error {
 	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 
 	port := infra.Port()
+	zap.L().Info("api server is starting at port", zap.String("port", port))
 	err = http.ListenAndServe(":"+port, h)
 	if err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)

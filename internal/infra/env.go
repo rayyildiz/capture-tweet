@@ -2,9 +2,13 @@ package infra
 
 import "os"
 
-// Port returns the port your HTTP server should listen on.
+// Port returns the port your HTTP server should listen on. Default port 4000.
 func Port() string {
-	return os.Getenv("PORT")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "4000"
+	}
+	return port
 }
 
 // Revision returns the name of the Cloud Run revision being run.
