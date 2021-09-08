@@ -24,13 +24,9 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-ci-go-
-            
-      - name: setup env
-        run: |
-          echo "::set-env name=GOPATH::$(go env GOPATH)"
-          echo "::add-path::$(go env GOPATH)/bin"
-        shell: bash
-      
+
+      - run: export PATH=$PATH:$(go env GOPATH)/bin
+
       - run: go mod download
 
       - run: go install github.com/vakenbolt/go-test-report@latest
