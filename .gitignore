@@ -9,3 +9,6 @@ coverage.txt
 target/
 .metals/
 .vscode/
+test_report.html
+test_report.zip
+test_report/
