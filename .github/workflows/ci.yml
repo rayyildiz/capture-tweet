@@ -29,9 +29,10 @@ jobs:
 
       - run: go mod download
 
-      - run: go install github.com/vakenbolt/go-test-report@latest
+      # - run: go install github.com/vakenbolt/go-test-report@latest
+      # - run: go test -cover -coverprofile=coverage.txt -covermode=atomic ./... -json | go-test-report
 
-      - run: go test -cover -coverprofile=coverage.txt -covermode=atomic ./... -json | go-test-report
+      - run: go test -cover -coverprofile=coverage.txt -covermode=atomic ./...
 
       - uses: codecov/codecov-action@v1
         with:
@@ -53,9 +54,9 @@ jobs:
         with:
           version: ${{ steps.vars.outputs.sha_short }}
 
-      - name: Upload Test Results As Artifact
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: test_report
-          path: test_report.html
+      # - name: Upload Test Results As Artifact
+      #   uses: actions/upload-artifact@v2
+      #   if: always()
+      #   with:
+      #     name: test_report
+      #     path: test_report.html
