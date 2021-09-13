@@ -12,7 +12,7 @@ import (
 
 func NewDocstore(collectionName string) *docstore.Collection {
 	if len(collectionName) < 1 {
-		log.Fatalf("collection is empty")
+		log.Fatalf("collection name is empty")
 	}
 
 	coll, err := docstore.OpenCollection(context.Background(), collectionName)
