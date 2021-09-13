@@ -12,7 +12,7 @@ require (
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/Microsoft/hcsshim v0.8.17 // indirect
-	github.com/TheZeroSlave/zapsentry v1.7.0
+	github.com/TheZeroSlave/zapsentry v1.8.0
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/algolia/algoliasearch-client-go/v3 v3.21.0
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
@@ -88,11 +88,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
-require (
-	cloud.google.com/go/firestore v1.5.0 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/russross/blackfriday/v2 v2.0.1 // indirect
-	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
-	github.com/urfave/cli/v2 v2.1.1 // indirect
-	golang.org/x/mod v0.5.0 // indirect
-)
+require cloud.google.com/go/firestore v1.5.0 // indirect
