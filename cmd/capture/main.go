@@ -7,8 +7,6 @@ import (
 	"time"
 
 	"com.capturetweet/internal/infra"
-	"com.capturetweet/pkg/browser"
-	"com.capturetweet/pkg/tweet"
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
@@ -30,30 +28,8 @@ func Run() error {
 
 	start := time.Now()
 
-	tweetColl, err := infra.NewTweetCollection()
-	if err != nil {
-		return fmt.Errorf("twitter:docstore collection %w", err)
-	}
-	defer tweetColl.Close()
-
-	bucket, err := infra.NewBucketFromEnvironment()
-	if err != nil {
-		return fmt.Errorf("bloc bucket, %w", err)
-	}
-	defer bucket.Close()
-
-	tweetService := tweet.NewServiceWithRepository(tweet.NewRepository(tweetColl))
-	if tweetService == nil {
-		return fmt.Errorf("init tweet service, %w", err)
-	}
-
-	browserService := browser.NewService(tweetService, bucket)
-	if browserService == nil {
-		return fmt.Errorf("browser service initialize")
-	}
-
 	h := handlerImpl{
-		service: browserService,
+		service: initializeBrowserService(),
 	}
 
 	handler := http.NewServeMux()
@@ -63,8 +39,7 @@ func Run() error {
 
 	port := infra.Port()
 	zap.L().Info("capture server is starting at port", zap.String("port", port))
-	err = http.ListenAndServe(":"+port, handler)
-	if err != nil {
+	if err := http.ListenAndServe(":"+port, handler); err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}
 

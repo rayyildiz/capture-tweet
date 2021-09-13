@@ -38,34 +38,19 @@ func Run() error {
 
 	start := time.Now()
 
-	tweetColl, err := infra.NewTweetCollection()
-	if err != nil {
-		return fmt.Errorf("twitter:docstore collection, %w", err)
-	}
+	tweetColl := infra.NewTweetCollection()
 	defer tweetColl.Close()
 
-	userColl, err := infra.NewUserCollection()
-	if err != nil {
-		return fmt.Errorf("user:docstore collection, %w", err)
-	}
+	userColl := infra.NewUserCollection()
 	defer userColl.Close()
 
-	contactUsColl, err := infra.NewContactUsCollection()
-	if err != nil {
-		return fmt.Errorf("content:ContactUs collection, %w", err)
-	}
+	contactUsColl := infra.NewContactUsCollection()
 	defer contactUsColl.Close()
 
-	topic, err := infra.NewTopic(os.Getenv("TOPIC_CAPTURE"))
-	if err != nil {
-		return fmt.Errorf("pubsub topic capture, %w", err)
-	}
+	topic := infra.NewTopic(os.Getenv("TOPIC_CAPTURE"))
 	defer topic.Shutdown(context.Background())
 
-	searchIndexer, err := infra.NewIndex()
-	if err != nil {
-		return fmt.Errorf("search index, algolia, %w", err)
-	}
+	searchIndexer := infra.NewIndex()
 
 	twitterApi := infra.NewTwitterClient()
 	if twitterApi == nil {
@@ -119,8 +104,7 @@ func Run() error {
 
 	port := infra.Port()
 	zap.L().Info("api server is starting at port", zap.String("port", port))
-	err = http.ListenAndServe(":"+port, h)
-	if err != nil {
+	if err := http.ListenAndServe(":"+port, h); err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}
 
