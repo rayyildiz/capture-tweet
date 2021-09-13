@@ -80,8 +80,7 @@ func TestService_Store(t *testing.T) {
 		},
 	}, nil)
 
-	topic, err := infra.NewTopic("mem://topicTest")
-	require.NoError(t, err)
+	topic := infra.NewTopic("mem://topicTest")
 
 	infra.RegisterLogger()
 

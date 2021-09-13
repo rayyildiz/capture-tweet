@@ -11,26 +11,24 @@ import (
 )
 
 func TestRepository_Store(t *testing.T) {
-	coll, err := infra.NewDocstore("mem://collection/id")
-	require.NoError(t, err)
+	coll := infra.NewDocstore("mem://collection/id")
 	defer coll.Close()
 
 	repo := NewRepository(coll)
 
-	err = repo.Store(context.Background(), "testId", "username", "display name", "Bio", "profile.png", time.Now())
+	err := repo.Store(context.Background(), "testId", "username", "display name", "Bio", "profile.png", time.Now())
 	require.NoError(t, err)
 }
 
 func TestRepository_FindById(t *testing.T) {
-	coll, err := infra.NewDocstore("mem://collection2/id")
-	require.NoError(t, err)
+	coll := infra.NewDocstore("mem://collection2/id")
 	defer coll.Close()
 
 	repo := NewRepository(coll)
 
 	id := "1270800178421706753"
 
-	err = repo.Store(context.Background(), id, "test", "screenName", "Bio", "profile.png", time.Now())
+	err := repo.Store(context.Background(), id, "test", "screenName", "Bio", "profile.png", time.Now())
 	require.NoError(t, err)
 
 	user, err := repo.FindById(context.Background(), id)
@@ -42,8 +40,7 @@ func TestRepository_FindById(t *testing.T) {
 }
 
 func TestRepository_FindByUserName(t *testing.T) {
-	coll, err := infra.NewDocstore("mem://collection3/id")
-	require.NoError(t, err)
+	coll := infra.NewDocstore("mem://collection3/id")
 	defer coll.Close()
 
 	repo := NewRepository(coll)
@@ -62,8 +59,7 @@ func TestRepository_FindByUserName(t *testing.T) {
 }
 
 func TestRepository_FindById_NotFound(t *testing.T) {
-	coll, err := infra.NewDocstore("mem://collection4/id")
-	require.NoError(t, err)
+	coll := infra.NewDocstore("mem://collection4/id")
 	defer coll.Close()
 
 	repo := NewRepository(coll)

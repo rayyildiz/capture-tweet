@@ -11,11 +11,10 @@ import (
 func TestNewContactUsCollection(t *testing.T) {
 	os.Setenv("DOCSTORE_CONTACT_US", "mem://contact/ID")
 
-	coll, err := NewContactUsCollection()
-	require.NoError(t, err)
+	coll := NewContactUsCollection()
 	require.NotNil(t, coll)
 
-	err = coll.Put(context.Background(), map[string]interface{}{
+	err := coll.Put(context.Background(), map[string]interface{}{
 		"ID":      1,
 		"Email":   "email",
 		"Subject": "subject",
@@ -27,11 +26,10 @@ func TestNewContactUsCollection(t *testing.T) {
 func TestNewTweetCollection(t *testing.T) {
 	os.Setenv("DOCSTORE_TWEETS", "mem://tweet/id")
 
-	coll, err := NewTweetCollection()
-	require.NoError(t, err)
+	coll := NewTweetCollection()
 	require.NotNil(t, coll)
 
-	err = coll.Put(context.Background(), map[string]interface{}{
+	err := coll.Put(context.Background(), map[string]interface{}{
 		"id":         1,
 		"user":       "user",
 		"text":       "test",
@@ -43,11 +41,10 @@ func TestNewTweetCollection(t *testing.T) {
 func TestNewUserCollection(t *testing.T) {
 	os.Setenv("DOCSTORE_USERS", "mem://users/Username")
 
-	coll, err := NewUserCollection()
-	require.NoError(t, err)
+	coll := NewUserCollection()
 	require.NotNil(t, coll)
 
-	err = coll.Put(context.Background(), map[string]interface{}{
+	err := coll.Put(context.Background(), map[string]interface{}{
 		"Username":  "@rayyildiz",
 		"FullName":  "Ramazan",
 		"CreatedAt": time.Now(),

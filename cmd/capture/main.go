@@ -30,21 +30,15 @@ func Run() error {
 
 	start := time.Now()
 
-	tweetColl, err := infra.NewTweetCollection()
-	if err != nil {
-		return fmt.Errorf("twitter:docstore collection %w", err)
-	}
+	tweetColl := infra.NewTweetCollection()
 	defer tweetColl.Close()
 
-	bucket, err := infra.NewBucketFromEnvironment()
-	if err != nil {
-		return fmt.Errorf("bloc bucket, %w", err)
-	}
+	bucket := infra.NewBucketFromEnvironment()
 	defer bucket.Close()
 
 	tweetService := tweet.NewServiceWithRepository(tweet.NewRepository(tweetColl))
 	if tweetService == nil {
-		return fmt.Errorf("init tweet service, %w", err)
+		return fmt.Errorf("init tweet service")
 	}
 
 	browserService := browser.NewService(tweetService, bucket)
@@ -63,8 +57,8 @@ func Run() error {
 
 	port := infra.Port()
 	zap.L().Info("capture server is starting at port", zap.String("port", port))
-	err = http.ListenAndServe(":"+port, handler)
-	if err != nil {
+
+	if err := http.ListenAndServe(":"+port, handler); err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}
 

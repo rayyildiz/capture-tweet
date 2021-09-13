@@ -8,12 +8,11 @@ import (
 )
 
 func TestRepository_ContactUS(t *testing.T) {
-	coll, err := infra.NewDocstore("mem://collection/id")
-	require.NoError(t, err)
+	coll := infra.NewDocstore("mem://collection/id")
 	defer coll.Close()
 
 	repo := NewRepository(coll)
 
-	err = repo.ContactUs(context.Background(), "test", "ramazan", "hello")
+	err := repo.ContactUs(context.Background(), "test", "ramazan", "hello")
 	require.NoError(t, err)
 }

@@ -11,14 +11,13 @@ import (
 )
 
 func TestRepository_Store(t *testing.T) {
-	coll, err := infra.NewDocstore("mem://collection/id")
-	require.NoError(t, err)
+	coll := infra.NewDocstore("mem://collection/id")
 	defer coll.Close()
 
 	ctx := context.Background()
 
 	repo := NewRepository(coll)
-	err = repo.Store(ctx, &anaconda.Tweet{
+	err := repo.Store(ctx, &anaconda.Tweet{
 		IdStr:         "1",
 		RetweetCount:  4,
 		FavoriteCount: 9,
@@ -29,13 +28,12 @@ func TestRepository_Store(t *testing.T) {
 }
 
 func TestRepository_Exist(t *testing.T) {
-	coll, err := infra.NewDocstore("mem://collection/id")
-	require.NoError(t, err)
+	coll := infra.NewDocstore("mem://collection/id")
 	defer coll.Close()
 	ctx := context.Background()
 
 	repo := NewRepository(coll)
-	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "testId1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
+	err := repo.Store(ctx, &anaconda.Tweet{IdStr: "testId1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
 	require.NoError(t, err)
 
 	b := repo.Exist(ctx, "testId1")
@@ -43,14 +41,13 @@ func TestRepository_Exist(t *testing.T) {
 }
 
 func TestRepository_FindByIds(t *testing.T) {
-	coll, err := infra.NewDocstore("mem://collection/id")
-	require.NoError(t, err)
+	coll := infra.NewDocstore("mem://collection/id")
 	defer coll.Close()
 
 	ctx := context.Background()
 
 	repo := NewRepository(coll)
-	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
+	err := repo.Store(ctx, &anaconda.Tweet{IdStr: "1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
 	require.NoError(t, err)
 
 	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "2", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
@@ -68,14 +65,13 @@ func TestRepository_FindByIds(t *testing.T) {
 }
 
 func TestRepository_UpdateThumbImage(t *testing.T) {
-	coll, err := infra.NewDocstore("mem://collection/id")
-	require.NoError(t, err)
+	coll := infra.NewDocstore("mem://collection/id")
 	defer coll.Close()
 
 	ctx := context.Background()
 
 	repo := NewRepository(coll)
-	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
+	err := repo.Store(ctx, &anaconda.Tweet{IdStr: "1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
 	require.NoError(t, err)
 
 	err = repo.UpdateThumbImage(ctx, "1", "image1.png")
@@ -92,15 +88,14 @@ func TestRepository_UpdateThumbImage(t *testing.T) {
 }
 
 func TestRepository_FindByUser(t *testing.T) {
-	coll, err := infra.NewDocstore("mem://collection/id")
-	require.NoError(t, err)
+	coll := infra.NewDocstore("mem://collection/id")
 	defer coll.Close()
 
 	ctx := context.Background()
 
 	repo := NewRepository(coll)
 
-	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "x1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "123"}})
+	err := repo.Store(ctx, &anaconda.Tweet{IdStr: "x1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "123"}})
 	require.NoError(t, err)
 
 	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "ay2", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "123"}})

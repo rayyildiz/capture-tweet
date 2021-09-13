@@ -2,7 +2,7 @@ package infra
 
 import (
 	"context"
-	"errors"
+	"log"
 	"os"
 
 	"gocloud.dev/docstore"
@@ -10,26 +10,26 @@ import (
 	_ "gocloud.dev/docstore/memdocstore"
 )
 
-var (
-	ErrInvalidDocstoreEnv = errors.New("invalid collection name")
-)
-
-func NewDocstore(collectionName string) (*docstore.Collection, error) {
+func NewDocstore(collectionName string) *docstore.Collection {
 	if len(collectionName) < 1 {
-		return nil, ErrInvalidDocstoreEnv
+		log.Fatalf("collection is empty")
 	}
 
-	return docstore.OpenCollection(context.Background(), collectionName)
+	coll, err := docstore.OpenCollection(context.Background(), collectionName)
+	if err != nil {
+		log.Fatalf("error while opening docstore, %v", err)
+	}
+	return coll
 }
 
-func NewTweetCollection() (*docstore.Collection, error) {
+func NewTweetCollection() *docstore.Collection {
 	return NewDocstore(os.Getenv("DOCSTORE_TWEETS"))
 }
 
-func NewUserCollection() (*docstore.Collection, error) {
+func NewUserCollection() *docstore.Collection {
 	return NewDocstore(os.Getenv("DOCSTORE_USERS"))
 }
 
-func NewContactUsCollection() (*docstore.Collection, error) {
+func NewContactUsCollection() *docstore.Collection {
 	return NewDocstore(os.Getenv("DOCSTORE_CONTACT_US"))
 }
