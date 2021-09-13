@@ -53,8 +53,7 @@ func TestService_SaveCapture(t *testing.T) {
 
 	infra.RegisterLogger()
 
-	bucket, err := infra.NewBucket("mem://test")
-	require.NoError(t, err)
+	bucket := infra.NewBucket("mem://test")
 	require.NotNil(t, bucket)
 
 	service := NewService(nil, bucket)
@@ -91,8 +90,7 @@ func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
 	require.NoError(t, err)
 	defer chromeC.Terminate(ctx)
 
-	bucket, err := infra.NewBucket("mem://mem")
-	require.NoError(t, err)
+	bucket := infra.NewBucket("mem://mem")
 	require.NotNil(t, bucket)
 
 	infra.RegisterLogger()

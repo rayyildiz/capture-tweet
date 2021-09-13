@@ -29,16 +29,10 @@ func Run() error {
 
 	start := time.Now()
 
-	tweetColl, err := infra.NewTweetCollection()
-	if err != nil {
-		return fmt.Errorf("twitter:docstore collection, %w", err)
-	}
+	tweetColl := infra.NewTweetCollection()
 	defer tweetColl.Close()
 
-	bucket, err := infra.NewBucketFromEnvironment()
-	if err != nil {
-		return fmt.Errorf("blob bucket, %w", err)
-	}
+	bucket := infra.NewBucketFromEnvironment()
 
 	defer bucket.Close()
 
@@ -54,8 +48,7 @@ func Run() error {
 
 	port := infra.Port()
 	zap.L().Info("sitemap server is starting at port", zap.String("port", port))
-	err = http.ListenAndServe(":"+port, mux)
-	if err != nil {
+	if err := http.ListenAndServe(":"+port, mux); err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}
 	return nil

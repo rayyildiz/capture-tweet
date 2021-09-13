@@ -30,10 +30,7 @@ func Run() error {
 
 	mux := http.NewServeMux()
 
-	bucket, err := infra.NewBucketFromEnvironment()
-	if err != nil {
-		return fmt.Errorf("blob bucket, %w", err)
-	}
+	bucket := infra.NewBucketFromEnvironment()
 	defer bucket.Close()
 
 	h := handlerImpl{
@@ -45,9 +42,7 @@ func Run() error {
 
 	port := infra.Port()
 	zap.L().Info("dlq-capture server is starting at port", zap.String("port", port))
-
-	err = http.ListenAndServe(":"+port, mux)
-	if err != nil {
+	if err := http.ListenAndServe(":"+port, mux); err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}
 	return nil
