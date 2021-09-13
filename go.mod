@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.94.0 // indirect
 	cloud.google.com/go/pubsub v1.16.0 // indirect
 	cloud.google.com/go/storage v1.16.1 // indirect
-	github.com/99designs/gqlgen v0.13.0
+	github.com/99designs/gqlgen v0.14.0
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
@@ -88,11 +88,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
-require (
-	cloud.google.com/go/firestore v1.5.0 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/russross/blackfriday/v2 v2.0.1 // indirect
-	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
-	github.com/urfave/cli/v2 v2.1.1 // indirect
-	golang.org/x/mod v0.5.0 // indirect
-)
+require cloud.google.com/go/firestore v1.5.0 // indirect
