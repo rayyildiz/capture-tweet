@@ -58,11 +58,11 @@ func TestService_Put(t *testing.T) {
 	algolia.EXPECT().SaveObject(api.SearchModel{
 		TweetID:  "1",
 		FullText: "test",
-		Author:   "RAYYILDIZ",
+		Author:   "AYYILDIZ",
 	}).Return(search.SaveObjectRes{}, nil)
 
 	svc := NewService(algolia)
 
-	err := svc.Put(context.Background(), "1", "test", "RAYYILDIZ")
+	err := svc.Put(context.Background(), "1", "test", "AYYILDIZ")
 	require.NoError(t, err)
 }

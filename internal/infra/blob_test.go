@@ -9,11 +9,10 @@ import (
 
 func TestNewBucketFromEnvironment(t *testing.T) {
 	os.Setenv("BLOB_BUCKET", "mem://bucket/to/memory")
-	bucket, err := NewBucketFromEnvironment()
-	require.NoError(t, err)
+	bucket := NewBucketFromEnvironment()
 	defer bucket.Close()
 	require.NotNil(t, bucket)
 
-	err = bucket.WriteAll(context.Background(), "test", []byte("hello world"), nil)
+	err := bucket.WriteAll(context.Background(), "test", []byte("hello world"), nil)
 	require.NoError(t, err)
 }
