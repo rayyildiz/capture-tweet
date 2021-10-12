@@ -17,11 +17,13 @@ jobs:
       - uses: actions/setup-go@v1
         with:
           go-version: 1.17
-        
+
+      - run: export PATH=$PATH:$(go env GOPATH)/bin
+
       - name: Run Gosec Security Scanner
-        uses: securego/gosec@master
-        with:
-          args: -exclude-generated -exclude-dir=web ./...
+        run: |
+          go install github.com/securego/gosec/cmd/gosec@latest
+          gosec -exclude-generated -exclude-dir=web ./...
 
       - uses: actions/cache@v2
         with:
