@@ -3,7 +3,7 @@ package main
 import (
 	"com.capturetweet/pkg/tweet"
 	"context"
-	"crypto/md5"
+	"crypto/md5" // #nosec
 	"encoding/base64"
 	"fmt"
 	"go.uber.org/zap"
@@ -58,7 +58,7 @@ func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 	zap.L().Info("create sitemap", zap.Duration("elapsed", diff))
 
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("No Content"))
+	_, _ = w.Write([]byte("No Content"))
 }
 
 func createSitemap(ctx context.Context, bucket *blob.Bucket, tweets []tweet.Tweet) error {
@@ -104,6 +104,7 @@ func createSitemap(ctx context.Context, bucket *blob.Bucket, tweets []tweet.Twee
 		zap.L().Error("bucket:ReadAll", zap.Error(err))
 		return err
 	}
+	/* #nosec */
 	h := md5.New()
 	newHash := base64.StdEncoding.EncodeToString(h.Sum([]byte(content)))
 

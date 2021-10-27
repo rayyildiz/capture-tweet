@@ -12,3 +12,6 @@ target/
 test_report.html
 test_report.zip
 test_report/
+*.exe
+.gitignore~
+..gitignore.un~

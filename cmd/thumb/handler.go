@@ -67,7 +67,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	if request.Kind != "storage#object" {
 		zap.L().Warn("expected image kind must be object", zap.String("image_kind", request.Kind), zap.String("image_key", request.Name))
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("it is not an object"))
+		_, _ = w.Write([]byte("it is not an object"))
 		return
 	}
 
@@ -141,5 +141,5 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	zap.L().Info("image saved", zap.Duration("elapsed", diff), zap.String("image_thumb", thumbNailKey), zap.String("image_key", request.Name), zap.String("image_kind", request.Kind))
 
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("No Content"))
+	_, _ = w.Write([]byte("No Content"))
 }

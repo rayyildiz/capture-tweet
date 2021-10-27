@@ -18,6 +18,11 @@ jobs:
         with:
           go-version: 1.17
 
+      - name: Run Gosec Security Scanner
+        uses: securego/gosec@master
+        with:
+          args: -exclude-generated -exclude-dir=web ./...
+
       - uses: actions/cache@v2
         with:
           path: ~/go/pkg/mod
