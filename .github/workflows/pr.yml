@@ -20,10 +20,9 @@ jobs:
 
       - run: export PATH=$PATH:$(go env GOPATH)/bin
 
-      - name: Run Gosec Security Scanner
-        run: |
-          go install github.com/securego/gosec/cmd/gosec@latest
-          gosec -exclude-generated -exclude-dir=web ./...
+      - run: go install github.com/securego/gosec/cmd/gosec@latest
+
+      - run: gosec -exclude-generated -exclude-dir=web ./...
 
       - uses: actions/cache@v2
         with:
