@@ -53,5 +53,5 @@ func (h handlerImpl) handleCapture(w http.ResponseWriter, r *http.Request) {
 
 	zap.L().Info("capture successfully", zap.String("tweet_id", respModel.ID), zap.String("tweet_url", request.Url), zap.String("capture_image", respModel.CaptureURL))
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("No Content"))
+	_, _ = w.Write([]byte("No Content"))
 }
