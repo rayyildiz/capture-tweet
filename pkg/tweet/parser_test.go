@@ -48,6 +48,13 @@ func TestParseTweetURL(t *testing.T) {
 			expectedUser: "",
 			expectedErr:  ErrInvalidURL,
 		},
+		{
+			name:         "support mobile subdomain",
+			url:          "https://mobile.twitter.com/_denizparlak/status/1454140209306734602",
+			expectedId:   1454140209306734602,
+			expectedUser: "_denizparlak",
+			expectedErr:  nil,
+		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

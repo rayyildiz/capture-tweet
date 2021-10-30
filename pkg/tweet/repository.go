@@ -33,6 +33,7 @@ func NewRepository(coll *docstore.Collection) Repository {
 	}
 }
 
+// FindById returns a tweet by id. Return err if not found.
 func (r repositoryImpl) FindById(ctx context.Context, id string) (*Tweet, error) {
 	tweet := &Tweet{ID: id}
 	err := r.coll.Get(ctx, tweet)
@@ -43,6 +44,7 @@ func (r repositoryImpl) FindById(ctx context.Context, id string) (*Tweet, error)
 	return tweet, nil
 }
 
+// Exist returns true if the tweet exists. Otherwise, return false.
 func (r repositoryImpl) Exist(ctx context.Context, id string) bool {
 	tweet := &Tweet{ID: id}
 
@@ -54,6 +56,7 @@ func (r repositoryImpl) Exist(ctx context.Context, id string) bool {
 	return true
 }
 
+// Store a tweet.
 func (r repositoryImpl) Store(ctx context.Context, tweet *anaconda.Tweet) error {
 	postedAt, err := tweet.CreatedAtTime()
 	if err != nil {
@@ -85,6 +88,7 @@ func (r repositoryImpl) Store(ctx context.Context, tweet *anaconda.Tweet) error 
 	})
 }
 
+// FindByIds returns a list of tweets by ids. Return err if not found.
 func (r repositoryImpl) FindByIds(ctx context.Context, ids []string) ([]Tweet, error) {
 	var list []Tweet
 
@@ -98,6 +102,8 @@ func (r repositoryImpl) FindByIds(ctx context.Context, ids []string) ([]Tweet, e
 
 	return list, nil
 }
+
+// FindByUser returns a list of tweets by user id.
 func (r repositoryImpl) FindByUser(ctx context.Context, userId string) ([]Tweet, error) {
 	iterator := r.coll.Query().Where("author_id", "=", userId).Limit(24).Get(ctx)
 	defer iterator.Stop()
@@ -120,16 +126,19 @@ func (r repositoryImpl) FindByUser(ctx context.Context, userId string) ([]Tweet,
 	return tweets, nil
 }
 
+// UpdateLargeImage updates the large image of the tweet in the database.
 func (r repositoryImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {
 	tweet := &Tweet{ID: id}
 	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_url": captureUrl, "updated_at": time.Now()}).Do(ctx)
 }
 
+// UpdateThumbImage updates the thumb image of the tweet in the database.
 func (r repositoryImpl) UpdateThumbImage(ctx context.Context, id, captureUrl string) error {
 	tweet := &Tweet{ID: id}
 	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_thumb_url": captureUrl, "updated_at": time.Now()}).Do(ctx)
 }
 
+// FindAllOrderByUpdated returns a list of tweets ordered by updated_at.
 func (r repositoryImpl) FindAllOrderByUpdated(ctx context.Context, size int) ([]Tweet, error) {
 	var tweets []Tweet
 	ctx, cancel := context.WithTimeout(ctx, time.Second*5)
