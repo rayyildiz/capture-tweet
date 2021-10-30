@@ -137,8 +137,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	diff := time.Now().Sub(start)
-	zap.L().Info("image saved", zap.Duration("elapsed", diff), zap.String("image_thumb", thumbNailKey), zap.String("image_key", request.Name), zap.String("image_kind", request.Kind))
+	zap.L().Info("image saved", zap.Duration("elapsed", time.Since(start).Round(time.Millisecond)), zap.String("image_thumb", thumbNailKey), zap.String("image_key", request.Name), zap.String("image_kind", request.Kind))
 
 	w.WriteHeader(http.StatusCreated)
 	_, _ = w.Write([]byte("No Content"))

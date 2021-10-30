@@ -54,8 +54,7 @@ func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	diff := time.Now().Sub(start)
-	zap.L().Info("create sitemap", zap.Duration("elapsed", diff))
+	zap.L().Info("create sitemap", zap.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 
 	w.WriteHeader(http.StatusCreated)
 	_, _ = w.Write([]byte("No Content"))
