@@ -10,19 +10,18 @@ var (
 	ErrInvalidURL = errors.New("invalid URL")
 )
 
-func parseTweetURL(url string) (int64, string, error) {
-	r, err := regexp.Compile("(/twitter.com/)(.*)(/status/)([0-9]*)")
-	if err != nil {
-		return 0, "", err
-	}
+// re represents a compiled regular expression for matching twitter URLs.
+var re = regexp.MustCompile(`((/twitter.com/)|(/mobile.twitter.com/))(.*)(/status/)([0-9]*)`)
 
-	parts := r.FindStringSubmatch(url)
-	if len(parts) < 5 {
+// parseTweetURL parses a tweet URL into its components ( userId, tweetId and error).
+func parseTweetURL(url string) (int64, string, error) {
+	parts := re.FindStringSubmatch(url)
+	if len(parts) < 7 {
 		return 0, "", ErrInvalidURL
 	}
 
-	idStr := parts[4]
-	user := parts[2]
+	idStr := parts[6]
+	user := parts[4]
 
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
