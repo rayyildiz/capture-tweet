@@ -1,13 +1,14 @@
 package resolver
 
 import (
-	"com.capturetweet/api"
-	"com.capturetweet/internal/infra"
 	"context"
+	"testing"
+
+	"capturetweet.com/api"
+	"capturetweet.com/internal/infra"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestMutationResolver_Capture(t *testing.T) {

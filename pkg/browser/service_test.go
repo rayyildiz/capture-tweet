@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"com.capturetweet/api"
-	"com.capturetweet/internal/infra"
+	"capturetweet.com/api"
+	"capturetweet.com/internal/infra"
 	"github.com/docker/go-connections/nat"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"

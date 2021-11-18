@@ -7,10 +7,10 @@
 package main
 
 import (
-	"com.capturetweet/api"
-	"com.capturetweet/internal/infra"
-	"com.capturetweet/pkg/browser"
-	"com.capturetweet/pkg/tweet"
+	"capturetweet.com/api"
+	"capturetweet.com/internal/infra"
+	"capturetweet.com/pkg/browser"
+	"capturetweet.com/pkg/tweet"
 )
 
 // Injectors from wire.go:

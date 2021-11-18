@@ -1,9 +1,10 @@
 package resolver
 
 import (
-	"com.capturetweet/internal/convert"
 	"context"
 	"time"
+
+	"capturetweet.com/internal/convert"
 )
 
 type Author struct {

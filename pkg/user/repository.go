@@ -1,10 +1,11 @@
-//go:generate mockgen -package=user -self_package=com.capturetweet/pkg/user -destination=repository_mock.go . Repository
+//go:generate mockgen -package=user -self_package=capturetweet.com/pkg/user -destination=repository_mock.go . Repository
 package user
 
 import (
 	"context"
-	"gocloud.dev/docstore"
 	"time"
+
+	"gocloud.dev/docstore"
 )
 
 type Repository interface {

@@ -1,12 +1,13 @@
 package user
 
 import (
-	"com.capturetweet/api"
-	"com.capturetweet/internal/convert"
 	"context"
+	"time"
+
+	"capturetweet.com/api"
+	"capturetweet.com/internal/convert"
 	"github.com/ChimeraCoder/anaconda"
 	"go.uber.org/zap"
-	"time"
 )
 
 type serviceImpl struct {

@@ -1,10 +1,11 @@
 package main
 
 import (
-	"com.capturetweet/api"
 	"encoding/json"
-	"go.uber.org/zap"
 	"net/http"
+
+	"capturetweet.com/api"
+	"go.uber.org/zap"
 )
 
 type handlerImpl struct {

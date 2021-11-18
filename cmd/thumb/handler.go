@@ -2,18 +2,19 @@ package main
 
 import (
 	"bytes"
-	"com.capturetweet/api"
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/nfnt/resize"
-	"go.uber.org/zap"
-	"gocloud.dev/blob"
 	"image"
 	"image/jpeg"
 	"net/http"
 	"strings"
 	"time"
+
+	"capturetweet.com/api"
+	"github.com/nfnt/resize"
+	"go.uber.org/zap"
+	"gocloud.dev/blob"
 )
 
 type PubSubMessage struct {

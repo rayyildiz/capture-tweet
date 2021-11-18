@@ -1,10 +1,11 @@
-//go:generate mockgen -package=infra -self_package=com.capturetweet/internal/infra -destination=anaconda_mock.go . TweetAPI
+//go:generate mockgen -package=infra -self_package=capturetweet.com/internal/infra -destination=anaconda_mock.go . TweetAPI
 package infra
 
 import (
-	"github.com/ChimeraCoder/anaconda"
 	"net/url"
 	"os"
+
+	"github.com/ChimeraCoder/anaconda"
 )
 
 func NewTwitterClient() TweetAPI {

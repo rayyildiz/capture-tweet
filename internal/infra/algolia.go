@@ -1,10 +1,11 @@
-//go:generate mockgen -package=infra -self_package=com.capturetweet/internal/infra -destination=algolia_mock.go . IndexInterface
+//go:generate mockgen -package=infra -self_package=capturetweet.com/internal/infra -destination=algolia_mock.go . IndexInterface
 package infra
 
 import (
-	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"log"
 	"os"
+
+	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 )
 
 func NewIndex() IndexInterface {

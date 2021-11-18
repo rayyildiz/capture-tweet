@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"os"
 
-	"com.capturetweet/api"
+	"capturetweet.com/api"
 )
 
 type serviceImpl struct {

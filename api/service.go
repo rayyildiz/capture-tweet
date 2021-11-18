@@ -1,8 +1,9 @@
-//go:generate mockgen -package=api -self_package=com.capturetweet/api -destination=service_mock.go . UserService,TweetService,SearchService,BrowserService,ContentService
+//go:generate mockgen -package=api -self_package=capturetweet.com/api -destination=service_mock.go . UserService,TweetService,SearchService,BrowserService,ContentService
 package api
 
 import (
 	"context"
+
 	"github.com/ChimeraCoder/anaconda"
 )
 
@@ -26,10 +27,10 @@ type SearchService interface {
 }
 
 type BrowserService interface {
-	// Capture and return a image (PNG)
+	// CaptureURL capture and return a image (PNG)
 	CaptureURL(ctx context.Context, model *CaptureRequestModel) ([]byte, error)
 
-	// Save in a bucket
+	// SaveCapture saves in a bucket
 	SaveCapture(ctx context.Context, originalImage []byte, model *CaptureRequestModel) (*CaptureResponseModel, error)
 
 	CaptureSaveUpdateDatabase(ctx context.Context, model *CaptureRequestModel) (*CaptureResponseModel, error)

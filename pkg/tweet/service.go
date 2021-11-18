@@ -1,16 +1,17 @@
 package tweet
 
 import (
-	"com.capturetweet/api"
-	"com.capturetweet/internal/convert"
-	"com.capturetweet/internal/infra"
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
+
+	"capturetweet.com/api"
+	"capturetweet.com/internal/convert"
+	"capturetweet.com/internal/infra"
 	"github.com/ChimeraCoder/anaconda"
 	"go.uber.org/zap"
 	"gocloud.dev/pubsub"
-	"net/url"
 )
 
 type serviceImpl struct {

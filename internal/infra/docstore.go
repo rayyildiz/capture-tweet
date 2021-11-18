@@ -10,6 +10,7 @@ import (
 	_ "gocloud.dev/docstore/memdocstore"
 )
 
+// NewDocstore opens a new collection.
 func NewDocstore(collectionName string) *docstore.Collection {
 	if len(collectionName) < 1 {
 		log.Fatalf("collection name is empty")

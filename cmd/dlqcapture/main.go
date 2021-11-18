@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"com.capturetweet/internal/infra"
+	"capturetweet.com/internal/infra"
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"

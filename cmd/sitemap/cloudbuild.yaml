@@ -5,7 +5,7 @@ steps:
       - 'GO111MODULE=on'
       - 'CGO_ENABLED=0'
       - 'GOOS=linux'
-      - 'GOFLAGS=-ldflags=-X=com.capturetweet/internal/infra.Version=$SHORT_SHA'
+      - 'GOFLAGS=-ldflags=-X=capturetweet.com/internal/infra.Version=$SHORT_SHA'
     dir: 'cmd/sitemap'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
