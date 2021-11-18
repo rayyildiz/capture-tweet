@@ -1,13 +1,14 @@
 package user
 
 import (
-	"com.capturetweet/internal/infra"
 	"context"
+	"testing"
+	"time"
+
+	"capturetweet.com/internal/infra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gocloud.dev/gcerrors"
-	"testing"
-	"time"
 )
 
 func TestRepository_Store(t *testing.T) {

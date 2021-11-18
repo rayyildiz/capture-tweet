@@ -1,10 +1,11 @@
 package content
 
 import (
-	"com.capturetweet/internal/infra"
 	"context"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"capturetweet.com/internal/infra"
+	"github.com/stretchr/testify/require"
 )
 
 func TestRepository_ContactUS(t *testing.T) {

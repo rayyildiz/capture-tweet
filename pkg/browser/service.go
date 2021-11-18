@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"com.capturetweet/api"
+	"capturetweet.com/api"
 	"github.com/chromedp/cdproto/emulation"
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"

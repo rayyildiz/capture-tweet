@@ -2,7 +2,7 @@
 package resolver
 
 import (
-	"com.capturetweet/api"
+	"capturetweet.com/api"
 )
 
 type resolver struct {

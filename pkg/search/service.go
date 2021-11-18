@@ -1,9 +1,10 @@
 package search
 
 import (
-	"com.capturetweet/api"
-	"com.capturetweet/internal/infra"
 	"context"
+
+	"capturetweet.com/api"
+	"capturetweet.com/internal/infra"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/opt"
 )
 

@@ -1,18 +1,19 @@
 package main
 
 import (
-	"com.capturetweet/pkg/tweet"
 	"context"
 	"crypto/md5" // #nosec
 	"encoding/base64"
 	"fmt"
-	"go.uber.org/zap"
-	"gocloud.dev/blob"
 	"net/http"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+
+	"capturetweet.com/pkg/tweet"
+	"go.uber.org/zap"
+	"gocloud.dev/blob"
 )
 
 type handlerImpl struct {

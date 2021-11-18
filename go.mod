@@ -1,4 +1,4 @@
-module com.capturetweet
+module capturetweet.com
 
 go 1.17
 

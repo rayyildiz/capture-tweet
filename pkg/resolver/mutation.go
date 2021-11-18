@@ -1,10 +1,11 @@
 package resolver
 
 import (
-	"com.capturetweet/internal/convert"
 	"context"
 	"errors"
 	"fmt"
+
+	"capturetweet.com/internal/convert"
 	"go.uber.org/zap"
 )
 

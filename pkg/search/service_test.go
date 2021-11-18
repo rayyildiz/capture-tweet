@@ -1,14 +1,15 @@
 package search
 
 import (
-	"com.capturetweet/api"
-	"com.capturetweet/internal/infra"
 	"context"
+	"testing"
+
+	"capturetweet.com/api"
+	"capturetweet.com/internal/infra"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestService_Search(t *testing.T) {

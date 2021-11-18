@@ -1,10 +1,11 @@
 package resolver
 
 import (
-	"com.capturetweet/api"
-	"com.capturetweet/internal/convert"
 	"context"
 	"errors"
+
+	"capturetweet.com/api"
+	"capturetweet.com/internal/convert"
 	"go.uber.org/zap"
 	"gocloud.dev/gcerrors"
 )

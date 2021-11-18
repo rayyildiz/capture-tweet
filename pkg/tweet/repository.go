@@ -1,14 +1,15 @@
-//go:generate mockgen -package=tweet -self_package=com.capturetweet/pkg/tweet -destination=repository_mock.go . Repository
+//go:generate mockgen -package=tweet -self_package=capturetweet.com/pkg/tweet -destination=repository_mock.go . Repository
 package tweet
 
 import (
 	"context"
-	"github.com/ChimeraCoder/anaconda"
-	"gocloud.dev/docstore"
-	"gocloud.dev/gcerrors"
 	"io"
 	"sort"
 	"time"
+
+	"github.com/ChimeraCoder/anaconda"
+	"gocloud.dev/docstore"
+	"gocloud.dev/gcerrors"
 )
 
 type Repository interface {

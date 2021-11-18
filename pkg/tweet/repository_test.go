@@ -1,13 +1,14 @@
 package tweet
 
 import (
-	"com.capturetweet/internal/infra"
 	"context"
+	"testing"
+	"time"
+
+	"capturetweet.com/internal/infra"
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	"time"
 )
 
 func TestRepository_Store(t *testing.T) {

@@ -15,8 +15,8 @@ model:
 
 models:
   Author:
-    model: com.capturetweet/pkg/resolver.Author
+    model: capturetweet.com/pkg/resolver.Author
   Tweet:
-    model: com.capturetweet/pkg/resolver.Tweet
+    model: capturetweet.com/pkg/resolver.Tweet
   Resource:
-    model: com.capturetweet/pkg/resolver.Resource
+    model: capturetweet.com/pkg/resolver.Resource
