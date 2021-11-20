@@ -15,7 +15,7 @@ jobs:
       CGO_ENABLED: "1"
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         
       - uses: actions/setup-go@v1
         with:
@@ -29,11 +29,6 @@ jobs:
             ${{ runner.os }}-ci-go-
 
       - run: go mod download
-
-      - run: |
-          export PATH=$PATH:$(go env GOPATH)/bin
-          go install github.com/securego/gosec/cmd/gosec@latest
-          gosec -exclude-dir=web ./...
 
 
       - run: go test -cover -coverprofile=coverage.txt -covermode=atomic ./...
