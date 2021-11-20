@@ -1,7 +1,7 @@
 import {FormEvent, useState} from "react";
 import './HomePage.css';
 import {gql, useMutation} from "@apollo/client";
-import {Redirect} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import {Helmet} from "react-helmet";
 import {WEB_BASE_URL} from "../Constants";
 import {Capture, CaptureVariables} from "./__generated__/Capture";
@@ -51,7 +51,7 @@ const HomePage = () => {
   }
 
   if (data && data.capture && data.capture.id.length > 0) {
-    return <Redirect to={`/tweet/${data.capture.id}`}/>
+    return <Navigate replace to={`/tweet/${data.capture.id}`}/>
   }
 
   return (

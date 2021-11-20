@@ -4,6 +4,9 @@ on:
     branches:
       - main
 
+env:
+  RELEASE: 1.0.0
+
 jobs:
   build:
     name: Build
@@ -43,9 +46,6 @@ jobs:
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
-      - name: Show Short SHA
-        run: echo ${{ steps.vars.outputs.sha_short }}
-
       - name: Create Sentry release
         uses: getsentry/action-release@v1.1.5
         env:
@@ -53,7 +53,7 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
-          version: ${{ steps.vars.outputs.sha_short }}
+          version: ${{ RELEASE }}
 
       # - name: Upload Test Results As Artifact
       #   uses: actions/upload-artifact@v2

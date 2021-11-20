@@ -51,11 +51,15 @@ const TWEET_BY_ID = gql`
 `;
 
 
+type QueryParams = {
+  id: string;
+}
+
 const TweetPage = () => {
-  const {id} = useParams<{ id: string }>();
+  const {id} = useParams<keyof QueryParams>() as QueryParams;
 
   const {data, loading, error} = useQuery<Tweet, TweetVariables>(TWEET_BY_ID, {
-    variables: {id}
+    variables: { id }
   });
 
   if (loading) {
