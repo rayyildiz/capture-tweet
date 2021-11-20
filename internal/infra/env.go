@@ -31,6 +31,10 @@ func ProjectID() string {
 	return os.Getenv("GOOGLE_CLOUD_PROJECT")
 }
 
+func SentryDSN() string {
+	return os.Getenv("SENTRY_DSN")
+}
+
 // SentryRelease is for sentry
 var sentryRelease = "0.5.0"
 
