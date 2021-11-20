@@ -25,48 +25,52 @@ const SEARCH_BY_USER = gql`
   }
 `;
 
+type QueryParams = {
+    id: string;
+}
+
 const UserPage = () => {
-  const {id} = useParams<{ id: string }>();
+    const {id} = useParams<keyof QueryParams>();
 
-  const {data, loading, error} = useQuery<SearchByUser, SearchByUserVariables>(SEARCH_BY_USER, {
-    variables: {
-      userID: id
+    const {data, loading, error} = useQuery<SearchByUser, SearchByUserVariables>(SEARCH_BY_USER, {
+        variables: {
+            userID: id || ''
+        }
+    });
+    if (loading) {
+        return <span>Loading</span>
     }
-  });
-  if (loading) {
-    return <span>Loading</span>
-  }
 
-  return <>
-    <Helmet>
-      <meta property="og:title" content={`Search results for ${id}`}/>
-      <meta property="og:url" content={`${WEB_BASE_URL}/user/${id}`}/>
-      <meta property="og:image" content={`${WEB_BASE_URL}${notFound}`}/>
-      <title>Capture Tweet</title>
-    </Helmet>
+    return <>
+        <Helmet>
+            <meta property="og:title" content={`Search results for ${id}`}/>
+            <meta property="og:url" content={`${WEB_BASE_URL}/user/${id}`}/>
+            <meta property="og:image" content={`${WEB_BASE_URL}${notFound}`}/>
+            <title>Capture Tweet</title>
+        </Helmet>
 
-    <div>
-      <div className="row">
-        <div className="col-8">
-          <h4>User Tweets</h4>
+        <div>
+            <div className="row">
+                <div className="col-8">
+                    <h4>User Tweets</h4>
+                </div>
+            </div>
+            {error && <div className="alert alert-dismissible alert-warning">
+                <p className="mb-0">{error.message}</p>
+            </div>}
+
+            <div className="row">
+                {data && data.searchByUser?.map(t => (t && <TweetCard key={t.id}
+                                                                      author={t.author?.userName}
+                                                                      fullText={t.fullText ?? ""}
+                                                                      id={t.id ?? ""}
+                                                                      captureThumbURL={t.captureThumbURL ?? ""}
+                                                                      lang={t.lang ?? ""}
+                                                                      postedAt={t.postedAt}/>
+                ))}
+            </div>
         </div>
-      </div>
-      {error && <div className="alert alert-dismissible alert-warning">
-        <p className="mb-0">{error.message}</p>
-      </div>}
-
-      <div className="row">
-        {data && data.searchByUser?.map(t => (t && <TweetCard key={t.id}
-                                                              author={t.author?.userName}
-                                                              fullText={t.fullText ?? ""}
-                                                              id={t.id ?? ""}
-                                                              captureThumbURL={t.captureThumbURL ?? ""}
-                                                              lang={t.lang ?? ""}
-                                                              postedAt={t.postedAt}/>
-        ))}
-      </div>
-    </div>
-  </>
+    </>
 }
 
 

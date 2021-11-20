@@ -1,6 +1,8 @@
 package infra
 
-import "net/http"
+import (
+	"net/http"
+)
 
 var Version string // do not remove or modify
 

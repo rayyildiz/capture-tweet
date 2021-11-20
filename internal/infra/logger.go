@@ -38,7 +38,7 @@ func modifyToSentryLogger(log *zap.Logger) *zap.Logger {
 	}
 
 	cfg := zapsentry.Configuration{
-		Level: zapcore.ErrorLevel, //when to send message to sentry
+		Level: zapcore.ErrorLevel,
 		Tags: map[string]string{
 			"serviceName": ServiceName(),
 			"revision":    Revision(),
