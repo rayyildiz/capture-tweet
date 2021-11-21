@@ -48,7 +48,7 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
-          version: ${{ RELEASE }}
+          version: ${{ env.RELEASE }}
 
       # - name: Upload Test Results As Artifact
       #   uses: actions/upload-artifact@v2
