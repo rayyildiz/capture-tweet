@@ -17,17 +17,19 @@ func RegisterLogger() {
 		config = zap.NewProductionConfig()
 	}
 
+	config.EncoderConfig.TimeKey = "@timestamp"
+	config.EncoderConfig.EncodeTime = zapcore.RFC3339TimeEncoder
 	config.InitialFields = map[string]interface{}{
 		"version":     Version,
 		"serviceName": ServiceName(),
 	}
+
 	logger, err := config.Build()
 	if err != nil {
 		fmt.Printf("Could not create zap logger, %v\n", err)
 		return
 	}
 	logger = modifyToSentryLogger(logger)
-
 	zap.ReplaceGlobals(logger)
 }
 
