@@ -475,7 +475,7 @@ func (ec *executionContext) field_Mutation_contact_args(ctx context.Context, raw
 	var arg0 ContactInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNContactInput2comᚗcapturetweetᚋpkgᚋresolverᚐContactInput(ctx, tmp)
+		arg0, err = ec.unmarshalNContactInput2capturetweetᚗcomᚋpkgᚋresolverᚐContactInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -538,7 +538,7 @@ func (ec *executionContext) field_Query_search_args(ctx context.Context, rawArgs
 	var arg0 SearchInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNSearchInput2comᚗcapturetweetᚋpkgᚋresolverᚐSearchInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSearchInput2capturetweetᚗcomᚋpkgᚋresolverᚐSearchInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -829,7 +829,7 @@ func (ec *executionContext) _Mutation_capture(ctx context.Context, field graphql
 	}
 	res := resTmp.(*Tweet)
 	fc.Result = res
-	return ec.marshalOTweet2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx, field.Selections, res)
+	return ec.marshalOTweet2ᚖcapturetweetᚗcomᚋpkgᚋresolverᚐTweet(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_contact(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -910,7 +910,7 @@ func (ec *executionContext) _Query_tweet(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*Tweet)
 	fc.Result = res
-	return ec.marshalOTweet2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx, field.Selections, res)
+	return ec.marshalOTweet2ᚖcapturetweetᚗcomᚋpkgᚋresolverᚐTweet(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_search(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -949,7 +949,7 @@ func (ec *executionContext) _Query_search(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.([]*Tweet)
 	fc.Result = res
-	return ec.marshalOTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweetᚄ(ctx, field.Selections, res)
+	return ec.marshalOTweet2ᚕᚖcapturetweetᚗcomᚋpkgᚋresolverᚐTweetᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_searchByUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -988,7 +988,7 @@ func (ec *executionContext) _Query_searchByUser(ctx context.Context, field graph
 	}
 	res := resTmp.([]*Tweet)
 	fc.Result = res
-	return ec.marshalOTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweetᚄ(ctx, field.Selections, res)
+	return ec.marshalOTweet2ᚕᚖcapturetweetᚗcomᚋpkgᚋresolverᚐTweetᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1391,7 +1391,7 @@ func (ec *executionContext) _Tweet_author(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.(*Author)
 	fc.Result = res
-	return ec.marshalOAuthor2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐAuthor(ctx, field.Selections, res)
+	return ec.marshalOAuthor2ᚖcapturetweetᚗcomᚋpkgᚋresolverᚐAuthor(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Tweet_captureURL(ctx context.Context, field graphql.CollectedField, obj *Tweet) (ret graphql.Marshaler) {
@@ -1583,7 +1583,7 @@ func (ec *executionContext) _Tweet_resources(ctx context.Context, field graphql.
 	}
 	res := resTmp.([]*Resource)
 	fc.Result = res
-	return ec.marshalOResource2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2ᚕᚖcapturetweetᚗcomᚋpkgᚋresolverᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -3265,7 +3265,7 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) unmarshalNContactInput2comᚗcapturetweetᚋpkgᚋresolverᚐContactInput(ctx context.Context, v interface{}) (ContactInput, error) {
+func (ec *executionContext) unmarshalNContactInput2capturetweetᚗcomᚋpkgᚋresolverᚐContactInput(ctx context.Context, v interface{}) (ContactInput, error) {
 	res, err := ec.unmarshalInputContactInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -3300,7 +3300,7 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) unmarshalNSearchInput2comᚗcapturetweetᚋpkgᚋresolverᚐSearchInput(ctx context.Context, v interface{}) (SearchInput, error) {
+func (ec *executionContext) unmarshalNSearchInput2capturetweetᚗcomᚋpkgᚋresolverᚐSearchInput(ctx context.Context, v interface{}) (SearchInput, error) {
 	res, err := ec.unmarshalInputSearchInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -3320,7 +3320,7 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNTweet2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx context.Context, sel ast.SelectionSet, v *Tweet) graphql.Marshaler {
+func (ec *executionContext) marshalNTweet2ᚖcapturetweetᚗcomᚋpkgᚋresolverᚐTweet(ctx context.Context, sel ast.SelectionSet, v *Tweet) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -3602,7 +3602,7 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAuthor2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐAuthor(ctx context.Context, sel ast.SelectionSet, v *Author) graphql.Marshaler {
+func (ec *executionContext) marshalOAuthor2ᚖcapturetweetᚗcomᚋpkgᚋresolverᚐAuthor(ctx context.Context, sel ast.SelectionSet, v *Author) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -3663,7 +3663,7 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return graphql.MarshalInt(*v)
 }
 
-func (ec *executionContext) marshalOResource2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐResource(ctx context.Context, sel ast.SelectionSet, v []*Resource) graphql.Marshaler {
+func (ec *executionContext) marshalOResource2ᚕᚖcapturetweetᚗcomᚋpkgᚋresolverᚐResource(ctx context.Context, sel ast.SelectionSet, v []*Resource) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -3690,7 +3690,7 @@ func (ec *executionContext) marshalOResource2ᚕᚖcomᚗcapturetweetᚋpkgᚋre
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOResource2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐResource(ctx, sel, v[i])
+			ret[i] = ec.marshalOResource2ᚖcapturetweetᚗcomᚋpkgᚋresolverᚐResource(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -3704,7 +3704,7 @@ func (ec *executionContext) marshalOResource2ᚕᚖcomᚗcapturetweetᚋpkgᚋre
 	return ret
 }
 
-func (ec *executionContext) marshalOResource2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐResource(ctx context.Context, sel ast.SelectionSet, v *Resource) graphql.Marshaler {
+func (ec *executionContext) marshalOResource2ᚖcapturetweetᚗcomᚋpkgᚋresolverᚐResource(ctx context.Context, sel ast.SelectionSet, v *Resource) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -3750,7 +3750,7 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	return graphql.MarshalTime(*v)
 }
 
-func (ec *executionContext) marshalOTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweetᚄ(ctx context.Context, sel ast.SelectionSet, v []*Tweet) graphql.Marshaler {
+func (ec *executionContext) marshalOTweet2ᚕᚖcapturetweetᚗcomᚋpkgᚋresolverᚐTweetᚄ(ctx context.Context, sel ast.SelectionSet, v []*Tweet) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -3777,7 +3777,7 @@ func (ec *executionContext) marshalOTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresol
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTweet2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx, sel, v[i])
+			ret[i] = ec.marshalNTweet2ᚖcapturetweetᚗcomᚋpkgᚋresolverᚐTweet(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -3797,7 +3797,7 @@ func (ec *executionContext) marshalOTweet2ᚕᚖcomᚗcapturetweetᚋpkgᚋresol
 	return ret
 }
 
-func (ec *executionContext) marshalOTweet2ᚖcomᚗcapturetweetᚋpkgᚋresolverᚐTweet(ctx context.Context, sel ast.SelectionSet, v *Tweet) graphql.Marshaler {
+func (ec *executionContext) marshalOTweet2ᚖcapturetweetᚗcomᚋpkgᚋresolverᚐTweet(ctx context.Context, sel ast.SelectionSet, v *Tweet) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
