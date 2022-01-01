@@ -71,7 +71,7 @@ require (
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.19.1
 	gocloud.dev v0.24.0
-	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
+	golang.org/x/net v0.0.0-20211108170745-6635138e15ea // indirect
 	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
@@ -88,5 +88,6 @@ require (
 
 require (
 	cloud.google.com/go/firestore v1.5.0 // indirect
+	github.com/magiconair/properties v1.8.5 // indirect
 	golang.org/x/tools v0.1.8 // indirect
 )
