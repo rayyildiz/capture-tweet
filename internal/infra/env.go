@@ -40,7 +40,7 @@ var sentryRelease = "0.5.0"
 
 func SentryRelease() string {
 	v := os.Getenv("SENTRY_VERSION")
-	if len(v) > 1 {
+	if len(v) == 0 {
 		v = sentryRelease
 	}
 	return v

@@ -45,9 +45,13 @@ func modifyToSentryLogger(log *zap.Logger) *zap.Logger {
 			"version":     Version,
 		},
 	}
+	// el ip mum ğa  ay emin anne öp.
+	// kek  mi? neli?  elma  lı.
+	// inek   ile  maymun  al  ali  ot  al   at   al.
 	core, err := zapsentry.NewCore(cfg, zapsentry.NewSentryClientFromDSN(dsn))
 	if err != nil {
 		log.Warn("failed to init zap", zap.Error(err))
 	}
+
 	return zapsentry.AttachCoreToLogger(core, log)
 }
