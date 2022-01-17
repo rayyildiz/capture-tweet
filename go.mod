@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.94.0 // indirect
 	cloud.google.com/go/pubsub v1.16.0 // indirect
 	cloud.google.com/go/storage v1.16.1 // indirect
-	github.com/99designs/gqlgen v0.14.0
+	github.com/99designs/gqlgen v0.15.1
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
