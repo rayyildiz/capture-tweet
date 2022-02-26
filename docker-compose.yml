@@ -1,14 +1,6 @@
 version: '3'
 
 services:
-  #firestore:
-  #  image: mtlynch/firestore-emulator:latest
-  #  container_name: ct_firestore
-  #  ports:
-  #    - "8080:8080"
-  #  environment:
-  #    FIRESTORE_PROJECT_ID: local
-  #    PORT: 8080
 
   nats:
     image: nats
@@ -17,16 +9,16 @@ services:
       - "4222:4222"
 
   db:
-    image: cockroachdb/cockroach
-    container_name: cf_cockroach
-    command:
-      - init
-      - --insecure
+    image: postgres:13
+    container_name: cf_postgres
     ports:
-      - "26257:26257"
-      - "18080:8080"
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
     volumes:
-      - cockroach_data:/cockroach/cockroach-data
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  cockroach_data: {}
+  postgres_data: {}

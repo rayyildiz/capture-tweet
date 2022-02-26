@@ -3,9 +3,10 @@ package user
 
 import (
 	"context"
+	"fmt"
 	"time"
 
-	"gocloud.dev/docstore"
+	"github.com/jmoiron/sqlx"
 )
 
 type Repository interface {
@@ -16,44 +17,37 @@ type Repository interface {
 }
 
 type repositoryImpl struct {
-	coll *docstore.Collection
+	db *sqlx.DB
 }
 
-func NewRepository(coll *docstore.Collection) Repository {
-	return &repositoryImpl{
-		coll: coll,
-	}
+func NewRepository(db *sqlx.DB) Repository {
+	return &repositoryImpl{db}
 }
 
 func (r repositoryImpl) FindByUserName(ctx context.Context, userName string) (*User, error) {
 	user := &User{}
-	it := r.coll.Query().Where("username", "=", userName).Limit(1).Get(ctx)
-
-	err := it.Next(ctx, user)
+	err := r.db.GetContext(ctx, user, `select * from users where username = $1`, userName)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while getting data, %w", err)
 	}
 	return user, err
 }
 
 func (r repositoryImpl) FindById(ctx context.Context, id string) (*User, error) {
 	user := &User{ID: id}
-	err := r.coll.Get(ctx, user)
+	err := r.db.GetContext(ctx, user, `select * from users where id = $1`, id)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while getting data, %w", err)
 	}
 	return user, nil
 }
 
 func (r repositoryImpl) Store(ctx context.Context, userIdStr, userName, screenName, bio, profileImage string, registeredAt time.Time) error {
-	return r.coll.Put(ctx, &User{
-		ID:              userIdStr,
-		CreatedAt:       time.Now(),
-		UpdateAt:        time.Now(),
-		RegisterAt:      registeredAt,
-		Username:        userName,
-		ScreenName:      screenName,
-		Bio:             bio,
-		ProfileImageURL: profileImage,
-	})
+
+	_, err := r.db.ExecContext(ctx, "insert into users(id, username,screen_name,bio,profile_image_url, registered_at) values (?,?,?,?,?)", userIdStr, userName, screenName, bio, profileImage, registeredAt)
+
+	if err != nil {
+		return fmt.Errorf("wrror while inserting user, %w", err)
+	}
+	return nil
 }

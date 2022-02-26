@@ -3,10 +3,10 @@ package content
 
 import (
 	"context"
+	"github.com/jmoiron/sqlx"
 	"time"
 
 	"github.com/google/uuid"
-	"gocloud.dev/docstore"
 )
 
 type Repository interface {
@@ -14,22 +14,16 @@ type Repository interface {
 }
 
 type repositoryImpl struct {
-	contactUs *docstore.Collection
+	db *sqlx.DB
 }
 
-func NewRepository(contactUs *docstore.Collection) Repository {
-	return &repositoryImpl{
-		contactUs: contactUs,
-	}
+func NewRepository(db *sqlx.DB) Repository {
+	return &repositoryImpl{db}
 }
 
 func (r repositoryImpl) ContactUs(ctx context.Context, email, fullName, message string) error {
 	id := uuid.New().String()
-	return r.contactUs.Create(ctx, &ContactUs{
-		ID:        id,
-		CreatedAt: time.Now(),
-		Email:     email,
-		FullName:  fullName,
-		Message:   message,
-	})
+	_, err := r.db.ExecContext(ctx, `insert into contact_us(id, email, full_name, message, created_at)  values($1,$2,$3,$4,$5)`, id, email, fullName, message, time.Now())
+
+	return err
 }
