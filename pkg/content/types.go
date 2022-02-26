@@ -5,10 +5,9 @@ import (
 )
 
 type ContactUs struct {
-	ID               string    `docstore:"id"`
-	CreatedAt        time.Time `docstore:"created_at"`
-	Email            string    `docstore:"email"`
-	FullName         string    `docstore:"full_name"`
-	Message          string    `docstore:"message"`
-	DocstoreRevision interface{}
+	ID        string    `db:"id"`
+	CreatedAt time.Time `db:"created_at"`
+	Email     string    `db:"email"`
+	FullName  string    `db:"full_name"`
+	Message   string    `db:"message"`
 }

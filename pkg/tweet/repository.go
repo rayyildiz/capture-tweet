@@ -3,13 +3,11 @@ package tweet
 
 import (
 	"context"
-	"io"
-	"sort"
+	"fmt"
+	"github.com/jmoiron/sqlx"
 	"time"
 
 	"github.com/ChimeraCoder/anaconda"
-	"gocloud.dev/docstore"
-	"gocloud.dev/gcerrors"
 )
 
 type Repository interface {
@@ -25,21 +23,19 @@ type Repository interface {
 }
 
 type repositoryImpl struct {
-	coll *docstore.Collection
+	db *sqlx.DB
 }
 
-func NewRepository(coll *docstore.Collection) Repository {
-	return &repositoryImpl{
-		coll: coll,
-	}
+func NewRepository(db *sqlx.DB) Repository {
+	return &repositoryImpl{db}
 }
 
 // FindById returns a tweet by id. Return err if not found.
 func (r repositoryImpl) FindById(ctx context.Context, id string) (*Tweet, error) {
-	tweet := &Tweet{ID: id}
-	err := r.coll.Get(ctx, tweet)
+	tweet := &Tweet{}
+	err := r.db.GetContext(ctx, tweet, `select * from tweets where id=$1`, id)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while getting from database %w", err)
 	}
 
 	return tweet, nil
@@ -47,14 +43,14 @@ func (r repositoryImpl) FindById(ctx context.Context, id string) (*Tweet, error)
 
 // Exist returns true if the tweet exists. Otherwise, return false.
 func (r repositoryImpl) Exist(ctx context.Context, id string) bool {
-	tweet := &Tweet{ID: id}
+	var count int
 
-	err := r.coll.Get(ctx, tweet, "id")
-	code := gcerrors.Code(err)
-	if code == gcerrors.NotFound {
+	err := r.db.GetContext(ctx, &count, `select count(*) from tweets where id=$1`, id)
+	if err != nil {
 		return false
 	}
-	return true
+
+	return count == 0
 }
 
 // Store a tweet.
@@ -73,7 +69,8 @@ func (r repositoryImpl) Store(ctx context.Context, tweet *anaconda.Tweet) error 
 			MediaType: media.Type,
 		})
 	}
-	return r.coll.Create(ctx, &Tweet{
+
+	t := &Tweet{
 		ID:              tweet.IdStr,
 		CreatedAt:       time.Now(),
 		UpdatedAt:       time.Now(),
@@ -86,57 +83,48 @@ func (r repositoryImpl) Store(ctx context.Context, tweet *anaconda.Tweet) error 
 		RetweetCount:    tweet.RetweetCount,
 		AuthorID:        tweet.User.IdStr,
 		Resources:       resources,
-	})
+	}
+	_, err = r.db.ExecContext(ctx, `insert into tweets values(:id, :full_text, :capture_url, :capture_thumb_url, :lang, :resources, :author_id, :posted_at) `, t)
+	return err
 }
 
 // FindByIds returns a list of tweets by ids. Return err if not found.
 func (r repositoryImpl) FindByIds(ctx context.Context, ids []string) ([]Tweet, error) {
-	var list []Tweet
+	var tweets []Tweet
 
-	for _, id := range ids {
-		if tweet, err := r.FindById(ctx, id); err == nil {
-			list = append(list, *tweet)
-		}
+	err := r.db.SelectContext(ctx, &tweets, `select * from tweets where id in(?) order by posted_at`, ids)
+	if err != nil {
+		return nil, fmt.Errorf("error while getting tweets, %w", err)
 	}
 
-	sort.Sort(SortByPosted(list))
-
-	return list, nil
+	return tweets, nil
 }
 
 // FindByUser returns a list of tweets by user id.
 func (r repositoryImpl) FindByUser(ctx context.Context, userId string) ([]Tweet, error) {
-	iterator := r.coll.Query().Where("author_id", "=", userId).Limit(24).Get(ctx)
-	defer iterator.Stop()
 
 	var tweets []Tweet
-	for {
-		var tweet Tweet
-		err := iterator.Next(ctx, &tweet)
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			return nil, err
-		}
 
-		tweets = append(tweets, tweet)
+	err := r.db.SelectContext(ctx, &tweets, `select * from tweets where author_id=$1 order by posted_at limit 24`, userId)
+	if err != nil {
+		return nil, fmt.Errorf("error while getting tweets, %w", err)
 	}
-
-	sort.Sort(SortByPosted(tweets))
 
 	return tweets, nil
 }
 
 // UpdateLargeImage updates the large image of the tweet in the database.
 func (r repositoryImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {
-	tweet := &Tweet{ID: id}
-	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_url": captureUrl, "updated_at": time.Now()}).Do(ctx)
+	_, err := r.db.ExecContext(ctx, `update tweets set capture_url=$2 AND updated_at=$3 where id=$1`, id, captureUrl, time.Now())
+
+	return err
 }
 
 // UpdateThumbImage updates the thumb image of the tweet in the database.
 func (r repositoryImpl) UpdateThumbImage(ctx context.Context, id, captureUrl string) error {
-	tweet := &Tweet{ID: id}
-	return r.coll.Actions().Update(tweet, docstore.Mods{"capture_thumb_url": captureUrl, "updated_at": time.Now()}).Do(ctx)
+	_, err := r.db.ExecContext(ctx, `update tweets set capture_thumb_url=$2 AND updated_at=$3 where id=$1`, id, captureUrl, time.Now())
+
+	return err
 }
 
 // FindAllOrderByUpdated returns a list of tweets ordered by updated_at.
@@ -145,19 +133,9 @@ func (r repositoryImpl) FindAllOrderByUpdated(ctx context.Context, size int) ([]
 	ctx, cancel := context.WithTimeout(ctx, time.Second*5)
 	defer cancel()
 
-	it := r.coll.Query().Limit(size).OrderBy("updated_at", "desc").Get(ctx)
-
-	for {
-		var tweet Tweet
-		err := it.Next(ctx, &tweet)
-		if err == io.EOF {
-			break
-		}
-
-		if err != nil {
-			return nil, err
-		}
-		tweets = append(tweets, tweet)
+	err := r.db.SelectContext(ctx, tweets, `select * from tweets order by updated_at desc limit $1`, size)
+	if err != nil {
+		return nil, err
 	}
 
 	return tweets, nil

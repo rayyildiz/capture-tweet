@@ -88,6 +88,7 @@ require (
 
 require (
 	cloud.google.com/go/firestore v1.5.0 // indirect
+	github.com/jmoiron/sqlx v1.3.4 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	golang.org/x/tools v0.1.8 // indirect
 )
