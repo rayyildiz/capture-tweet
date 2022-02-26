@@ -1,24 +1,52 @@
 package tweet
 
 import (
+	"capturetweet.com/internal/infra/database"
 	"context"
 	"testing"
 	"time"
 
-	"capturetweet.com/internal/infra"
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestRepository_Store(t *testing.T) {
-	coll := infra.NewDocstore("mem://collection/id")
-	defer coll.Close()
+	db := database.NewInmemoryDb()
+	defer db.Close()
+
+	_, err := db.Exec(`CREATE TABLE users
+(
+    id                text      not null primary key,
+    username          text      not null,
+    screen_name       text      not null,
+    bio               text,
+    profile_image_url text,
+    registered_at     timestamp not null,
+    created_at        timestamp,
+    updated_at        timestamp
+);
+CREATE TABLE tweets
+(
+    id                text      not null primary key,
+    full_text         text      not null,
+    capture_url       text,
+    capture_thumb_url text,
+    lang              text      not null,
+    favorite_count    int       not null default 0,
+    retweet_count     int       not null default 0,
+    resources         jsonb,
+    author_id         text      not null references users (id),
+    posted_at         timestamp not null,
+    created_at        timestamp,
+    updated_at        timestamp          
+)`)
+	require.NoError(t, err)
 
 	ctx := context.Background()
 
-	repo := NewRepository(coll)
-	err := repo.Store(ctx, &anaconda.Tweet{
+	repo := NewRepository(db)
+	err = repo.Store(ctx, &anaconda.Tweet{
 		IdStr:         "1",
 		RetweetCount:  4,
 		FavoriteCount: 9,
@@ -29,12 +57,41 @@ func TestRepository_Store(t *testing.T) {
 }
 
 func TestRepository_Exist(t *testing.T) {
-	coll := infra.NewDocstore("mem://collection/id")
-	defer coll.Close()
+	db := database.NewInmemoryDb()
+	defer db.Close()
+
+	_, err := db.Exec(`CREATE TABLE users
+(
+    id                text      not null primary key,
+    username          text      not null,
+    screen_name       text      not null,
+    bio               text,
+    profile_image_url text,
+    registered_at     timestamp not null,
+    created_at        timestamp,
+    updated_at        timestamp
+);
+CREATE TABLE tweets
+(
+    id                text      not null primary key,
+    full_text         text      not null,
+    capture_url       text,
+    capture_thumb_url text,
+    lang              text      not null,
+    favorite_count    int       not null default 0,
+    retweet_count     int       not null default 0,
+    resources         jsonb,
+    author_id         text      not null references users (id),
+    posted_at         timestamp not null,
+    created_at        timestamp,
+    updated_at        timestamp          
+)`)
+	require.NoError(t, err)
+
 	ctx := context.Background()
 
-	repo := NewRepository(coll)
-	err := repo.Store(ctx, &anaconda.Tweet{IdStr: "testId1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
+	repo := NewRepository(db)
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "testId1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
 	require.NoError(t, err)
 
 	b := repo.Exist(ctx, "testId1")
@@ -42,13 +99,41 @@ func TestRepository_Exist(t *testing.T) {
 }
 
 func TestRepository_FindByIds(t *testing.T) {
-	coll := infra.NewDocstore("mem://collection/id")
-	defer coll.Close()
+	db := database.NewInmemoryDb()
+	defer db.Close()
+
+	_, err := db.Exec(`CREATE TABLE users
+(
+    id                text      not null primary key,
+    username          text      not null,
+    screen_name       text      not null,
+    bio               text,
+    profile_image_url text,
+    registered_at     timestamp not null,
+    created_at        timestamp,
+    updated_at        timestamp
+);
+CREATE TABLE tweets
+(
+    id                text      not null primary key,
+    full_text         text      not null,
+    capture_url       text,
+    capture_thumb_url text,
+    lang              text      not null,
+    favorite_count    int       not null default 0,
+    retweet_count     int       not null default 0,
+    resources         jsonb,
+    author_id         text      not null references users (id),
+    posted_at         timestamp not null,
+    created_at        timestamp,
+    updated_at        timestamp          
+)`)
+	require.NoError(t, err)
 
 	ctx := context.Background()
 
-	repo := NewRepository(coll)
-	err := repo.Store(ctx, &anaconda.Tweet{IdStr: "1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
+	repo := NewRepository(db)
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
 	require.NoError(t, err)
 
 	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "2", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
@@ -66,13 +151,41 @@ func TestRepository_FindByIds(t *testing.T) {
 }
 
 func TestRepository_UpdateThumbImage(t *testing.T) {
-	coll := infra.NewDocstore("mem://collection/id")
-	defer coll.Close()
+	db := database.NewInmemoryDb()
+	defer db.Close()
+
+	_, err := db.Exec(`CREATE TABLE users
+(
+    id                text      not null primary key,
+    username          text      not null,
+    screen_name       text      not null,
+    bio               text,
+    profile_image_url text,
+    registered_at     timestamp not null,
+    created_at        timestamp,
+    updated_at        timestamp
+);
+CREATE TABLE tweets
+(
+    id                text      not null primary key,
+    full_text         text      not null,
+    capture_url       text,
+    capture_thumb_url text,
+    lang              text      not null,
+    favorite_count    int       not null default 0,
+    retweet_count     int       not null default 0,
+    resources         jsonb,
+    author_id         text      not null references users (id),
+    posted_at         timestamp not null,
+    created_at        timestamp,
+    updated_at        timestamp          
+)`)
+	require.NoError(t, err)
 
 	ctx := context.Background()
 
-	repo := NewRepository(coll)
-	err := repo.Store(ctx, &anaconda.Tweet{IdStr: "1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
+	repo := NewRepository(db)
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
 	require.NoError(t, err)
 
 	err = repo.UpdateThumbImage(ctx, "1", "image1.png")
@@ -89,14 +202,42 @@ func TestRepository_UpdateThumbImage(t *testing.T) {
 }
 
 func TestRepository_FindByUser(t *testing.T) {
-	coll := infra.NewDocstore("mem://collection/id")
-	defer coll.Close()
+	db := database.NewInmemoryDb()
+	defer db.Close()
+
+	_, err := db.Exec(`CREATE TABLE users
+(
+    id                text      not null primary key,
+    username          text      not null,
+    screen_name       text      not null,
+    bio               text,
+    profile_image_url text,
+    registered_at     timestamp not null,
+    created_at        timestamp,
+    updated_at        timestamp
+);
+CREATE TABLE tweets
+(
+    id                text      not null primary key,
+    full_text         text      not null,
+    capture_url       text,
+    capture_thumb_url text,
+    lang              text      not null,
+    favorite_count    int       not null default 0,
+    retweet_count     int       not null default 0,
+    resources         jsonb,
+    author_id         text      not null references users (id),
+    posted_at         timestamp not null,
+    created_at        timestamp,
+    updated_at        timestamp          
+)`)
+	require.NoError(t, err)
 
 	ctx := context.Background()
 
-	repo := NewRepository(coll)
+	repo := NewRepository(db)
 
-	err := repo.Store(ctx, &anaconda.Tweet{IdStr: "x1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "123"}})
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "x1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "123"}})
 	require.NoError(t, err)
 
 	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "ay2", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "123"}})

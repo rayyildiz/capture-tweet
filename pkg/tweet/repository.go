@@ -84,7 +84,7 @@ func (r repositoryImpl) Store(ctx context.Context, tweet *anaconda.Tweet) error 
 		AuthorID:        tweet.User.IdStr,
 		Resources:       resources,
 	}
-	_, err = r.db.ExecContext(ctx, `insert into tweets values(:id, :full_text, :capture_url, :capture_thumb_url, :lang, :resources, :author_id, :posted_at) `, t)
+	_, err = r.db.NamedExecContext(ctx, `insert into tweets(id, full_text, capture_url, capture_thumb_url, lang, author_id, posted_at) values(:id, :full_text, :capture_url, :capture_thumb_url, :lang, :author_id, :posted_at) `, t)
 	return err
 }
 
