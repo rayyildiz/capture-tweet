@@ -1,28 +1,24 @@
 package content
 
 import (
-	"capturetweet.com/internal/infra/database"
+	"capturetweet.com/internal/ent/enttest"
 	"context"
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func TestRepository_ContactUS(t *testing.T) {
-	db := database.NewInmemoryDb()
-	defer db.Close()
+	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	defer client.Close()
 
-	_, err := db.Exec(`CREATE TABLE contact_us
-(
-    id         text primary key,
-    email      text,
-    full_name  text,
-    message    text,
-    created_at timestamp
-)`)
+	ctx := context.Background()
+	err := client.Schema.Create(ctx)
 	require.NoError(t, err)
 
-	repo := NewRepository(db)
+	repo := NewRepository(client)
 
 	err = repo.ContactUs(context.Background(), "test", "ramazan", "hello")
 	require.NoError(t, err)

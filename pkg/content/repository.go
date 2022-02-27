@@ -2,10 +2,8 @@
 package content
 
 import (
+	"capturetweet.com/internal/ent"
 	"context"
-	"github.com/jmoiron/sqlx"
-	"time"
-
 	"github.com/google/uuid"
 )
 
@@ -14,16 +12,16 @@ type Repository interface {
 }
 
 type repositoryImpl struct {
-	db *sqlx.DB
+	db *ent.Client
 }
 
-func NewRepository(db *sqlx.DB) Repository {
+func NewRepository(db *ent.Client) Repository {
 	return &repositoryImpl{db}
 }
 
 func (r repositoryImpl) ContactUs(ctx context.Context, email, fullName, message string) error {
 	id := uuid.New().String()
-	_, err := r.db.ExecContext(ctx, `insert into contact_us(id, email, full_name, message, created_at)  values($1,$2,$3,$4,$5)`, id, email, fullName, message, time.Now())
 
+	_, err := r.db.ContactUs.Create().SetID(id).SetMessage(message).SetFullName(fullName).SetEmail(email).Save(ctx)
 	return err
 }

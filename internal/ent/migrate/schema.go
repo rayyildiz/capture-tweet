@@ -8,6 +8,21 @@ import (
 )
 
 var (
+	// ContactUsColumns holds the columns for the "contact_us" table.
+	ContactUsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "email", Type: field.TypeString},
+		{Name: "full_name", Type: field.TypeString, Nullable: true, Size: 512},
+		{Name: "message", Type: field.TypeString, Nullable: true, Size: 4096},
+	}
+	// ContactUsTable holds the schema information for the "contact_us" table.
+	ContactUsTable = &schema.Table{
+		Name:       "contact_us",
+		Columns:    ContactUsColumns,
+		PrimaryKey: []*schema.Column{ContactUsColumns[0]},
+	}
 	// TweetsColumns holds the columns for the "tweets" table.
 	TweetsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 32},
@@ -56,6 +71,7 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		ContactUsTable,
 		TweetsTable,
 		UsersTable,
 	}

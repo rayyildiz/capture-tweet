@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 
+	"capturetweet.com/internal/ent/contactus"
 	"capturetweet.com/internal/ent/tweet"
 	"capturetweet.com/internal/ent/user"
 	"entgo.io/ent"
@@ -30,8 +31,9 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		tweet.Table: tweet.ValidColumn,
-		user.Table:  user.ValidColumn,
+		contactus.Table: contactus.ValidColumn,
+		tweet.Table:     tweet.ValidColumn,
+		user.Table:      user.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {
