@@ -30,13 +30,12 @@ func Run() error {
 	defer sentry.Flush(time.Second * 2)
 	start := time.Now()
 
-	tweetColl := infra.NewTweetCollection()
-	defer tweetColl.Close()
+	client := infra.NewPostgresDatabase()
 
 	bucket := infra.NewBucketFromEnvironment()
 	defer bucket.Close()
 
-	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), nil, nil, nil, nil)
+	tweetService := tweet.NewService(tweet.NewRepository(client), nil, nil, nil, nil)
 	if tweetService == nil {
 		return fmt.Errorf("tweet service is nil")
 	}

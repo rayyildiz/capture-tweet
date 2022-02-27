@@ -16,8 +16,8 @@ import (
 // Injectors from wire.go:
 
 func initializeBrowserService() api.BrowserService {
-	collection := infra.NewTweetCollection()
-	repository := tweet.NewRepository(collection)
+	client := infra.NewPostgresDatabase()
+	repository := tweet.NewRepository(client)
 	tweetService := tweet.NewServiceWithRepository(repository)
 	bucket := infra.NewBucketFromEnvironment()
 	browserService := browser.NewService(tweetService, bucket)

@@ -18,10 +18,8 @@ func TestRun(t *testing.T) {
 	port := rand.Intn(2000) + 30010
 	log.Printf("port is %d", port)
 
-	os.Setenv("DOCSTORE_TWEETS", "mem://tweet/ID")
+	os.Setenv("POSTGRES_CONNECTION", "host=localhost port=5432 user=postgres password=postgres")
 	os.Setenv("BLOB_BUCKET", "mem://bucket")
-	os.Setenv("DOCSTORE_USERS", "mem://users/ID")
-	os.Setenv("DOCSTORE_CONTACT_US", "mem://contact/ID")
 	os.Setenv("TOPIC_CAPTURE", "mem://topic1")
 	os.Setenv("ALGOLIA_SECRET", "secret")
 	os.Setenv("ALGOLIA_CLIENT_ID", "client")
