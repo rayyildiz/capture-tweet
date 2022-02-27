@@ -2,11 +2,11 @@
 package user
 
 import (
+	"capturetweet.com/internal/ent"
+	"capturetweet.com/internal/ent/user"
 	"context"
 	"fmt"
 	"time"
-
-	"github.com/jmoiron/sqlx"
 )
 
 type Repository interface {
@@ -17,34 +17,44 @@ type Repository interface {
 }
 
 type repositoryImpl struct {
-	db *sqlx.DB
+	db *ent.Client
 }
 
-func NewRepository(db *sqlx.DB) Repository {
+func NewRepository(db *ent.Client) Repository {
 	return &repositoryImpl{db}
 }
 
+func toUser(u *ent.User) *User {
+	return &User{
+		ID:              u.ID,
+		CreatedAt:       u.CreatedAt,
+		UpdateAt:        u.UpdatedAt,
+		RegisterAt:      u.RegisteredAt,
+		Username:        u.Username,
+		ScreenName:      u.ScreenName,
+		Bio:             u.Bio,
+		ProfileImageURL: u.ProfileImageURL,
+	}
+}
+
 func (r repositoryImpl) FindByUserName(ctx context.Context, userName string) (*User, error) {
-	user := &User{}
-	err := r.db.GetContext(ctx, user, `select * from users where username = $1`, userName)
+	u, err := r.db.User.Query().Where(user.Username(userName)).First(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error while getting data, %w", err)
 	}
-	return user, err
+	return toUser(u), nil
 }
 
 func (r repositoryImpl) FindById(ctx context.Context, id string) (*User, error) {
-	user := &User{ID: id}
-	err := r.db.GetContext(ctx, user, `select * from users where id = $1`, id)
+	u, err := r.db.User.Get(ctx, id)
 	if err != nil {
 		return nil, fmt.Errorf("error while getting data, %w", err)
 	}
-	return user, nil
+	return toUser(u), nil
 }
 
 func (r repositoryImpl) Store(ctx context.Context, userIdStr, userName, screenName, bio, profileImage string, registeredAt time.Time) error {
-
-	_, err := r.db.ExecContext(ctx, "insert into users(id, username,screen_name,bio,profile_image_url, registered_at) values (?,?,?,?,?)", userIdStr, userName, screenName, bio, profileImage, registeredAt)
+	_, err := r.db.User.Create().SetID(userIdStr).SetUsername(userName).SetScreenName(screenName).SetBio(bio).SetProfileImageURL(profileImage).SetRegisteredAt(registeredAt).Save(ctx)
 
 	if err != nil {
 		return fmt.Errorf("wrror while inserting user, %w", err)

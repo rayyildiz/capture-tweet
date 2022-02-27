@@ -12,7 +12,7 @@ import (
 )
 
 func initializeBrowserService() api.BrowserService {
-	wire.Build(infra.NewTweetCollection, infra.NewBucketFromEnvironment, tweet.NewRepository, tweet.NewServiceWithRepository, browser.NewService)
+	wire.Build(infra.NewPostgresDatabase, infra.NewBucketFromEnvironment, tweet.NewRepository, tweet.NewServiceWithRepository, browser.NewService)
 
 	return nil
 }

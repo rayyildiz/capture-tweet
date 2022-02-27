@@ -6,7 +6,7 @@ import (
 )
 
 func TestInitializeBrowserService(t *testing.T) {
-	os.Setenv("DOCSTORE_TWEETS", "mem://tweets/id")
+	os.Setenv("POSTGRES_CONNECTION", "host=localhost port=5432 user=postgres password=postgres")
 	os.Setenv("BLOB_BUCKET", "mem://file")
 
 	s := initializeBrowserService()

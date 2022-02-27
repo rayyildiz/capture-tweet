@@ -1,35 +1,44 @@
 package user
 
 import (
+	"capturetweet.com/internal/ent"
+	"capturetweet.com/internal/ent/enttest"
 	"context"
 	"testing"
 	"time"
 
-	"capturetweet.com/internal/infra"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"gocloud.dev/gcerrors"
 )
 
 func TestRepository_Store(t *testing.T) {
-	coll := infra.NewDocstore("mem://collection/id")
-	defer coll.Close()
+	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	defer client.Close()
 
-	repo := NewRepository(coll)
+	ctx := context.Background()
+	err := client.Schema.Create(ctx)
+	require.NoError(t, err)
 
-	err := repo.Store(context.Background(), "testId", "username", "display name", "Bio", "profile.png", time.Now())
+	repo := NewRepository(client)
+
+	err = repo.Store(context.Background(), "testId", "username", "display name", "Bio", "profile.png", time.Now())
 	require.NoError(t, err)
 }
 
 func TestRepository_FindById(t *testing.T) {
-	coll := infra.NewDocstore("mem://collection2/id")
-	defer coll.Close()
+	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	defer client.Close()
 
-	repo := NewRepository(coll)
+	ctx := context.Background()
+	err := client.Schema.Create(ctx)
+	require.NoError(t, err)
+
+	repo := NewRepository(client)
 
 	id := "1270800178421706753"
 
-	err := repo.Store(context.Background(), id, "test", "screenName", "Bio", "profile.png", time.Now())
+	err = repo.Store(context.Background(), id, "test", "screenName", "Bio", "profile.png", time.Now())
 	require.NoError(t, err)
 
 	user, err := repo.FindById(context.Background(), id)
@@ -41,11 +50,14 @@ func TestRepository_FindById(t *testing.T) {
 }
 
 func TestRepository_FindByUserName(t *testing.T) {
-	coll := infra.NewDocstore("mem://collection3/id")
-	defer coll.Close()
+	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	defer client.Close()
 
-	repo := NewRepository(coll)
 	ctx := context.Background()
+	err := client.Schema.Create(ctx)
+	require.NoError(t, err)
+
+	repo := NewRepository(client)
 
 	require.NoError(t, repo.Store(ctx, "1", "test1", "screenName 1", "Bio", "profile1.png", time.Now()))
 	require.NoError(t, repo.Store(ctx, "2", "test2", "screenName 2", "Bio", "profile2.png", time.Now()))
@@ -60,16 +72,20 @@ func TestRepository_FindByUserName(t *testing.T) {
 }
 
 func TestRepository_FindById_NotFound(t *testing.T) {
-	coll := infra.NewDocstore("mem://collection4/id")
-	defer coll.Close()
+	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	defer client.Close()
 
-	repo := NewRepository(coll)
+	ctx := context.Background()
+	err := client.Schema.Create(ctx)
+	require.NoError(t, err)
+
+	repo := NewRepository(client)
 
 	user, err := repo.FindById(context.Background(), "1")
 
 	if assert.Nil(t, user) {
 		assert.Error(t, err, "record not found")
-		code := gcerrors.Code(err)
-		assert.Equal(t, code, gcerrors.NotFound)
+		notExist := ent.IsNotFound(err)
+		assert.True(t, notExist)
 	}
 }

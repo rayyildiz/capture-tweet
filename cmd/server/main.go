@@ -39,15 +39,7 @@ func Run() error {
 	defer sentry.Flush(time.Second * 2)
 
 	start := time.Now()
-
-	tweetColl := infra.NewTweetCollection()
-	defer tweetColl.Close()
-
-	userColl := infra.NewUserCollection()
-	defer userColl.Close()
-
-	contactUsColl := infra.NewContactUsCollection()
-	defer contactUsColl.Close()
+	client := infra.NewPostgresDatabase()
 
 	topic := infra.NewTopic(os.Getenv("TOPIC_CAPTURE"))
 	defer topic.Shutdown(context.Background())
@@ -64,17 +56,17 @@ func Run() error {
 		return fmt.Errorf("search:NewService is nil")
 	}
 
-	userService := user.NewService(user.NewRepository(userColl))
+	userService := user.NewService(user.NewRepository(client))
 	if userService == nil {
 		return fmt.Errorf("user:NewService is nil")
 	}
 
-	tweetService := tweet.NewService(tweet.NewRepository(tweetColl), searchService, userService, twitterApi, topic)
+	tweetService := tweet.NewService(tweet.NewRepository(client), searchService, userService, twitterApi, topic)
 	if tweetService == nil {
 		return fmt.Errorf("tweet:NewService is nil")
 	}
 
-	contentService := content.NewService(content.NewRepository(contactUsColl))
+	contentService := content.NewService(content.NewRepository(client))
 	if contentService == nil {
 		return fmt.Errorf("content service is nil")
 	}

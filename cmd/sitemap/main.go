@@ -31,15 +31,14 @@ func Run() error {
 
 	start := time.Now()
 
-	tweetColl := infra.NewTweetCollection()
-	defer tweetColl.Close()
+	client := infra.NewPostgresDatabase()
 
 	bucket := infra.NewBucketFromEnvironment()
 
 	defer bucket.Close()
 
 	h := handlerImpl{
-		repo:   tweet.NewRepository(tweetColl),
+		repo:   tweet.NewRepository(client),
 		bucket: bucket,
 	}
 
