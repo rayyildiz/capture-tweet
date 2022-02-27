@@ -2,9 +2,12 @@
 package tweet
 
 import (
+	"capturetweet.com/internal/convert"
+	"capturetweet.com/internal/ent"
+	"capturetweet.com/internal/ent/schema"
+	"capturetweet.com/internal/ent/tweet"
 	"context"
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"time"
 
 	"github.com/ChimeraCoder/anaconda"
@@ -23,34 +26,76 @@ type Repository interface {
 }
 
 type repositoryImpl struct {
-	db *sqlx.DB
+	db *ent.Client
 }
 
-func NewRepository(db *sqlx.DB) Repository {
+func NewRepository(db *ent.Client) Repository {
 	return &repositoryImpl{db}
 }
 
 // FindById returns a tweet by id. Return err if not found.
 func (r repositoryImpl) FindById(ctx context.Context, id string) (*Tweet, error) {
-	tweet := &Tweet{}
-	err := r.db.GetContext(ctx, tweet, `select * from tweets where id=$1`, id)
+	t, err := r.db.Tweet.Get(ctx, id)
 	if err != nil {
 		return nil, fmt.Errorf("error while getting from database %w", err)
 	}
 
-	return tweet, nil
+	return &Tweet{
+		ID:              t.ID,
+		CreatedAt:       t.CreatedAt,
+		UpdatedAt:       t.UpdatedAt,
+		PostedAt:        t.PostedAt,
+		FullText:        t.FullText,
+		CaptureURL:      convert.String(t.CaptureURL),
+		CaptureThumbURL: convert.String(t.CaptureThumbURL),
+		Lang:            t.Lang,
+		FavoriteCount:   t.FavoriteCount,
+		RetweetCount:    t.RetweetCount,
+		AuthorID:        t.AuthorID,
+		Resources:       toResource(t),
+	}, nil
+}
+
+func toResource(t *ent.Tweet) []Resource {
+	var list []Resource
+
+	for _, r := range t.Resources {
+		list = append(list, Resource{
+			URL:       r.URL,
+			Width:     r.Width,
+			Height:    r.Height,
+			MediaType: r.MediaType,
+		})
+	}
+	return list
+}
+
+func toTweet(l *ent.Tweet) Tweet {
+	return Tweet{
+		ID:              l.ID,
+		CreatedAt:       l.CreatedAt,
+		UpdatedAt:       l.UpdatedAt,
+		PostedAt:        l.PostedAt,
+		FullText:        l.FullText,
+		CaptureURL:      convert.String(l.CaptureURL),
+		CaptureThumbURL: convert.String(l.CaptureThumbURL),
+		Lang:            l.Lang,
+		FavoriteCount:   l.FavoriteCount,
+		RetweetCount:    l.RetweetCount,
+		AuthorID:        l.AuthorID,
+		Resources:       toResource(l),
+	}
 }
 
 // Exist returns true if the tweet exists. Otherwise, return false.
 func (r repositoryImpl) Exist(ctx context.Context, id string) bool {
-	var count int
+	exist, err := r.db.Tweet.Query().Where(tweet.ID(id)).Exist(ctx)
 
-	err := r.db.GetContext(ctx, &count, `select count(*) from tweets where id=$1`, id)
 	if err != nil {
 		return false
 	}
 
-	return count == 0
+	return exist
 }
 
 // Store a tweet.
@@ -59,42 +104,45 @@ func (r repositoryImpl) Store(ctx context.Context, tweet *anaconda.Tweet) error 
 	if err != nil {
 		postedAt = time.Now()
 	}
-	var resources []Resource
+	var resources []schema.Resource
 	for _, media := range tweet.Entities.Media {
-		resources = append(resources, Resource{
-			ID:        media.Id_str,
+		resources = append(resources, schema.Resource{
 			URL:       media.Media_url_https,
 			Width:     media.Sizes.Medium.H,
 			Height:    media.Sizes.Medium.W,
 			MediaType: media.Type,
 		})
 	}
-
-	t := &Tweet{
-		ID:              tweet.IdStr,
-		CreatedAt:       time.Now(),
-		UpdatedAt:       time.Now(),
-		PostedAt:        postedAt,
-		FullText:        tweet.FullText,
-		CaptureURL:      nil,
-		CaptureThumbURL: nil,
-		Lang:            tweet.Lang,
-		FavoriteCount:   tweet.FavoriteCount,
-		RetweetCount:    tweet.RetweetCount,
-		AuthorID:        tweet.User.IdStr,
-		Resources:       resources,
+	_, err = r.db.Tweet.Create().SetID(tweet.IdStr).
+		SetPostedAt(postedAt).
+		SetFullText(tweet.FullText).
+		SetLang(tweet.Lang).
+		SetResources(resources).
+		SetCreatedAt(time.Now()).
+		SetCaptureURL("").
+		SetCaptureThumbURL("").
+		SetFavoriteCount(tweet.FavoriteCount).
+		SetRetweetCount(tweet.RetweetCount).
+		SetAuthorID(tweet.User.IdStr).
+		Save(ctx)
+	if err != nil {
+		return fmt.Errorf("error while inserting tweet %w", err)
 	}
-	_, err = r.db.NamedExecContext(ctx, `insert into tweets(id, full_text, capture_url, capture_thumb_url, lang, author_id, posted_at) values(:id, :full_text, :capture_url, :capture_thumb_url, :lang, :author_id, :posted_at) `, t)
-	return err
+
+	return nil
 }
 
 // FindByIds returns a list of tweets by ids. Return err if not found.
 func (r repositoryImpl) FindByIds(ctx context.Context, ids []string) ([]Tweet, error) {
 	var tweets []Tweet
 
-	err := r.db.SelectContext(ctx, &tweets, `select * from tweets where id in(?) order by posted_at`, ids)
+	list, err := r.db.Tweet.Query().Where(tweet.IDIn(ids...)).All(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("error while getting tweets, %w", err)
+		return nil, fmt.Errorf("error wh,le getting tweets, %w", err)
+	}
+
+	for _, l := range list {
+		tweets = append(tweets, toTweet(l))
 	}
 
 	return tweets, nil
@@ -102,27 +150,29 @@ func (r repositoryImpl) FindByIds(ctx context.Context, ids []string) ([]Tweet, e
 
 // FindByUser returns a list of tweets by user id.
 func (r repositoryImpl) FindByUser(ctx context.Context, userId string) ([]Tweet, error) {
-
 	var tweets []Tweet
 
-	err := r.db.SelectContext(ctx, &tweets, `select * from tweets where author_id=$1 order by posted_at limit 24`, userId)
+	list, err := r.db.Tweet.Query().Where(tweet.AuthorID(userId)).Limit(24).All(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error while getting tweets, %w", err)
 	}
 
+	for _, l := range list {
+		tweets = append(tweets, toTweet(l))
+	}
 	return tweets, nil
 }
 
 // UpdateLargeImage updates the large image of the tweet in the database.
 func (r repositoryImpl) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {
-	_, err := r.db.ExecContext(ctx, `update tweets set capture_url=$2 AND updated_at=$3 where id=$1`, id, captureUrl, time.Now())
+	_, err := r.db.Tweet.Update().SetCaptureURL(captureUrl).Where(tweet.ID(id)).Save(ctx)
 
 	return err
 }
 
 // UpdateThumbImage updates the thumb image of the tweet in the database.
 func (r repositoryImpl) UpdateThumbImage(ctx context.Context, id, captureUrl string) error {
-	_, err := r.db.ExecContext(ctx, `update tweets set capture_thumb_url=$2 AND updated_at=$3 where id=$1`, id, captureUrl, time.Now())
+	_, err := r.db.Tweet.Update().SetCaptureThumbURL(captureUrl).Where(tweet.ID(id)).Save(ctx)
 
 	return err
 }
@@ -133,9 +183,13 @@ func (r repositoryImpl) FindAllOrderByUpdated(ctx context.Context, size int) ([]
 	ctx, cancel := context.WithTimeout(ctx, time.Second*5)
 	defer cancel()
 
-	err := r.db.SelectContext(ctx, tweets, `select * from tweets order by updated_at desc limit $1`, size)
+	list, err := r.db.Tweet.Query().Order(ent.Desc(tweet.FieldPostedAt)).Limit(24).All(ctx)
 	if err != nil {
 		return nil, err
+	}
+
+	for _, l := range list {
+		tweets = append(tweets, toTweet(l))
 	}
 
 	return tweets, nil
