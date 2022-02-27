@@ -3,10 +3,10 @@ module capturetweet.com
 go 1.17
 
 require (
-	cloud.google.com/go v0.94.0 // indirect
+	cloud.google.com/go v0.100.2 // indirect
 	cloud.google.com/go/pubsub v1.16.0 // indirect
-	cloud.google.com/go/storage v1.16.1 // indirect
-	github.com/99designs/gqlgen v0.16.0
+	cloud.google.com/go/storage v1.21.0 // indirect
+	github.com/99designs/gqlgen v0.14.0
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
@@ -14,7 +14,7 @@ require (
 	github.com/Microsoft/hcsshim v0.8.17 // indirect
 	github.com/TheZeroSlave/zapsentry v1.9.0
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/algolia/algoliasearch-client-go/v3 v3.23.0
+	github.com/algolia/algoliasearch-client-go/v3 v3.22.0
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/chromedp/cdproto v0.0.0-20211226214557-5a9a0564ad26
@@ -38,10 +38,10 @@ require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/mock v1.6.0
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-cmp v0.5.6 // indirect
+	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
-	github.com/googleapis/gax-go/v2 v2.1.0 // indirect
+	github.com/googleapis/gax-go/v2 v2.1.1 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
@@ -62,35 +62,54 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rs/cors v1.8.2
 	github.com/sirupsen/logrus v1.8.1 // indirect
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.7.1-0.20210427113832-6241f9ab9942
 	github.com/testcontainers/testcontainers-go v0.12.0
-	github.com/vektah/gqlparser/v2 v2.3.1
+	github.com/vektah/gqlparser/v2 v2.2.0
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/goleak v1.1.12
 	go.uber.org/multierr v1.7.0 // indirect
-	go.uber.org/zap v1.21.0
+	go.uber.org/zap v1.19.1
 	gocloud.dev v0.24.0
-	golang.org/x/net v0.0.0-20211108170745-6635138e15ea // indirect
-	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f // indirect
+	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
+	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
+	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
-	google.golang.org/api v0.56.0 // indirect
+	google.golang.org/api v0.69.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20210831024726-fe130286e0e2 // indirect
-	google.golang.org/grpc v1.40.0 // indirect
+	google.golang.org/genproto v0.0.0-20220216160803-4663080d8bc8 // indirect
+	google.golang.org/grpc v1.44.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
 require (
-	cloud.google.com/go/firestore v1.5.0 // indirect
-	github.com/jmoiron/sqlx v1.3.4 // indirect
-	github.com/lib/pq v1.10.4 // indirect
+	entgo.io/ent v0.10.0
+	github.com/jmoiron/sqlx v1.3.4
+	github.com/lib/pq v1.10.4
+	github.com/mattn/go-sqlite3 v1.14.11
+)
+
+require (
+	ariga.io/atlas v0.3.2-0.20220120225051-c3fac7d636dd // indirect
+	cloud.google.com/go/compute v1.2.0 // indirect
+	cloud.google.com/go/firestore v1.6.1 // indirect
+	cloud.google.com/go/iam v0.1.1 // indirect
+	github.com/agext/levenshtein v1.2.1 // indirect
+	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
+	github.com/census-instrumentation/opencensus-proto v0.3.0 // indirect
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/cncf/udpa/go v0.0.0-20210930031921-04548b0d99d4 // indirect
+	github.com/cncf/xds/go v0.0.0-20211130200136-a8f946100490 // indirect
+	github.com/envoyproxy/go-control-plane v0.10.1 // indirect
+	github.com/envoyproxy/protoc-gen-validate v0.6.2 // indirect
+	github.com/go-openapi/inflect v0.19.0 // indirect
+	github.com/hashicorp/hcl/v2 v2.10.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
-	github.com/mattn/go-sqlite3 v1.14.11 // indirect
-	golang.org/x/tools v0.1.8 // indirect
+	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
+	github.com/zclconf/go-cty v1.8.0 // indirect
+	golang.org/x/mod v0.5.1 // indirect
 )

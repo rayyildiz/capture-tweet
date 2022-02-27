@@ -1,7 +1,7 @@
 package tweet
 
 import (
-	"capturetweet.com/internal/infra/database"
+	"capturetweet.com/internal/ent/enttest"
 	"context"
 	"testing"
 	"time"
@@ -9,89 +9,47 @@ import (
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func TestRepository_Store(t *testing.T) {
-	db := database.NewInmemoryDb()
-	defer db.Close()
-
-	_, err := db.Exec(`CREATE TABLE users
-(
-    id                text      not null primary key,
-    username          text      not null,
-    screen_name       text      not null,
-    bio               text,
-    profile_image_url text,
-    registered_at     timestamp not null,
-    created_at        timestamp,
-    updated_at        timestamp
-);
-CREATE TABLE tweets
-(
-    id                text      not null primary key,
-    full_text         text      not null,
-    capture_url       text,
-    capture_thumb_url text,
-    lang              text      not null,
-    favorite_count    int       not null default 0,
-    retweet_count     int       not null default 0,
-    resources         jsonb,
-    author_id         text      not null references users (id),
-    posted_at         timestamp not null,
-    created_at        timestamp,
-    updated_at        timestamp          
-)`)
-	require.NoError(t, err)
+	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	defer client.Close()
 
 	ctx := context.Background()
+	err := client.Schema.Create(ctx)
+	require.NoError(t, err)
 
-	repo := NewRepository(db)
+	repo := NewRepository(client)
+	_, err = client.User.Create().SetID("1").SetUsername("rayyildiz").SetScreenName("Ramazan").SetRegisteredAt(time.Now()).Save(ctx)
+	require.NoError(t, err)
 	err = repo.Store(ctx, &anaconda.Tweet{
 		IdStr:         "1",
 		RetweetCount:  4,
 		FavoriteCount: 9,
 		Lang:          "en",
-		CreatedAt:     time.Now().Format(time.RubyDate),
+		FullText:      "hello",
+		User: anaconda.User{
+			IdStr: "1",
+		},
+		CreatedAt: time.Now().Format(time.RubyDate),
 	})
 	require.NoError(t, err)
 }
 
 func TestRepository_Exist(t *testing.T) {
-	db := database.NewInmemoryDb()
-	defer db.Close()
-
-	_, err := db.Exec(`CREATE TABLE users
-(
-    id                text      not null primary key,
-    username          text      not null,
-    screen_name       text      not null,
-    bio               text,
-    profile_image_url text,
-    registered_at     timestamp not null,
-    created_at        timestamp,
-    updated_at        timestamp
-);
-CREATE TABLE tweets
-(
-    id                text      not null primary key,
-    full_text         text      not null,
-    capture_url       text,
-    capture_thumb_url text,
-    lang              text      not null,
-    favorite_count    int       not null default 0,
-    retweet_count     int       not null default 0,
-    resources         jsonb,
-    author_id         text      not null references users (id),
-    posted_at         timestamp not null,
-    created_at        timestamp,
-    updated_at        timestamp          
-)`)
-	require.NoError(t, err)
+	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	defer client.Close()
 
 	ctx := context.Background()
+	err := client.Schema.Create(ctx)
+	require.NoError(t, err)
 
-	repo := NewRepository(db)
-	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "testId1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
+	repo := NewRepository(client)
+	_, err = client.User.Create().SetID("1").SetUsername("rayyildiz").SetScreenName("Ramazan").SetRegisteredAt(time.Now()).Save(ctx)
+	require.NoError(t, err)
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "testId1", FullText: "hello", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "1"}})
 	require.NoError(t, err)
 
 	b := repo.Exist(ctx, "testId1")
@@ -99,47 +57,25 @@ CREATE TABLE tweets
 }
 
 func TestRepository_FindByIds(t *testing.T) {
-	db := database.NewInmemoryDb()
-	defer db.Close()
-
-	_, err := db.Exec(`CREATE TABLE users
-(
-    id                text      not null primary key,
-    username          text      not null,
-    screen_name       text      not null,
-    bio               text,
-    profile_image_url text,
-    registered_at     timestamp not null,
-    created_at        timestamp,
-    updated_at        timestamp
-);
-CREATE TABLE tweets
-(
-    id                text      not null primary key,
-    full_text         text      not null,
-    capture_url       text,
-    capture_thumb_url text,
-    lang              text      not null,
-    favorite_count    int       not null default 0,
-    retweet_count     int       not null default 0,
-    resources         jsonb,
-    author_id         text      not null references users (id),
-    posted_at         timestamp not null,
-    created_at        timestamp,
-    updated_at        timestamp          
-)`)
-	require.NoError(t, err)
+	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	defer client.Close()
 
 	ctx := context.Background()
-
-	repo := NewRepository(db)
-	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
+	err := client.Schema.Create(ctx)
 	require.NoError(t, err)
 
-	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "2", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
+	repo := NewRepository(client)
+
+	_, err = client.User.Create().SetID("1").SetUsername("rayyildiz").SetScreenName("Ramazan").SetRegisteredAt(time.Now()).Save(ctx)
 	require.NoError(t, err)
 
-	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "3", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "1", FullText: "1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "1"}})
+	require.NoError(t, err)
+
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "2", FullText: "2", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "1"}})
+	require.NoError(t, err)
+
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "3", FullText: "3", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "1"}})
 	require.NoError(t, err)
 
 	tweets, err := repo.FindByIds(ctx, []string{"1", "3", "4"})
@@ -151,41 +87,19 @@ CREATE TABLE tweets
 }
 
 func TestRepository_UpdateThumbImage(t *testing.T) {
-	db := database.NewInmemoryDb()
-	defer db.Close()
-
-	_, err := db.Exec(`CREATE TABLE users
-(
-    id                text      not null primary key,
-    username          text      not null,
-    screen_name       text      not null,
-    bio               text,
-    profile_image_url text,
-    registered_at     timestamp not null,
-    created_at        timestamp,
-    updated_at        timestamp
-);
-CREATE TABLE tweets
-(
-    id                text      not null primary key,
-    full_text         text      not null,
-    capture_url       text,
-    capture_thumb_url text,
-    lang              text      not null,
-    favorite_count    int       not null default 0,
-    retweet_count     int       not null default 0,
-    resources         jsonb,
-    author_id         text      not null references users (id),
-    posted_at         timestamp not null,
-    created_at        timestamp,
-    updated_at        timestamp          
-)`)
-	require.NoError(t, err)
+	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	defer client.Close()
 
 	ctx := context.Background()
+	err := client.Schema.Create(ctx)
+	require.NoError(t, err)
 
-	repo := NewRepository(db)
-	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate)})
+	repo := NewRepository(client)
+
+	_, err = client.User.Create().SetID("1").SetUsername("rayyildiz").SetScreenName("Ramazan").SetRegisteredAt(time.Now()).Save(ctx)
+	require.NoError(t, err)
+
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "1", Lang: "en", FullText: "1", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "1"}})
 	require.NoError(t, err)
 
 	err = repo.UpdateThumbImage(ctx, "1", "image1.png")
@@ -202,51 +116,27 @@ CREATE TABLE tweets
 }
 
 func TestRepository_FindByUser(t *testing.T) {
-	db := database.NewInmemoryDb()
-	defer db.Close()
-
-	_, err := db.Exec(`CREATE TABLE users
-(
-    id                text      not null primary key,
-    username          text      not null,
-    screen_name       text      not null,
-    bio               text,
-    profile_image_url text,
-    registered_at     timestamp not null,
-    created_at        timestamp,
-    updated_at        timestamp
-);
-CREATE TABLE tweets
-(
-    id                text      not null primary key,
-    full_text         text      not null,
-    capture_url       text,
-    capture_thumb_url text,
-    lang              text      not null,
-    favorite_count    int       not null default 0,
-    retweet_count     int       not null default 0,
-    resources         jsonb,
-    author_id         text      not null references users (id),
-    posted_at         timestamp not null,
-    created_at        timestamp,
-    updated_at        timestamp          
-)`)
-	require.NoError(t, err)
+	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	defer client.Close()
 
 	ctx := context.Background()
-
-	repo := NewRepository(db)
-
-	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "x1", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "123"}})
+	err := client.Schema.Create(ctx)
 	require.NoError(t, err)
 
-	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "ay2", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "123"}})
+	repo := NewRepository(client)
+	_, err = client.User.Create().SetID("1").SetUsername("rayyildiz").SetScreenName("Ramazan").SetRegisteredAt(time.Now()).Save(ctx)
 	require.NoError(t, err)
 
-	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "z3", Lang: "en", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "123"}})
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "x1", Lang: "en", FullText: "1", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "1"}})
 	require.NoError(t, err)
 
-	tweets, err := repo.FindByUser(ctx, "123")
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "ay2", Lang: "en", FullText: "2", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "1"}})
+	require.NoError(t, err)
+
+	err = repo.Store(ctx, &anaconda.Tweet{IdStr: "z3", Lang: "en", FullText: "3", CreatedAt: time.Now().Format(time.RubyDate), User: anaconda.User{IdStr: "1"}})
+	require.NoError(t, err)
+
+	tweets, err := repo.FindByUser(ctx, "1")
 	require.NoError(t, err)
 	if assert.Equal(t, 3, len(tweets)) {
 		ids := []string{tweets[0].ID, tweets[1].ID, tweets[2].ID}
