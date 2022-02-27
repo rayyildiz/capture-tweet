@@ -9,6 +9,7 @@ import (
 
 	"capturetweet.com/internal/ent/migrate"
 
+	"capturetweet.com/internal/ent/contactus"
 	"capturetweet.com/internal/ent/tweet"
 	"capturetweet.com/internal/ent/user"
 
@@ -22,6 +23,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// ContactUs is the client for interacting with the ContactUs builders.
+	ContactUs *ContactUsClient
 	// Tweet is the client for interacting with the Tweet builders.
 	Tweet *TweetClient
 	// User is the client for interacting with the User builders.
@@ -39,6 +42,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.ContactUs = NewContactUsClient(c.config)
 	c.Tweet = NewTweetClient(c.config)
 	c.User = NewUserClient(c.config)
 }
@@ -72,10 +76,11 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Tweet:  NewTweetClient(cfg),
-		User:   NewUserClient(cfg),
+		ctx:       ctx,
+		config:    cfg,
+		ContactUs: NewContactUsClient(cfg),
+		Tweet:     NewTweetClient(cfg),
+		User:      NewUserClient(cfg),
 	}, nil
 }
 
@@ -93,17 +98,18 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Tweet:  NewTweetClient(cfg),
-		User:   NewUserClient(cfg),
+		ctx:       ctx,
+		config:    cfg,
+		ContactUs: NewContactUsClient(cfg),
+		Tweet:     NewTweetClient(cfg),
+		User:      NewUserClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Tweet.
+//		ContactUs.
 //		Query().
 //		Count(ctx)
 //
@@ -126,8 +132,99 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.ContactUs.Use(hooks...)
 	c.Tweet.Use(hooks...)
 	c.User.Use(hooks...)
+}
+
+// ContactUsClient is a client for the ContactUs schema.
+type ContactUsClient struct {
+	config
+}
+
+// NewContactUsClient returns a client for the ContactUs from the given config.
+func NewContactUsClient(c config) *ContactUsClient {
+	return &ContactUsClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `contactus.Hooks(f(g(h())))`.
+func (c *ContactUsClient) Use(hooks ...Hook) {
+	c.hooks.ContactUs = append(c.hooks.ContactUs, hooks...)
+}
+
+// Create returns a create builder for ContactUs.
+func (c *ContactUsClient) Create() *ContactUsCreate {
+	mutation := newContactUsMutation(c.config, OpCreate)
+	return &ContactUsCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ContactUs entities.
+func (c *ContactUsClient) CreateBulk(builders ...*ContactUsCreate) *ContactUsCreateBulk {
+	return &ContactUsCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ContactUs.
+func (c *ContactUsClient) Update() *ContactUsUpdate {
+	mutation := newContactUsMutation(c.config, OpUpdate)
+	return &ContactUsUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ContactUsClient) UpdateOne(cu *ContactUs) *ContactUsUpdateOne {
+	mutation := newContactUsMutation(c.config, OpUpdateOne, withContactUs(cu))
+	return &ContactUsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ContactUsClient) UpdateOneID(id string) *ContactUsUpdateOne {
+	mutation := newContactUsMutation(c.config, OpUpdateOne, withContactUsID(id))
+	return &ContactUsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ContactUs.
+func (c *ContactUsClient) Delete() *ContactUsDelete {
+	mutation := newContactUsMutation(c.config, OpDelete)
+	return &ContactUsDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *ContactUsClient) DeleteOne(cu *ContactUs) *ContactUsDeleteOne {
+	return c.DeleteOneID(cu.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *ContactUsClient) DeleteOneID(id string) *ContactUsDeleteOne {
+	builder := c.Delete().Where(contactus.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ContactUsDeleteOne{builder}
+}
+
+// Query returns a query builder for ContactUs.
+func (c *ContactUsClient) Query() *ContactUsQuery {
+	return &ContactUsQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a ContactUs entity by its id.
+func (c *ContactUsClient) Get(ctx context.Context, id string) (*ContactUs, error) {
+	return c.Query().Where(contactus.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ContactUsClient) GetX(ctx context.Context, id string) *ContactUs {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *ContactUsClient) Hooks() []Hook {
+	return c.hooks.ContactUs
 }
 
 // TweetClient is a client for the Tweet schema.

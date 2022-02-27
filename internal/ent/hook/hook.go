@@ -9,6 +9,19 @@ import (
 	"capturetweet.com/internal/ent"
 )
 
+// The ContactUsFunc type is an adapter to allow the use of ordinary
+// function as ContactUs mutator.
+type ContactUsFunc func(context.Context, *ent.ContactUsMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ContactUsFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.ContactUsMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ContactUsMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The TweetFunc type is an adapter to allow the use of ordinary
 // function as Tweet mutator.
 type TweetFunc func(context.Context, *ent.TweetMutation) (ent.Value, error)

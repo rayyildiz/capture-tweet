@@ -5,6 +5,7 @@ package ent
 import (
 	"time"
 
+	"capturetweet.com/internal/ent/contactus"
 	"capturetweet.com/internal/ent/schema"
 	"capturetweet.com/internal/ent/tweet"
 	"capturetweet.com/internal/ent/user"
@@ -14,6 +15,47 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	contactusMixin := schema.ContactUs{}.Mixin()
+	contactusMixinFields0 := contactusMixin[0].Fields()
+	_ = contactusMixinFields0
+	contactusFields := schema.ContactUs{}.Fields()
+	_ = contactusFields
+	// contactusDescCreatedAt is the schema descriptor for created_at field.
+	contactusDescCreatedAt := contactusMixinFields0[0].Descriptor()
+	// contactus.DefaultCreatedAt holds the default value on creation for the created_at field.
+	contactus.DefaultCreatedAt = contactusDescCreatedAt.Default.(func() time.Time)
+	// contactusDescUpdatedAt is the schema descriptor for updated_at field.
+	contactusDescUpdatedAt := contactusMixinFields0[1].Descriptor()
+	// contactus.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	contactus.DefaultUpdatedAt = contactusDescUpdatedAt.Default.(func() time.Time)
+	// contactus.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	contactus.UpdateDefaultUpdatedAt = contactusDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// contactusDescFullName is the schema descriptor for full_name field.
+	contactusDescFullName := contactusFields[2].Descriptor()
+	// contactus.FullNameValidator is a validator for the "full_name" field. It is called by the builders before save.
+	contactus.FullNameValidator = contactusDescFullName.Validators[0].(func(string) error)
+	// contactusDescMessage is the schema descriptor for message field.
+	contactusDescMessage := contactusFields[3].Descriptor()
+	// contactus.MessageValidator is a validator for the "message" field. It is called by the builders before save.
+	contactus.MessageValidator = contactusDescMessage.Validators[0].(func(string) error)
+	// contactusDescID is the schema descriptor for id field.
+	contactusDescID := contactusFields[0].Descriptor()
+	// contactus.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	contactus.IDValidator = func() func(string) error {
+		validators := contactusDescID.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(id string) error {
+			for _, fn := range fns {
+				if err := fn(id); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	tweetMixin := schema.Tweet{}.Mixin()
 	tweetMixinFields0 := tweetMixin[0].Fields()
 	_ = tweetMixinFields0
