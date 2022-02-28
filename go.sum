@@ -146,8 +146,8 @@ github.com/PuerkitoBio/purell v1.1.1/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbt
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
 github.com/Shopify/goreferrer v0.0.0-20181106222321-ec9c9a553398/go.mod h1:a1uqRtAwp2Xwc6WNPJEufxJ7fx3npB4UV/JOLmbu5I0=
 github.com/Shopify/logrus-bugsnag v0.0.0-20171204204709-577dee27f20d/go.mod h1:HI8ITrYtUY+O+ZhtlqUnD8+KwNPOyugEhfP9fdUIaEQ=
-github.com/TheZeroSlave/zapsentry v1.9.0 h1:UFswopxQWY/NghGJWegD089/W3PqLrWWEzK4hW5BdpU=
-github.com/TheZeroSlave/zapsentry v1.9.0/go.mod h1:4OiF19Jk2MUTOyorSZAla41+q9sFgtx+2V5VrXBitXw=
+github.com/TheZeroSlave/zapsentry v1.9.1 h1:cGyBFf6TO0PxiGmTLNIyQbzqwu+l+/sxNAviMuFPwjE=
+github.com/TheZeroSlave/zapsentry v1.9.1/go.mod h1:4OiF19Jk2MUTOyorSZAla41+q9sFgtx+2V5VrXBitXw=
 github.com/agnivade/levenshtein v1.0.1/go.mod h1:CURSv5d9Uaml+FovSIICkLbAUZ9S4RqaHDIsdSBg7lM=
 github.com/agnivade/levenshtein v1.1.0/go.mod h1:veldBMzWxcCG2ZvUTKD2kJNRdCk5hVbJomOvKkmgYbo=
 github.com/agnivade/levenshtein v1.1.1 h1:QY8M92nrzkmr798gCo3kmMyqXFzdQVpxLlGPRBij0P8=
