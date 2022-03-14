@@ -1,11 +1,13 @@
 package tweet
 
 import (
-	"github.com/stretchr/testify/assert"
+	"github.com/matryer/is"
 	"testing"
 )
 
 func TestParseTweetURL(t *testing.T) {
+	is := is.New(t)
+
 	tests := []struct {
 		name         string
 		url          string
@@ -59,10 +61,10 @@ func TestParseTweetURL(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			actualId, actualUser, actualErr := parseTweetURL(test.url)
-			if assert.Equal(t, test.expectedErr, actualErr) {
-				assert.Equal(t, test.expectedId, actualId)
-				assert.Equal(t, test.expectedUser, actualUser)
-			}
+			is.Equal(test.expectedErr, actualErr)
+
+			is.Equal(test.expectedId, actualId)
+			is.Equal(test.expectedUser, actualUser)
 		})
 	}
 }

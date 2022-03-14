@@ -2,6 +2,7 @@ package browser
 
 import (
 	"context"
+	"github.com/matryer/is"
 	"os"
 	"testing"
 
@@ -9,13 +10,12 @@ import (
 	"capturetweet.com/internal/infra"
 	"github.com/docker/go-connections/nat"
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 func TestService_CaptureURL(t *testing.T) {
+	is := is.New(t)
 	os.Setenv("APP_SLEEP_TIME_MS", "6000")
 	ctx := context.Background()
 	req := testcontainers.ContainerRequest{
@@ -27,13 +27,13 @@ func TestService_CaptureURL(t *testing.T) {
 		ContainerRequest: req,
 		Started:          true,
 	})
-	require.NoError(t, err)
+	is.NoErr(err)
 	defer chromeC.Terminate(ctx)
 
 	infra.RegisterLogger()
 
 	service := NewService(nil, nil)
-	require.NotNil(t, service)
+	is.True(t != nil)
 
 	minImageSize = 1024 * 10
 
@@ -42,36 +42,38 @@ func TestService_CaptureURL(t *testing.T) {
 		Author: "rayyildiz",
 		Url:    "https://twitter.com/rayyildiz/status/1335519471822381056",
 	})
-	require.NoError(t, err)
-	if assert.NotNil(t, data) {
-		assert.True(t, len(data) > 1000)
-	}
+	is.NoErr(err)
+	is.True(data != nil)
+	is.True(len(data) > 1000)
 }
 
 func TestService_SaveCapture(t *testing.T) {
+	is := is.New(t)
+
 	ctx := context.Background()
 
 	infra.RegisterLogger()
 
 	bucket := infra.NewBucket("mem://test")
-	require.NotNil(t, bucket)
+	is.True(bucket != nil)
 
 	service := NewService(nil, bucket)
-	require.NotNil(t, service)
+	is.True(service != nil)
 
 	response, err := service.SaveCapture(ctx, []byte("hello"), &api.CaptureRequestModel{
 		ID:     "1",
 		Author: "example",
 		Url:    "https://twitter.com/example/1",
 	})
-	require.NoError(t, err)
-	if assert.NotNil(t, response) {
-		assert.Equal(t, "1", response.ID)
-		assert.Equal(t, "capture/large/1.jpg", response.CaptureURL)
-	}
+	is.NoErr(err)
+	is.True(response != nil)
+	is.True(response.ID == "1")
+	is.True(response.CaptureURL == "capture/large/1.jpg")
 }
 
 func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
+	is := is.New(t)
+
 	os.Setenv("APP_SLEEP_TIME_MS", "9000")
 
 	ctrl := gomock.NewController(t)
@@ -87,11 +89,11 @@ func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
 		ContainerRequest: req,
 		Started:          true,
 	})
-	require.NoError(t, err)
+	is.NoErr(err)
 	defer chromeC.Terminate(ctx)
 
 	bucket := infra.NewBucket("mem://mem")
-	require.NotNil(t, bucket)
+	is.True(bucket != nil)
 
 	infra.RegisterLogger()
 
@@ -99,14 +101,13 @@ func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
 	tweetS.EXPECT().UpdateLargeImage(gomock.Any(), "1356685552276434946", "capture/large/1356685552276434946.jpg").Return(nil)
 
 	service := NewService(tweetS, bucket)
-	require.NotNil(t, service)
+	is.True(service != nil)
 
 	response, err := service.CaptureSaveUpdateDatabase(ctx, &api.CaptureRequestModel{
 		ID:     "1356685552276434946",
 		Author: "CloudNativeFdn",
 		Url:    "https://twitter.com/CloudNativeFdn/status/1356685552276434946",
 	})
-	require.NoError(t, err)
-	if assert.NotNil(t, response) {
-	}
+	is.NoErr(err)
+	is.True(response != nil)
 }

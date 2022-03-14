@@ -1,18 +1,17 @@
 package main
 
 import (
+	"github.com/matryer/is"
 	"log"
 	"math/rand"
 	"os"
 	"strconv"
 	"testing"
 	"time"
-
-	"github.com/stretchr/testify/require"
 )
 
 func TestRun(t *testing.T) {
-	//defer goleak.VerifyNone(t)
+	is := is.New(t)
 
 	rand.Seed(time.Now().Unix())
 	port := rand.Intn(2000) + 30010
@@ -37,7 +36,7 @@ func TestRun(t *testing.T) {
 
 	go func() {
 		err := Run()
-		require.NoError(t, err)
+		is.NoErr(err)
 	}()
 
 	<-signal

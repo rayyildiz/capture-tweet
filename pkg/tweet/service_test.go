@@ -2,6 +2,7 @@ package tweet
 
 import (
 	"context"
+	"github.com/matryer/is"
 	"testing"
 	"time"
 
@@ -9,11 +10,10 @@ import (
 	"capturetweet.com/internal/infra"
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestService_FindById(t *testing.T) {
+	is := is.New(t)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -38,27 +38,31 @@ func TestService_FindById(t *testing.T) {
 	infra.RegisterLogger()
 
 	svc := NewService(repo, nil, nil, nil, nil)
-	require.NotNil(t, svc)
+	is.True(svc != nil)
 
 	model, err := svc.FindById(context.Background(), "1")
-	require.NoError(t, err)
-	if assert.NotNil(t, model) {
-		assert.Equal(t, "1", model.ID)
-		assert.Equal(t, "user1", model.AuthorID)
-		assert.NotNil(t, model.PostedAt)
-		assert.Nil(t, model.CaptureThumbURL)
-		assert.Nil(t, model.CaptureURL)
-		if assert.NotNil(t, model.Resources) {
-			assert.Equal(t, 1, len(model.Resources))
-			assert.Equal(t, "img1", model.Resources[0].ID)
-			assert.Equal(t, "images/png", model.Resources[0].ResourceType)
-			assert.Equal(t, 200, model.Resources[0].Height)
-			assert.Equal(t, 100, model.Resources[0].Width)
-		}
-	}
+	is.NoErr(err)
+
+	is.True(model != nil)
+
+	is.Equal("1", model.ID)
+	is.Equal("user1", model.AuthorID)
+
+	is.True(nil != model.PostedAt)
+	is.True(nil == model.CaptureThumbURL)
+	is.True(nil == model.CaptureURL)
+	is.True(nil != model.Resources)
+	is.Equal(1, len(model.Resources))
+	is.Equal("img1", model.Resources[0].ID)
+	is.Equal("images/png", model.Resources[0].ResourceType)
+	is.Equal(200, model.Resources[0].Height)
+	is.Equal(100, model.Resources[0].Width)
+
 }
 
 func TestService_Store(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -86,7 +90,7 @@ func TestService_Store(t *testing.T) {
 	infra.RegisterLogger()
 
 	svc := NewService(repo, searchService, userService, twitterAPI, topic)
-	require.NotNil(t, svc)
+	is.True(nil != svc)
 
 	signal := make(chan struct{})
 	go func() {
@@ -95,12 +99,14 @@ func TestService_Store(t *testing.T) {
 	}()
 
 	id, err := svc.Store(context.Background(), "https://twitter.com/jack/status/20")
-	require.NoError(t, err)
-	require.Equal(t, "20", id)
+	is.NoErr(err)
+	is.Equal("20", id)
 	<-signal
 }
 
 func TestService_UpdateLargeImage(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -112,13 +118,15 @@ func TestService_UpdateLargeImage(t *testing.T) {
 	infra.RegisterLogger()
 
 	svc := NewService(repo, nil, nil, nil, nil)
-	require.NotNil(t, svc)
+	is.True(nil != svc)
 
 	err := svc.UpdateLargeImage(ctx, "1", "capture/large/1.png")
-	require.NoError(t, err)
+	is.NoErr(err)
 }
 
 func TestService_UpdateThumbImage(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -128,13 +136,15 @@ func TestService_UpdateThumbImage(t *testing.T) {
 	infra.RegisterLogger()
 
 	svc := NewService(repo, nil, nil, nil, nil)
-	require.NotNil(t, svc)
+	is.True(nil != svc)
 
 	err := svc.UpdateThumbImage(context.Background(), "2", "capture/thumb/2.png")
-	require.NoError(t, err)
+	is.NoErr(err)
 }
 
 func TestService_SearchByUser(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -159,14 +169,14 @@ func TestService_SearchByUser(t *testing.T) {
 	infra.RegisterLogger()
 
 	svc := NewService(repo, nil, nil, nil, nil)
-	require.NotNil(t, svc)
+	is.True(nil != svc)
 
 	tweets, err := svc.SearchByUser(context.Background(), "user1")
-	require.NoError(t, err)
-	if assert.Equal(t, 2, len(tweets)) {
-		assert.Equal(t, "1", tweets[0].ID)
-		assert.Equal(t, "2", tweets[1].ID)
-		assert.Equal(t, "test1", tweets[0].FullText)
-		assert.Equal(t, "test2", tweets[1].FullText)
-	}
+	is.NoErr(err)
+	is.Equal(2, len(tweets))
+
+	is.Equal("1", tweets[0].ID)
+	is.Equal("2", tweets[1].ID)
+	is.Equal("test1", tweets[0].FullText)
+	is.Equal("test2", tweets[1].FullText)
 }

@@ -2,16 +2,17 @@ package resolver
 
 import (
 	"context"
+	"github.com/matryer/is"
 	"testing"
 
 	"capturetweet.com/api"
 	"capturetweet.com/internal/infra"
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestQueryResolver_Tweet(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -28,14 +29,17 @@ func TestQueryResolver_Tweet(t *testing.T) {
 	resolver := newQueryResolver()
 
 	tweet, err := resolver.Tweet(context.Background(), "1234")
-	require.NoError(t, err)
-	if assert.NotNil(t, tweet) {
-		assert.Equal(t, "1234", tweet.ID)
-		assert.Equal(t, "test", tweet.FullText)
-	}
+	is.NoErr(err)
+	is.NoErr(err)
+	is.True(tweet != nil)
+
+	is.Equal("1234", tweet.ID)
+	is.Equal("test", tweet.FullText)
 }
 
 func TestQueryResolver_SearchByUser(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -65,36 +69,40 @@ func TestQueryResolver_SearchByUser(t *testing.T) {
 	resolver := newQueryResolver()
 
 	tweets, err := resolver.SearchByUser(context.Background(), "user1")
-	require.NoError(t, err)
-	if assert.Equal(t, 2, len(tweets)) {
-		assert.Equal(t, "1", tweets[0].ID)
-		assert.Equal(t, "2", tweets[1].ID)
+	is.NoErr(err)
 
-		if assert.NotNil(t, tweets[0].Lang) && assert.NotNil(t, tweets[1].Lang) {
-			assert.Equal(t, "en", *tweets[0].Lang)
-			assert.Equal(t, "ar", *tweets[1].Lang)
-		}
+	is.True(2 == len(tweets))
 
-		assert.Equal(t, "test1", tweets[0].FullText)
-		assert.Equal(t, "test2", tweets[1].FullText)
+	is.Equal("1", tweets[0].ID)
+	is.Equal("2", tweets[1].ID)
 
-		if assert.NotNil(t, tweets[0].AuthorID) && assert.NotNil(t, tweets[1].AuthorID) {
-			assert.Equal(t, "user1", *tweets[0].AuthorID)
-			assert.Equal(t, "user1", *tweets[1].AuthorID)
-		}
+	is.True(tweets[0].Lang != nil)
+	is.True(tweets[1].Lang != nil)
+	is.Equal("en", *tweets[0].Lang)
+	is.Equal("ar", *tweets[1].Lang)
 
-		if assert.NotNil(t, tweets[0].FavoriteCount) && assert.NotNil(t, tweets[1].FavoriteCount) {
-			assert.Equal(t, 5, *tweets[0].FavoriteCount)
-			assert.Equal(t, 18, *tweets[1].FavoriteCount)
-		}
-		if assert.NotNil(t, tweets[0].RetweetCount) && assert.NotNil(t, tweets[1].RetweetCount) {
-			assert.Equal(t, 10, *tweets[0].RetweetCount)
-			assert.Equal(t, 200, *tweets[1].RetweetCount)
-		}
-	}
+	is.Equal("test1", tweets[0].FullText)
+	is.Equal("test2", tweets[1].FullText)
+
+	is.True(tweets[0].AuthorID != nil)
+	is.True(tweets[1].AuthorID != nil)
+	is.Equal("user1", *tweets[0].AuthorID)
+	is.Equal("user1", *tweets[1].AuthorID)
+
+	is.True(tweets[0].FavoriteCount != nil)
+	is.True(tweets[1].FavoriteCount != nil)
+	is.Equal(5, *tweets[0].FavoriteCount)
+	is.Equal(18, *tweets[1].FavoriteCount)
+
+	is.True(tweets[0].RetweetCount != nil)
+	is.True(tweets[1].RetweetCount != nil)
+	is.Equal(10, *tweets[0].RetweetCount)
+	is.Equal(200, *tweets[1].RetweetCount)
 }
 
 func TestQueryResolver_Search(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -132,38 +140,43 @@ func TestQueryResolver_Search(t *testing.T) {
 	resolver := newQueryResolver()
 
 	tweets, err := resolver.Search(context.Background(), SearchInput{Term: "test"}, 10, 0, 0)
-	require.NoError(t, err)
-	if assert.Equal(t, 3, len(tweets)) {
-		assert.Equal(t, "1", tweets[0].ID)
-		assert.Equal(t, "2", tweets[1].ID)
-		assert.Equal(t, "3", tweets[2].ID)
+	is.NoErr(err)
 
-		if assert.NotNil(t, tweets[0].Lang) && assert.NotNil(t, tweets[1].Lang) && assert.NotNil(t, tweets[2].Lang) {
-			assert.Equal(t, "en", *tweets[0].Lang)
-			assert.Equal(t, "ar", *tweets[1].Lang)
-			assert.Equal(t, "tr", *tweets[2].Lang)
-		}
+	is.Equal(3, len(tweets))
+	is.Equal("1", tweets[0].ID)
+	is.Equal("2", tweets[1].ID)
+	is.Equal("3", tweets[2].ID)
 
-		assert.Equal(t, "test1", tweets[0].FullText)
-		assert.Equal(t, "test2", tweets[1].FullText)
-		assert.Equal(t, "test3", tweets[2].FullText)
+	is.True(nil != tweets[0].Lang)
+	is.True(nil != tweets[1].Lang)
+	is.True(nil != tweets[2].Lang)
+	is.Equal("en", *tweets[0].Lang)
+	is.Equal("ar", *tweets[1].Lang)
+	is.Equal("tr", *tweets[2].Lang)
 
-		if assert.NotNil(t, tweets[0].AuthorID) && assert.NotNil(t, tweets[1].AuthorID) && assert.NotNil(t, tweets[2].AuthorID) {
-			assert.Equal(t, "user1", *tweets[0].AuthorID)
-			assert.Equal(t, "user2", *tweets[1].AuthorID)
-			assert.Equal(t, "user1", *tweets[2].AuthorID)
-		}
+	is.Equal("test1", tweets[0].FullText)
+	is.Equal("test2", tweets[1].FullText)
+	is.Equal("test3", tweets[2].FullText)
 
-		if assert.NotNil(t, tweets[0].FavoriteCount) && assert.NotNil(t, tweets[1].FavoriteCount) && assert.NotNil(t, tweets[2].FavoriteCount) {
-			assert.Equal(t, 5, *tweets[0].FavoriteCount)
-			assert.Equal(t, 18, *tweets[1].FavoriteCount)
-			assert.Equal(t, 0, *tweets[2].FavoriteCount)
-		}
-		if assert.NotNil(t, tweets[0].RetweetCount) && assert.NotNil(t, tweets[1].RetweetCount) && assert.NotNil(t, tweets[2].RetweetCount) {
+	is.True(nil != tweets[0].AuthorID)
+	is.True(nil != tweets[1].AuthorID)
+	is.True(nil != tweets[2].AuthorID)
+	is.Equal("user1", *tweets[0].AuthorID)
+	is.Equal("user2", *tweets[1].AuthorID)
+	is.Equal("user1", *tweets[2].AuthorID)
 
-			assert.Equal(t, 10, *tweets[0].RetweetCount)
-			assert.Equal(t, 200, *tweets[1].RetweetCount)
-			assert.Equal(t, 0, *tweets[2].RetweetCount)
-		}
-	}
+	is.True(nil != tweets[0].FavoriteCount)
+	is.True(nil != tweets[1].FavoriteCount)
+	is.True(nil != tweets[2].FavoriteCount)
+	is.Equal(5, *tweets[0].FavoriteCount)
+	is.Equal(18, *tweets[1].FavoriteCount)
+	is.Equal(0, *tweets[2].FavoriteCount)
+
+	is.True(nil != tweets[0].RetweetCount)
+	is.True(nil != tweets[1].RetweetCount)
+	is.True(nil != tweets[2].RetweetCount)
+
+	is.Equal(10, *tweets[0].RetweetCount)
+	is.Equal(200, *tweets[1].RetweetCount)
+	is.Equal(0, *tweets[2].RetweetCount)
 }

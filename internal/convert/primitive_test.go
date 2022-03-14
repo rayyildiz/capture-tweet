@@ -1,46 +1,54 @@
 package convert
 
 import (
-	"github.com/stretchr/testify/require"
+	"github.com/matryer/is"
 	"go.uber.org/goleak"
 	"testing"
 	"time"
 )
 
 func TestString(t *testing.T) {
+	is := is.New(t)
+
 	defer goleak.VerifyNone(t)
 
 	t1 := "test"
 	t2 := "hello"
 
-	require.Equal(t, &t1, String(t1))
-	require.Equal(t, &t2, String(t2))
-	require.Nil(t, String(""))
+	is.Equal(&t1, String(t1))
+	is.Equal(&t2, String(t2))
+	is.True(nil != String(""))
 }
 
 func TestInt(t *testing.T) {
+	is := is.New(t)
+
 	defer goleak.VerifyNone(t)
 
 	t1 := 1
 	t2 := 2
 
-	require.Equal(t, &t1, Int(t1))
-	require.Equal(t, &t2, Int(t2))
+	is.Equal(&t1, Int(t1))
+	is.Equal(&t2, Int(t2))
 }
 
 func TestTime(t *testing.T) {
+	is := is.New(t)
+
 	defer goleak.VerifyNone(t)
 
 	t1 := time.Now()
 	t2 := time.Now().Add(20 * time.Hour)
 
-	require.Equal(t, &t1, Time(t1))
-	require.Equal(t, &t2, Time(t2))
+	is.Equal(&t1, Time(t1))
+	is.Equal(&t2, Time(t2))
 }
 
 func TestInt64(t *testing.T) {
+	is := is.New(t)
+
 	defer goleak.VerifyNone(t)
 
 	var actual int64 = 5
-	require.Equal(t, &actual, Int64(actual))
+	is.Equal(&actual, Int64(actual))
 }

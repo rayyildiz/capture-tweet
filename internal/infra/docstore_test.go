@@ -2,17 +2,19 @@ package infra
 
 import (
 	"context"
-	"github.com/stretchr/testify/require"
+	"github.com/matryer/is"
 	"os"
 	"testing"
 	"time"
 )
 
 func TestNewContactUsCollection(t *testing.T) {
+	is := is.New(t)
+
 	os.Setenv("DOCSTORE_CONTACT_US", "mem://contact/ID")
 
 	coll := NewContactUsCollection()
-	require.NotNil(t, coll)
+	is.True(nil != coll)
 
 	err := coll.Put(context.Background(), map[string]interface{}{
 		"ID":      1,
@@ -20,14 +22,16 @@ func TestNewContactUsCollection(t *testing.T) {
 		"Subject": "subject",
 		"Date":    time.Now(),
 	})
-	require.NoError(t, err)
+	is.NoErr(err)
 }
 
 func TestNewTweetCollection(t *testing.T) {
+	is := is.New(t)
+
 	os.Setenv("DOCSTORE_TWEETS", "mem://tweet/id")
 
 	coll := NewTweetCollection()
-	require.NotNil(t, coll)
+	is.True(nil != coll)
 
 	err := coll.Put(context.Background(), map[string]interface{}{
 		"id":         1,
@@ -35,19 +39,21 @@ func TestNewTweetCollection(t *testing.T) {
 		"text":       "test",
 		"created_at": time.Now(),
 	})
-	require.NoError(t, err)
+	is.NoErr(err)
 }
 
 func TestNewUserCollection(t *testing.T) {
+	is := is.New(t)
+
 	os.Setenv("DOCSTORE_USERS", "mem://users/Username")
 
 	coll := NewUserCollection()
-	require.NotNil(t, coll)
+	is.True(nil != coll)
 
 	err := coll.Put(context.Background(), map[string]interface{}{
 		"Username":  "@rayyildiz",
 		"FullName":  "Ramazan",
 		"CreatedAt": time.Now(),
 	})
-	require.NoError(t, err)
+	is.NoErr(err)
 }

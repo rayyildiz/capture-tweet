@@ -2,17 +2,18 @@ package search
 
 import (
 	"context"
+	"github.com/matryer/is"
 	"testing"
 
 	"capturetweet.com/api"
 	"capturetweet.com/internal/infra"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestService_Search(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -35,23 +36,22 @@ func TestService_Search(t *testing.T) {
 	svc := NewService(algolia)
 
 	searchModels, err := svc.Search(context.Background(), "test", 20)
-	require.NoError(t, err)
-	require.NotNil(t, searchModels)
-	if assert.Equal(t, 2, len(searchModels)) {
-		if assert.NotNil(t, searchModels[0]) {
-			assert.Equal(t, "1", searchModels[0].TweetID)
-			assert.Equal(t, "test", searchModels[0].FullText)
-			assert.Equal(t, "rayyildiz", searchModels[0].Author)
-		}
+	is.NoErr(err)
+	is.True(searchModels != nil)
 
-		if assert.NotNil(t, searchModels[1]) {
-			assert.Equal(t, "2", searchModels[1].TweetID)
-			assert.Equal(t, "second tweet", searchModels[1].FullText)
-		}
-	}
+	is.True(len(searchModels) >= 2)
+
+	is.Equal("1", searchModels[0].TweetID)
+	is.Equal("test", searchModels[0].FullText)
+	is.Equal("rayyildiz", searchModels[0].Author)
+
+	is.Equal("2", searchModels[1].TweetID)
+	is.Equal("second tweet", searchModels[1].FullText)
 }
 
 func TestService_Put(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -65,5 +65,5 @@ func TestService_Put(t *testing.T) {
 	svc := NewService(algolia)
 
 	err := svc.Put(context.Background(), "1", "test", "AYYILDIZ")
-	require.NoError(t, err)
+	is.NoErr(err)
 }

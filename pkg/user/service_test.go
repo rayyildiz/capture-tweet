@@ -2,17 +2,18 @@ package user
 
 import (
 	"context"
+	"github.com/matryer/is"
 	"testing"
 	"time"
 
 	"capturetweet.com/internal/infra"
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestUserService_FindById(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -32,15 +33,17 @@ func TestUserService_FindById(t *testing.T) {
 	svc := NewService(repo)
 
 	userModel, err := svc.FindById(ctx, "testUserIdStr")
-	require.NoError(t, err)
-	if assert.NotNil(t, userModel) {
-		assert.Equal(t, "testUserIdStr", userModel.ID)
-		assert.Equal(t, "rayyildiz", userModel.UserName)
-		assert.Equal(t, "Ramazan A.", userModel.ScreenName)
-	}
+	is.NoErr(err)
+	is.True(nil != userModel)
+	is.Equal("testUserIdStr", userModel.ID)
+	is.Equal("rayyildiz", userModel.UserName)
+	is.Equal("Ramazan A.", userModel.ScreenName)
+
 }
 
 func TestUserService_FindOrCreate_Exist(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -64,15 +67,17 @@ func TestUserService_FindOrCreate_Exist(t *testing.T) {
 		ScreenName: "rayyildiz",
 		Name:       "Ramazan A.",
 	})
-	require.NoError(t, err)
-	if assert.NotNil(t, userModel) {
-		assert.Equal(t, "testId", userModel.ID)
-		assert.Equal(t, "rayyildiz", userModel.UserName)
-		assert.Equal(t, "Ramazan A.", userModel.ScreenName)
-	}
+	is.NoErr(err)
+	is.True(nil != userModel)
+	is.Equal("testId", userModel.ID)
+	is.Equal("rayyildiz", userModel.UserName)
+	is.Equal("Ramazan A.", userModel.ScreenName)
+
 }
 
 func TestUserService_FindOrCreate_NotExist(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -84,7 +89,7 @@ func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 
 	strDate := "Mon Jan 02 15:04:05 -0700 2006"
 	dt, err := time.Parse(time.RubyDate, strDate)
-	require.NoError(t, err)
+	is.NoErr(err)
 
 	repo.EXPECT().FindById(gomock.Any(), "testId").Return(nil, nil)
 	repo.EXPECT().Store(gomock.Any(), "testId", "rayyildiz", "Ramazan A.", "bio", "profile.png", dt).Return(nil)
@@ -100,10 +105,10 @@ func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 		CreatedAt:            strDate,
 	})
 
-	require.NoError(t, err)
-	if assert.NotNil(t, userModel) {
-		assert.Equal(t, "testId", userModel.ID)
-		assert.Equal(t, "rayyildiz", userModel.UserName)
-		assert.Equal(t, "Ramazan A.", userModel.ScreenName)
-	}
+	is.NoErr(err)
+	is.True(nil != userModel)
+	is.Equal("testId", userModel.ID)
+	is.Equal("rayyildiz", userModel.UserName)
+	is.Equal("Ramazan A.", userModel.ScreenName)
+
 }

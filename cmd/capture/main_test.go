@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/stretchr/testify/require"
+	"github.com/matryer/is"
 	"log"
 	"math/rand"
 	"os"
@@ -11,6 +11,8 @@ import (
 )
 
 func TestRun(t *testing.T) {
+	is := is.New(t)
+
 	rand.Seed(time.Now().UnixNano())
 	port := rand.Intn(2000) + 30005
 	log.Printf("port is %d", port)
@@ -30,7 +32,7 @@ func TestRun(t *testing.T) {
 
 	go func() {
 		err := Run()
-		require.NoError(t, err)
+		is.NoErr(err)
 	}()
 
 	<-signal

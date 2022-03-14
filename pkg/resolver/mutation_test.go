@@ -2,16 +2,18 @@ package resolver
 
 import (
 	"context"
+	"github.com/matryer/is"
+	"strings"
 	"testing"
 
 	"capturetweet.com/api"
 	"capturetweet.com/internal/infra"
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMutationResolver_Capture(t *testing.T) {
+	is := is.New(t)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -29,15 +31,18 @@ func TestMutationResolver_Capture(t *testing.T) {
 	resolver := newMutationResolver()
 
 	tweet, err := resolver.Capture(context.Background(), "https://twitter.com/jack/status/20")
-	require.NoError(t, err)
-	if assert.NotNil(t, tweet) {
-		assert.Equal(t, "20", tweet.ID)
-		assert.Equal(t, "jack", *tweet.AuthorID)
-		assert.Equal(t, "full text", tweet.FullText)
-	}
+	is.NoErr(err)
+	is.True(tweet != nil)
+
+	is.True(tweet.ID == "20")
+	is.True(tweet.AuthorID != nil)
+	is.True(*tweet.AuthorID == "jack")
+	is.True(tweet.FullText == "full text")
+
 }
 
 func TestMutationResolver_Contact(t *testing.T) {
+	is := is.New(t)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -55,9 +60,8 @@ func TestMutationResolver_Contact(t *testing.T) {
 		Message:  "hello",
 	}, nil, "captcha")
 
-	require.NoError(t, err)
-	if assert.True(t, len(msg) > 0) {
-		assert.Regexp(t, "saved your message", msg)
-	}
+	is.NoErr(err)
 
+	is.True(len(msg) > 0)
+	is.True(strings.Contains(msg, "saved your message"))
 }

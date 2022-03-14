@@ -2,17 +2,19 @@ package infra
 
 import (
 	"context"
-	"github.com/stretchr/testify/require"
+	"github.com/matryer/is"
 	"os"
 	"testing"
 )
 
 func TestNewBucketFromEnvironment(t *testing.T) {
+	is := is.New(t)
+
 	os.Setenv("BLOB_BUCKET", "mem://bucket/to/memory")
 	bucket := NewBucketFromEnvironment()
 	defer bucket.Close()
-	require.NotNil(t, bucket)
+	is.True(nil != bucket)
 
 	err := bucket.WriteAll(context.Background(), "test", []byte("hello world"), nil)
-	require.NoError(t, err)
+	is.NoErr(err)
 }
