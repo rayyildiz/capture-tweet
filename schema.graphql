@@ -13,6 +13,7 @@ type Tweet {
   retweetCount:Int
   resources:[Resource]
 }
+
 type Author {
   id:ID!
   userName:String!
