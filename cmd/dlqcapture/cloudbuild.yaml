@@ -1,5 +1,5 @@
 steps:
-  - name: 'golang:1.17'
+  - name: 'golang:1.18'
     args: [ 'go', 'build', '-a', '-installsuffix','cgo', '-o' ,'tmp/app','.' ]
     env:
       - 'GO111MODULE=on'

@@ -1,6 +1,6 @@
 module capturetweet.com
 
-go 1.17
+go 1.18
 
 require (
 	cloud.google.com/go v0.100.2 // indirect
@@ -90,5 +90,8 @@ require (
 	cloud.google.com/go/compute v1.5.0 // indirect
 	cloud.google.com/go/firestore v1.6.1 // indirect
 	cloud.google.com/go/iam v0.3.0 // indirect
+	github.com/google/subcommands v1.0.1 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
+	golang.org/x/mod v0.5.1 // indirect
+	golang.org/x/tools v0.1.9 // indirect
 )
