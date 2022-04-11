@@ -11,17 +11,16 @@ require (
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
 	github.com/Microsoft/go-winio v0.5.0 // indirect
-	github.com/Microsoft/hcsshim v0.8.17 // indirect
+	github.com/Microsoft/hcsshim v0.8.23 // indirect
 	github.com/TheZeroSlave/zapsentry v1.10.0
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/algolia/algoliasearch-client-go/v3 v3.23.0
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
-	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/chromedp/cdproto v0.0.0-20211226214557-5a9a0564ad26
 	github.com/chromedp/chromedp v0.7.6
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/containerd/cgroups v1.0.1 // indirect
-	github.com/containerd/containerd v1.5.2 // indirect
+	github.com/containerd/containerd v1.5.9 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker v20.10.11+incompatible // indirect
@@ -56,14 +55,14 @@ require (
 	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/opencontainers/go-digest v1.0.0 // indirect
-	github.com/opencontainers/image-spec v1.0.1 // indirect
+	github.com/opencontainers/image-spec v1.0.2 // indirect
 	github.com/opencontainers/runc v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rs/cors v1.8.2
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/stretchr/testify v1.7.0
-	github.com/testcontainers/testcontainers-go v0.12.0
+	github.com/testcontainers/testcontainers-go v0.13.0
 	github.com/vektah/gqlparser/v2 v2.4.1
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
@@ -82,7 +81,6 @@ require (
 	google.golang.org/genproto v0.0.0-20220401170504-314d38edb7de // indirect
 	google.golang.org/grpc v1.45.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
@@ -90,8 +88,6 @@ require (
 	cloud.google.com/go/compute v1.5.0 // indirect
 	cloud.google.com/go/firestore v1.6.1 // indirect
 	cloud.google.com/go/iam v0.3.0 // indirect
-	github.com/google/subcommands v1.0.1 // indirect
+	github.com/cenkalti/backoff/v4 v4.1.2 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
-	golang.org/x/mod v0.5.1 // indirect
-	golang.org/x/tools v0.1.9 // indirect
 )
