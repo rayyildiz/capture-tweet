@@ -5,18 +5,18 @@ import (
 )
 
 type Tweet struct {
-	ID              string     `db:"id"`
 	CreatedAt       time.Time  `db:"created_at"`
 	UpdatedAt       time.Time  `db:"updated_at"`
 	PostedAt        time.Time  `db:"posted_at"`
-	FullText        string     `db:"full_text"`
-	CaptureURL      *string    `db:"capture_url"`
 	CaptureThumbURL *string    `db:"capture_thumb_url"`
+	CaptureURL      *string    `db:"capture_url"`
+	FullText        string     `db:"full_text"`
+	ID              string     `db:"id"`
 	Lang            string     `db:"lang"`
-	FavoriteCount   int        `db:"favorite_count"`
-	RetweetCount    int        `db:"retweet_count"`
 	AuthorID        string     `db:"author_id"`
 	Resources       []Resource `db:"resources"`
+	FavoriteCount   int        `db:"favorite_count"`
+	RetweetCount    int        `db:"retweet_count"`
 }
 
 type SortByPosted []Tweet
@@ -28,7 +28,7 @@ func (a SortByPosted) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 type Resource struct {
 	ID        string `json:"id"`
 	URL       string `json:"url"`
+	MediaType string `json:"media_type"`
 	Width     int    `json:"width"`
 	Height    int    `json:"height"`
-	MediaType string `json:"media_type"`
 }
