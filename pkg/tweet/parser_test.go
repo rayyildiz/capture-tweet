@@ -9,11 +9,11 @@ func TestParseTweetURL(t *testing.T) {
 	is := is.New(t)
 
 	tests := []struct {
+		expectedErr  error
 		name         string
 		url          string
-		expectedId   int64
 		expectedUser string
-		expectedErr  error
+		expectedId   int64
 	}{
 		{
 			name:         "a valid twitter url",

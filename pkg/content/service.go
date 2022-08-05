@@ -22,8 +22,8 @@ func NewService(repo Repository) api.ContentService {
 }
 
 type captchaResponse struct {
-	Success    bool     `json:"success"`
 	ErrorCodes []string `json:"error-codes"`
+	Success    bool     `json:"success"`
 }
 
 func (s serviceImpl) StoreContactRequest(ctx context.Context, senderMail, senderName, message, captcha string) error {

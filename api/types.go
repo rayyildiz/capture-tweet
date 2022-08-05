@@ -5,33 +5,33 @@ import (
 )
 
 type UserModel struct {
+	ProfileImage *string
 	ID           string
 	UserName     string
 	ScreenName   string
 	Bio          string
-	ProfileImage *string
 }
 
 type TweetModel struct {
-	ID              string
-	FullText        string
-	Lang            string
 	PostedAt        *time.Time
 	CaptureURL      *string
 	CaptureThumbURL *string
+	Author          *UserModel
+	ID              string
+	FullText        string
+	Lang            string
+	AuthorID        string
+	Resources       []ResourceModel
 	FavoriteCount   int
 	RetweetCount    int
-	AuthorID        string
-	Author          *UserModel
-	Resources       []ResourceModel
 }
 
 type ResourceModel struct {
 	ID           string
 	URL          string
+	ResourceType string
 	Width        int
 	Height       int
-	ResourceType string
 }
 
 type SearchModel struct {

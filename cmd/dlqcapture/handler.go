@@ -13,13 +13,13 @@ type handlerImpl struct {
 }
 
 type PubSubMessage struct {
-	Message struct {
-		Data       []byte            `json:"data"`
-		MessageId  string            `json:"messageId"`
-		Attributes map[string]string `json:"attributes"`
-	} `json:"message"`
 	Subscription string `json:"subscription"`
 	PublishTime  string `json:"publishTime"`
+	Message      struct {
+		Attributes map[string]string `json:"attributes"`
+		MessageId  string            `json:"messageId"`
+		Data       []byte            `json:"data"`
+	} `json:"message"`
 }
 
 func (h handlerImpl) handleMessages(w http.ResponseWriter, r *http.Request) {

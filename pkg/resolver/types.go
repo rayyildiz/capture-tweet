@@ -8,19 +8,19 @@ import (
 )
 
 type Author struct {
-	ID              string  `json:"id"`
-	UserName        string  `json:"userName"`
 	ScreenName      *string `json:"screenName"`
 	Bio             *string `json:"bio"`
 	ProfileImageURL *string `json:"profileImageURL"`
+	ID              string  `json:"id"`
+	UserName        string  `json:"userName"`
 }
 
 type Resource struct {
-	ID        string  `json:"id"`
-	URL       string  `json:"url"`
 	MediaType *string `json:"mediaType"`
 	Width     *int    `json:"width"`
 	Height    *int    `json:"height"`
+	ID        string  `json:"id"`
+	URL       string  `json:"url"`
 }
 
 type Tweet struct {
