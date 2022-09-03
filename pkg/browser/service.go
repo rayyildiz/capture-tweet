@@ -37,12 +37,13 @@ func NewService(tweetService api.TweetService, bucket *blob.Bucket) api.BrowserS
 	}
 }
 
-func (s serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
+func (s *serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
 	originalImage, err := s.CaptureURL(ctx, model)
 	if err != nil {
 		zap.L().Error("browser CaptureSaveUpdateDatabase, captureURL", zap.String("tweet_id", model.ID), zap.Error(err))
 		return nil, err
 	}
+	s.bucket.WriteAll(ctx, "aaa.png", originalImage, nil)
 
 	if len(originalImage) < minImageSize {
 		return nil, fmt.Errorf("image size is less than 25 Kb. try again. size is %d", len(originalImage))
@@ -63,7 +64,8 @@ func (s serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.C
 	return response, nil
 }
 
-func (s serviceImpl) SaveCapture(ctx context.Context, originalImage []byte, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
+// SaveCapture stores screenshot of the tweet.
+func (s *serviceImpl) SaveCapture(ctx context.Context, originalImage []byte, model *api.CaptureRequestModel) (*api.CaptureResponseModel, error) {
 	imageKey := fmt.Sprintf("capture/large/%s.jpg", model.ID)
 
 	err := s.bucket.WriteAll(ctx, imageKey, originalImage, &blob.WriterOptions{
@@ -86,7 +88,7 @@ func (s serviceImpl) SaveCapture(ctx context.Context, originalImage []byte, mode
 		CaptureURL: imageKey,
 	}, nil
 }
-func (s serviceImpl) Close() {
+func (s *serviceImpl) Close() {
 	if s.browser != nil {
 		zap.L().Info("closing browser context")
 		s.browser.cancelFunc()
@@ -122,7 +124,7 @@ func (s *serviceImpl) CaptureURL(ctx context.Context, model *api.CaptureRequestM
 	return buf, nil
 }
 
-func getSleep() time.Duration {
+func getSleepTimeMs() time.Duration {
 	ms, _ := strconv.Atoi(os.Getenv("APP_SLEEP_TIME_MS"))
 	if ms == 0 {
 		ms = 3000
@@ -133,7 +135,7 @@ func getSleep() time.Duration {
 func fullScreenshot(url string, quality int64, res *[]byte) chromedp.Tasks {
 	return chromedp.Tasks{
 		chromedp.Navigate(url),
-		chromedp.Sleep(getSleep()),
+		chromedp.Sleep(getSleepTimeMs()),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			// get layout metrics
 			_, _, contentSize, _, _, _, err := page.GetLayoutMetrics().Do(ctx)

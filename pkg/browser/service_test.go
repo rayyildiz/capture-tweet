@@ -16,7 +16,7 @@ import (
 )
 
 func TestService_CaptureURL(t *testing.T) {
-	os.Setenv("APP_SLEEP_TIME_MS", "6000")
+	os.Setenv("APP_SLEEP_TIME_MS", "16000")
 	ctx := context.Background()
 	req := testcontainers.ContainerRequest{
 		Image:        "chromedp/headless-shell",
@@ -72,7 +72,7 @@ func TestService_SaveCapture(t *testing.T) {
 }
 
 func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
-	os.Setenv("APP_SLEEP_TIME_MS", "9000")
+	os.Setenv("APP_SLEEP_TIME_MS", "15000")
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -90,7 +90,7 @@ func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
 	require.NoError(t, err)
 	defer chromeC.Terminate(ctx)
 
-	bucket := infra.NewBucket("mem://mem")
+	bucket := infra.NewBucket("file:///C:/tmp")
 	require.NotNil(t, bucket)
 
 	infra.RegisterLogger()
