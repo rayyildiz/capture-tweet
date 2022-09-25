@@ -43,7 +43,6 @@ func (s *serviceImpl) CaptureSaveUpdateDatabase(ctx context.Context, model *api.
 		zap.L().Error("browser CaptureSaveUpdateDatabase, captureURL", zap.String("tweet_id", model.ID), zap.Error(err))
 		return nil, err
 	}
-	s.bucket.WriteAll(ctx, "aaa.png", originalImage, nil)
 
 	if len(originalImage) < minImageSize {
 		return nil, fmt.Errorf("image size is less than 25 Kb. try again. size is %d", len(originalImage))
