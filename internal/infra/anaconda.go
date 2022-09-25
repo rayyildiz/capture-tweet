@@ -1,4 +1,4 @@
-//go:generate mockgen -package=infra -self_package=capturetweet.com/internal/infra -destination=anaconda_mock.go . TweetAPI
+//go:generate go run github.com/golang/mock/mockgen -package=infra -self_package=capturetweet.com/internal/infra -destination=anaconda_mock.go . TweetAPI
 package infra
 
 import (

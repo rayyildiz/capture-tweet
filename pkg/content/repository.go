@@ -1,4 +1,4 @@
-//go:generate mockgen -package=content -self_package=capturetweet.com/pkg/content -destination=repository_mock.go . Repository
+//go:generate go run github.com/golang/mock/mockgen -package=content -self_package=capturetweet.com/pkg/content -destination=repository_mock.go . Repository
 package content
 
 import (
