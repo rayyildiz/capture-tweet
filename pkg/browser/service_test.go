@@ -90,7 +90,7 @@ func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
 	require.NoError(t, err)
 	defer chromeC.Terminate(ctx)
 
-	bucket := infra.NewBucket("file:///C:/tmp")
+	bucket := infra.NewBucket("mem://tmp2")
 	require.NotNil(t, bucket)
 
 	infra.RegisterLogger()
