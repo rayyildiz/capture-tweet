@@ -73,6 +73,7 @@ func TestService_SaveCapture(t *testing.T) {
 
 func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
 	os.Setenv("APP_SLEEP_TIME_MS", "15000")
+	minImageSize = 1024 * 5
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
