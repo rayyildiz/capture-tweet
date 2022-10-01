@@ -67,7 +67,7 @@ require (
 	github.com/vektah/gqlparser/v2 v2.5.1
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/goleak v1.1.12
+	go.uber.org/goleak v1.2.0
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.23.0
 	gocloud.dev v0.26.0
