@@ -12,7 +12,7 @@ require (
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
 	github.com/Microsoft/go-winio v0.5.1 // indirect
 	github.com/Microsoft/hcsshim v0.9.2 // indirect
-	github.com/TheZeroSlave/zapsentry v1.11.0
+	github.com/TheZeroSlave/zapsentry v1.12.0
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/algolia/algoliasearch-client-go/v3 v3.23.0
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
