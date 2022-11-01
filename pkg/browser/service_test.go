@@ -97,7 +97,7 @@ func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
 	infra.RegisterLogger()
 
 	tweetS := api.NewMockTweetService(ctrl)
-	tweetS.EXPECT().UpdateLargeImage(gomock.Any(), "1356685552276434946", "capture/large/1356685552276434946.jpg").Return(nil)
+	tweetS.EXPECT().UpdateLargeImage(gomock.Any(), "1356685552276434946", gomock.Any()).Return(nil)
 
 	service := NewService(tweetS, bucket)
 	require.NotNil(t, service)
