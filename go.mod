@@ -16,7 +16,6 @@ require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/algolia/algoliasearch-client-go/v3 v3.23.0
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
-	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/chromedp/cdproto v0.0.0-20221011223153-490dc4d81f7c
 	github.com/chromedp/chromedp v0.8.6
 	github.com/chromedp/sysutil v1.0.0 // indirect
@@ -67,7 +66,7 @@ require (
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/goleak v1.2.0
 	go.uber.org/multierr v1.8.0 // indirect
-	go.uber.org/zap v1.23.0
+	go.uber.org/zap v1.24.0
 	gocloud.dev v0.27.0
 	golang.org/x/net v0.1.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783 // indirect
@@ -80,7 +79,6 @@ require (
 	google.golang.org/genproto v0.0.0-20221027153422-115e99e71e1c // indirect
 	google.golang.org/grpc v1.50.1 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
@@ -94,7 +92,6 @@ require (
 	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/urfave/cli/v2 v2.19.2 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	golang.org/x/mod v0.6.0 // indirect
