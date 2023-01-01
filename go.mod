@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.105.0 // indirect
 	cloud.google.com/go/pubsub v1.24.0 // indirect
 	cloud.google.com/go/storage v1.27.0 // indirect
-	github.com/99designs/gqlgen v0.17.20
+	github.com/99designs/gqlgen v0.17.22
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
@@ -46,7 +46,7 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/mitchellh/mapstructure v1.4.3 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/moby/sys/mount v0.3.3 // indirect
 	github.com/moby/sys/mountinfo v0.6.2 // indirect
 	github.com/moby/term v0.0.0-20220808134915-39b0c02b01ae // indirect
