@@ -12,11 +12,11 @@ steps:
     dir: 'web/app'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    args: ['gsutil', '-h','Cache-Control:public,max-age=2592000','-m' ,'rsync','-R', 'build/static','gs://www.capturetweet.com/static']
+    args: ['gsutil', '-h','Cache-Control:public,max-age=2592000','-m' ,'rsync','-R', 'build/static','gs://capturetweet.com/static']
     dir: 'web/app'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    args: ['gsutil', '-h','Cache-Control:public,max-age=86400','-m' ,'rsync','-R', 'build','gs://www.capturetweet.com']
+    args: ['gsutil', '-h','Cache-Control:public,max-age=86400','-m' ,'rsync','-R', 'build','gs://capturetweet.com']
     dir: 'web/app'
 
 
