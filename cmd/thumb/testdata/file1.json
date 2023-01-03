@@ -1,0 +1,19 @@
+{
+  "kind": "storage#object",
+  "id": "capturetweet.com/capture/large/logo512.png/1672730847532471",
+  "selfLink": "https://www.googleapis.com/storage/v1/b/capturetweet.com/o/capture%2Flarge%2Flogo512.png",
+  "name": "capture/large/logo512.png",
+  "bucket": "capturetweet.com",
+  "generation": "1672730847532471",
+  "metageneration": "1",
+  "contentType": "image/png",
+  "timeCreated": "2023-01-03T07:27:27.543Z",
+  "updated": "2023-01-03T07:27:27.543Z",
+  "storageClass": "STANDARD",
+  "timeStorageClassUpdated": "2023-01-03T07:27:27.543Z",
+  "size": "62644",
+  "md5Hash": "eT2F5OvvPh4kR93Lty8cAw==",
+  "mediaLink": "https://storage.googleapis.com/download/storage/v1/b/capturetweet.com/o/capture%2Flarge%2Flogo512.png?generation=1672730847532471&alt=media",
+  "crc32c": "Uom/nw==",
+  "etag": "CLer4//vqvwCEAE="
+}
