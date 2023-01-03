@@ -1,14 +1,14 @@
 steps:
-  - name: 'node:lts'
-    args: ['yarn']
+  - name: 'node:16'
+    args: ['npm','install']
     dir: 'web/app'
 
-  - name: 'node:lts'
-    args: ['yarn','test']
+  - name: 'node:16'
+    args: ['npm','run','test']
     dir: 'web/app'
 
-  - name: 'node:lts'
-    args: ['yarn', 'build:prod']
+  - name: 'node:16'
+    args: ['npm','run', 'build:prod']
     dir: 'web/app'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
