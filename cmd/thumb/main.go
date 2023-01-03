@@ -47,6 +47,8 @@ func Run() error {
 	}
 
 	mux := http.NewServeMux()
+
+	mux.HandleFunc("/resize2", h.handleResizeLog)
 	mux.HandleFunc("/resize", h.handleResize)
 
 	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start).Round(time.Millisecond)))

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"image"
 	"image/jpeg"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -37,14 +38,28 @@ type handlerImpl struct {
 	bucket  *blob.Bucket
 }
 
+func (h handlerImpl) handleResizeLog(w http.ResponseWriter, r *http.Request) {
+	s := fmt.Sprintf("Detected change in Cloud Storage bucket: %s", r.Header.Get("Ce-Subject"))
+	zap.L().Info(s)
+	defer r.Body.Close()
+
+	b, err := io.ReadAll(r.Body)
+	if err != nil {
+		zap.L().Error("can not read ")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	zap.L().Info("aaa", zap.ByteString("data", b))
+}
+
 func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	w.Header().Set("Content-Type", "application/json")
 
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		zap.L().Warn("method not allowed", zap.String("method", r.Method))
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
 	}
 
