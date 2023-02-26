@@ -1,0 +1,7 @@
+runtime: go120
+service: default
+env: standard
+instance_class: F1
+handlers:
+  - url: .*
+    script: auto
