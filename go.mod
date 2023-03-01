@@ -14,7 +14,7 @@ require (
 	github.com/Microsoft/hcsshim v0.9.5 // indirect
 	github.com/TheZeroSlave/zapsentry v1.12.0
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/algolia/algoliasearch-client-go/v3 v3.23.0
+	github.com/algolia/algoliasearch-client-go/v3 v3.26.4
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
 	github.com/chromedp/cdproto v0.0.0-20230109101555-6b041c6303cc
 	github.com/chromedp/chromedp v0.8.7
