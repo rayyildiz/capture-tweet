@@ -110,7 +110,7 @@ Example: github.com/spf13/cobra
 ## Basic Types
 
 |    Type    |               Set of Values                |                    Values                     |
-| :--------: | :----------------------------------------: | :-------------------------------------------: |
+| :--------: |:------------------------------------------:|:---------------------------------------------:|
 |    bool    |                  boolean                   |                  true/false                   |
 |   string   |            array of characters             |             needs to be inside ""             |
 |    int     |                  integers                  |             32 or 64 bit integer              |
@@ -128,6 +128,7 @@ Example: github.com/spf13/cobra
 | complex128 | 64-bit float with real and imaginary parts |                                               |
 |    byte    |                sets of bits                |                alias for uint8                |
 |    rune    |             Unicode characters             |                alias for int32                |
+
 
 [Return to Summary](#summary)
 

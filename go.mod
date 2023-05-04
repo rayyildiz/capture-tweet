@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.109.0 // indirect
 	cloud.google.com/go/pubsub v1.28.0 // indirect
 	cloud.google.com/go/storage v1.29.0 // indirect
-	github.com/99designs/gqlgen v0.17.25
+	github.com/99designs/gqlgen v0.17.30
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
@@ -15,8 +15,8 @@ require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/algolia/algoliasearch-client-go/v3 v3.28.1
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
-	github.com/chromedp/cdproto v0.0.0-20230109101555-6b041c6303cc
-	github.com/chromedp/chromedp v0.8.7
+	github.com/chromedp/cdproto v0.0.0-20230502002814-67c6147a4636
+	github.com/chromedp/chromedp v0.9.1
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/containerd/containerd v1.6.19 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -30,7 +30,7 @@ require (
 	github.com/getsentry/sentry-go v0.20.0
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
-	github.com/gobwas/ws v1.1.0 // indirect
+	github.com/gobwas/ws v1.2.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/mock v1.6.0
@@ -52,22 +52,22 @@ require (
 	github.com/opencontainers/runc v1.1.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/rs/cors v1.8.3
+	github.com/rs/cors v1.9.0
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/stretchr/testify v1.8.2
 	github.com/testcontainers/testcontainers-go v0.19.0
 	github.com/vektah/gqlparser/v2 v2.5.1
 	go.opencensus.io v0.24.0 // indirect
-	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/goleak v1.2.0
-	go.uber.org/multierr v1.9.0 // indirect
+	go.uber.org/atomic v1.11.0 // indirect
+	go.uber.org/goleak v1.2.1
+	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.24.0
 	gocloud.dev v0.29.0
-	golang.org/x/net v0.8.0 // indirect
+	golang.org/x/net v0.9.0 // indirect
 	golang.org/x/oauth2 v0.5.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.6.0 // indirect
-	golang.org/x/text v0.8.0 // indirect
+	golang.org/x/sys v0.7.0 // indirect
+	golang.org/x/text v0.9.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.110.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
@@ -94,8 +94,8 @@ require (
 	github.com/moby/patternmatcher v0.5.0 // indirect
 	github.com/moby/sys/sequential v0.5.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/urfave/cli/v2 v2.24.4 // indirect
+	github.com/urfave/cli/v2 v2.25.3 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
-	golang.org/x/mod v0.8.0 // indirect
-	golang.org/x/tools v0.6.0 // indirect
+	golang.org/x/mod v0.10.0 // indirect
+	golang.org/x/tools v0.8.0 // indirect
 )
