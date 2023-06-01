@@ -13,7 +13,7 @@ require (
 	github.com/Microsoft/go-winio v0.6.0 // indirect
 	github.com/TheZeroSlave/zapsentry v1.15.0
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/algolia/algoliasearch-client-go/v3 v3.28.1
+	github.com/algolia/algoliasearch-client-go/v3 v3.29.4
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
 	github.com/chromedp/cdproto v0.0.0-20230506233603-4ea4c6dc2e5b
 	github.com/chromedp/chromedp v0.9.1
@@ -54,8 +54,8 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rs/cors v1.9.0
 	github.com/sirupsen/logrus v1.9.0 // indirect
-	github.com/stretchr/testify v1.8.2
 	github.com/testcontainers/testcontainers-go v0.20.1
+  github.com/stretchr/testify v1.8.4
 	github.com/vektah/gqlparser/v2 v2.5.1
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
