@@ -2,8 +2,6 @@
 
 ![Build status](https://github.com/rayyildiz/capture-tweet/workflows/build/badge.svg)
 ![Build status](https://github.com/rayyildiz/capture-tweet/workflows/pull-request/badge.svg)
-[![codecov](https://codecov.io/gh/rayyildiz/capture-tweet/branch/main/graph/badge.svg?token=58YR43PZFS)](https://codecov.io/gh/rayyildiz/capture-tweet)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=rayyildiz/capture-tweet&identifier=272198663)](https://dependabot.com)
 
 
 I am going to close capturetweet on 31.12.2023, which I started at Starbucks to try [cloud run](https://cloud.google.com/run) features, 
