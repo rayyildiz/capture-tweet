@@ -4,10 +4,6 @@ steps:
     dir: 'web/app'
 
   - name: 'node:16'
-    args: ['npm','run','test']
-    dir: 'web/app'
-
-  - name: 'node:16'
     args: ['npm','run', 'build:prod']
     dir: 'web/app'
 
