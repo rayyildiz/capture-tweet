@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.110.2 // indirect
 	cloud.google.com/go/pubsub v1.31.0 // indirect
 	cloud.google.com/go/storage v1.30.1 // indirect
-	github.com/99designs/gqlgen v0.17.33
+	github.com/99designs/gqlgen v0.17.34
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
@@ -56,7 +56,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/stretchr/testify v1.8.4
 	github.com/testcontainers/testcontainers-go v0.20.1
-	github.com/vektah/gqlparser/v2 v2.5.3
+	github.com/vektah/gqlparser/v2 v2.5.4
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/goleak v1.2.1
