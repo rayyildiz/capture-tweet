@@ -15,3 +15,6 @@ test_report/
 *.exe
 .gitignore~
 ..gitignore.un~
+..bfg-report/
+bfg.jar
+private.txt
