@@ -75,15 +75,17 @@ const HomePage = () => {
             </div>
             }
             <form onSubmit={handleSummit} className="mt-2">
+              <h5>Sunsetting: capturetweet is now readonly. It will be closed at <u>31.12.2023</u>. </h5>
+              <p>Source code is open, <a href="https://github.com/rayyildiz/capture-tweet">check it out</a></p>
               <label htmlFor="url" hidden={true}>Enter tweet url</label>
               <br/>
-              <input autoFocus autoComplete="off" type="text" id="url" name="url" placeholder="Enter Twitter URL" onChange={event => setUrl(event.target.value)}/>
+              <input readOnly autoFocus autoComplete="off" type="text" id="url" name="url" placeholder="Enter Twitter URL (disabled)" onChange={event => setUrl(event.target.value)}/>
               {loading ?
                   <button className="form-button" type="submit" disabled>
                     <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"> </span>
                     Capturing tweet...
                   </button> :
-                  <button className="form-button" type="submit" onClick={handleSummit}>CAPTURE</button>
+                  <button disabled className="form-button" type="submit" onClick={handleSummit}>CAPTURE</button>
               }
             </form>
           </div>
