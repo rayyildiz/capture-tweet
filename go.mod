@@ -11,7 +11,7 @@ require (
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
 	github.com/ChimeraCoder/tokenbucket v0.0.0-20131201223612-c5a927568de7 // indirect
 	github.com/Microsoft/go-winio v0.6.0 // indirect
-	github.com/TheZeroSlave/zapsentry v1.16.0
+	github.com/TheZeroSlave/zapsentry v1.18.0
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/algolia/algoliasearch-client-go/v3 v3.30.0
 	github.com/azr/backoff v0.0.0-20160115115103-53511d3c7330 // indirect
