@@ -18,3 +18,4 @@ test_report/
 ..bfg-report/
 bfg.jar
 private.txt
+.DS_Store
