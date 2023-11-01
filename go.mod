@@ -18,7 +18,7 @@ require (
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/rs/cors v1.10.1
 	github.com/stretchr/testify v1.8.4
-	github.com/testcontainers/testcontainers-go v0.25.0
+	github.com/testcontainers/testcontainers-go v0.26.0
 	github.com/vektah/gqlparser/v2 v2.5.10
 	go.uber.org/goleak v1.2.1
 	go.uber.org/zap v1.26.0
