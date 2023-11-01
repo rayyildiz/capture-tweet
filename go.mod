@@ -20,7 +20,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/testcontainers/testcontainers-go v0.25.0
 	github.com/vektah/gqlparser/v2 v2.5.10
-	go.uber.org/goleak v1.2.1
+	go.uber.org/goleak v1.3.0
 	go.uber.org/zap v1.26.0
 	gocloud.dev v0.34.0
 )
