@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/99designs/gqlgen v0.17.40
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
-	github.com/TheZeroSlave/zapsentry v1.19.0
+	github.com/TheZeroSlave/zapsentry v1.20.2
 	github.com/algolia/algoliasearch-client-go/v3 v3.31.0
 	github.com/chromedp/cdproto v0.0.0-20231011050154-1d073bb38998
 	github.com/chromedp/chromedp v0.9.3
