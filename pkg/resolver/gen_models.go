@@ -8,6 +8,12 @@ type ContactInput struct {
 	Message  string `json:"message"`
 }
 
+type Mutation struct {
+}
+
+type Query struct {
+}
+
 type SearchInput struct {
 	Term string `json:"term"`
 }

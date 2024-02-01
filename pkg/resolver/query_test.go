@@ -6,9 +6,9 @@ import (
 
 	"capturetweet.com/api"
 	"capturetweet.com/internal/infra"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestQueryResolver_Tweet(t *testing.T) {
