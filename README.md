@@ -1,9 +1,12 @@
 # CaptureTweet
 
-![Build status](https://github.com/rayyildiz/capture-tweet/workflows/build/badge.svg)
-![Build status](https://github.com/rayyildiz/capture-tweet/workflows/pull-request/badge.svg)
-[![codecov](https://codecov.io/gh/rayyildiz/capture-tweet/branch/main/graph/badge.svg?token=58YR43PZFS)](https://codecov.io/gh/rayyildiz/capture-tweet)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=rayyildiz/capture-tweet&identifier=272198663)](https://dependabot.com)
+[![build](https://github.com/rayyildiz/capture-tweet/actions/workflows/ci.yml/badge.svg)](https://github.com/rayyildiz/capture-tweet/actions/workflows/ci.yml)
+[![pull-request](https://github.com/rayyildiz/capture-tweet/actions/workflows/pr.yml/badge.svg)](https://github.com/rayyildiz/capture-tweet/actions/workflows/pr.yml)
+[![Security Scan](https://github.com/rayyildiz/capture-tweet/actions/workflows/security_scan.yml/badge.svg)](https://github.com/rayyildiz/capture-tweet/actions/workflows/security_scan.yml)
+
+I am going to close capturetweet on 31.12.2023, which I started at Starbucks to try [cloud run](https://cloud.google.com/run) features, 
+in accordance with [Twitter's pricing policy](https://www.engadget.com/twitter-announces-new-api-pricing-including-a-limited-free-tier-for-bots-005251253.html).
+Anyone who wishes can deploy the application to the GCP cloud run. All necessary [CI /CD pipelines](.github/workflows/ci.yml) are ready.
 
 ## How
 
@@ -33,14 +36,14 @@ ALGOLIA_INDEX=tweets-LOCAL
 
 ## RoadMap
 
-- [x] Create skeleton project
+- [x] Create a skeleton project
 - [x] Add graphql support.
 - [x] Tweet Service
   - [x] CRUD for tweet service
   - [x] Use algolia for search
   - [x] Store user additional data in a different collection.
 - [x] Async capture
-  - [x] Pubsub support
+  - [x] PubSub support
   - [x] Capture and update collection
 - [x] New UI design
 - [x] Apollo client support

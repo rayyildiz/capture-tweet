@@ -1,4 +1,4 @@
-//go:generate go run github.com/golang/mock/mockgen -package=tweet -self_package=capturetweet.com/pkg/tweet -destination=repository_mock.go . Repository
+//go:generate go run go.uber.org/mock/mockgen@latest -package=tweet -self_package=capturetweet.com/pkg/tweet -destination=repository_mock.go . Repository
 package tweet
 
 import (

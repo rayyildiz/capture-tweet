@@ -8,9 +8,9 @@ import (
 	"capturetweet.com/api"
 	"capturetweet.com/internal/infra"
 	"github.com/ChimeraCoder/anaconda"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestService_FindById(t *testing.T) {
