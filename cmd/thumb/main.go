@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -10,12 +11,11 @@ import (
 	"capturetweet.com/pkg/tweet"
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
-	"go.uber.org/zap"
 )
 
 func init() {
 	if err := godotenv.Load(); err != nil {
-		log.Printf("can't load .env file, %v", err)
+		slog.Debug("can't load .env file", slog.Any("err", err))
 	}
 }
 
@@ -26,7 +26,6 @@ func main() {
 }
 
 func Run() error {
-	infra.RegisterLogger()
 	defer sentry.Flush(time.Second * 2)
 	start := time.Now()
 
@@ -51,10 +50,10 @@ func Run() error {
 	mux.HandleFunc("/log", h.handleLog)
 	mux.HandleFunc("/resize", h.handleResize)
 
-	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
+	slog.Info("initialized objects", slog.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 
 	port := infra.Port()
-	zap.L().Info("thumb server is starting at port", zap.String("port", port))
+	slog.Info("thumb server is starting at port", slog.String("port", port))
 	if err := http.ListenAndServe(":"+port, mux); err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}

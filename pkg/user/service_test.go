@@ -5,7 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"capturetweet.com/internal/infra"
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -15,8 +14,6 @@ import (
 func TestUserService_FindById(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	infra.RegisterLogger()
 
 	ctx := context.Background()
 
@@ -43,8 +40,6 @@ func TestUserService_FindById(t *testing.T) {
 func TestUserService_FindOrCreate_Exist(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	infra.RegisterLogger()
 
 	ctx := context.Background()
 
@@ -75,8 +70,6 @@ func TestUserService_FindOrCreate_Exist(t *testing.T) {
 func TestUserService_FindOrCreate_NotExist(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	infra.RegisterLogger()
 
 	ctx := context.Background()
 

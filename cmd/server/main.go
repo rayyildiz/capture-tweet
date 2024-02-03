@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"time"
@@ -19,7 +20,6 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
-	"go.uber.org/zap"
 )
 
 func init() {
@@ -35,7 +35,6 @@ func main() {
 }
 
 func Run() error {
-	infra.RegisterLogger()
 	defer sentry.Flush(time.Second * 2)
 
 	start := time.Now()
@@ -86,7 +85,6 @@ func Run() error {
 	resolver.InitService(tweetService, userService, contentService)
 
 	srv := handler.NewDefaultServer(resolver.NewExecutableSchema(resolver.Config{Resolvers: rootResolver}))
-	srv.Use(infra.ZapLogger{})
 
 	mux := http.DefaultServeMux
 
@@ -102,10 +100,10 @@ func Run() error {
 		AllowCredentials: false,
 	}).Handler(mux)
 
-	zap.L().Info("initialized objects", zap.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
+	slog.Info("initialized objects", slog.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 
 	port := infra.Port()
-	zap.L().Info("api server is starting at port", zap.String("port", port))
+	slog.Info("api server is starting at port", slog.String("port", port))
 	if err := http.ListenAndServe(":"+port, h); err != nil {
 		return fmt.Errorf("http:ListenAndServe port :%s, %w", port, err)
 	}

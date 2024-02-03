@@ -3,10 +3,10 @@ package resolver
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	"capturetweet.com/api"
 	"capturetweet.com/internal/convert"
-	"go.uber.org/zap"
 	"gocloud.dev/gcerrors"
 )
 
@@ -21,12 +21,12 @@ func (r queryResolverImpl) Tweet(ctx context.Context, id string) (*Tweet, error)
 	model, err := _twitterService.FindById(ctx, id)
 	code := gcerrors.Code(err)
 	if code == gcerrors.NotFound {
-		zap.L().Warn("tweet not found", zap.String("id", id))
+		slog.Warn("tweet not found", slog.String("id", id))
 		return nil, nil
 	}
 
 	if err != nil {
-		zap.L().Error("tweet find error", zap.String("id", id), zap.Error(err))
+		slog.Error("tweet find error", slog.String("id", id), slog.Any("err", err))
 		return nil, err
 	}
 	var resources []*Resource
@@ -57,7 +57,7 @@ func (r queryResolverImpl) Tweet(ctx context.Context, id string) (*Tweet, error)
 func (r queryResolverImpl) SearchByUser(ctx context.Context, userID string) ([]*Tweet, error) {
 	models, err := _twitterService.SearchByUser(ctx, userID)
 	if err != nil {
-		zap.L().Error("search by user error", zap.String("user_id", userID), zap.Error(err))
+		slog.Error("search by user error", slog.String("user_id", userID), slog.Any("err", err))
 		return nil, errors.New("could not ind any result")
 	}
 	var list []*Tweet
@@ -71,7 +71,7 @@ func (r queryResolverImpl) SearchByUser(ctx context.Context, userID string) ([]*
 func (r queryResolverImpl) Search(ctx context.Context, input SearchInput, size int, page int, start int) ([]*Tweet, error) {
 	models, err := _twitterService.Search(ctx, input.Term, size, start, page)
 	if err != nil {
-		zap.L().Error("search error", zap.String("term", input.Term), zap.Error(err))
+		slog.Error("search error", slog.String("term", input.Term), slog.Any("err", err))
 		return nil, errors.New("could not ind any result")
 	}
 	var list []*Tweet

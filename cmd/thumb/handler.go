@@ -8,13 +8,13 @@ import (
 	"image"
 	"image/jpeg"
 	"io"
+	"log/slog"
 	"net/http"
 	"strings"
 	"time"
 
 	"capturetweet.com/api"
 	"github.com/nfnt/resize"
-	"go.uber.org/zap"
 	"gocloud.dev/blob"
 )
 
@@ -45,16 +45,15 @@ type handlerImpl struct {
 
 func (h handlerImpl) handleLog(w http.ResponseWriter, r *http.Request) {
 	s := fmt.Sprintf("Detected change in Cloud Storage bucket: %s", r.Header.Get("Ce-Subject"))
-	zap.L().Info(s)
+	slog.Info(s)
 	defer r.Body.Close()
 
-	b, err := io.ReadAll(r.Body)
+	_, err := io.ReadAll(r.Body)
 	if err != nil {
-		zap.L().Error("can not read ")
+		slog.Error("can not read ")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	zap.L().Info("aaa", zap.ByteString("data", b))
 }
 
 func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
@@ -63,7 +62,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		zap.L().Warn("method not allowed", zap.String("method", r.Method))
+		slog.Warn("method not allowed", slog.String("method", r.Method))
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
 	}
@@ -71,21 +70,21 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	var payload EventArcRequest
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
-		zap.L().Error("bad request", zap.Error(err))
+		slog.Error("bad request", slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 	defer r.Body.Close()
 
 	if !strings.HasPrefix(payload.Name, "capture/large/") {
-		zap.L().Warn("not a valid prefix", zap.String("image_kind", payload.Kind), zap.String("name", payload.Name), zap.String("id", payload.Id))
+		slog.Warn("not a valid prefix", slog.String("image_kind", payload.Kind), slog.String("name", payload.Name), slog.String("id", payload.Id))
 		w.WriteHeader(http.StatusNoContent)
 		fmt.Fprintf(w, "")
 		return
 	}
 
 	if payload.Kind != "storage#object" {
-		zap.L().Warn("expected image kind must be object", zap.String("image_kind", payload.Kind), zap.String("name", payload.Name), zap.String("id", payload.Id))
+		slog.Warn("expected image kind must be object", slog.String("image_kind", payload.Kind), slog.String("name", payload.Name), slog.String("id", payload.Id))
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("it is not an object"))
 		return
@@ -96,14 +95,14 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 
 	img, err := h.bucket.ReadAll(ctx, payload.Name)
 	if err != nil {
-		zap.L().Error("open bucket", zap.String("image_key", payload.Name), zap.String("image_kind", payload.Kind), zap.Error(err))
+		slog.Error("open bucket", slog.String("image_key", payload.Name), slog.String("image_kind", payload.Kind), slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
 	attrs, err := h.bucket.Attributes(ctx, payload.Name)
 	if err != nil {
-		zap.L().Error("read image attributes", zap.String("image_key", payload.Name), zap.String("image_kind", payload.Kind), zap.Error(err))
+		slog.Error("read image attributes", slog.String("image_key", payload.Name), slog.String("image_kind", payload.Kind), slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -114,7 +113,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 
 	decoder, _, err := image.Decode(bytes.NewBuffer(img))
 	if err != nil {
-		zap.L().Error("image decode", zap.String("image_key", payload.Name), zap.String("image_kind", payload.Kind), zap.Error(err))
+		slog.Error("image decode", slog.String("image_key", payload.Name), slog.String("image_kind", payload.Kind), slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -128,7 +127,7 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 	buf := new(bytes.Buffer)
 	err = jpeg.Encode(buf, newImage, nil)
 	if err != nil {
-		zap.L().Error("jpeg encode image", zap.String("image_key", payload.Name), zap.String("image_kind", payload.Kind), zap.Error(err))
+		slog.Error("jpeg encode image", slog.String("image_key", payload.Name), slog.String("image_kind", payload.Kind), slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -144,20 +143,20 @@ func (h handlerImpl) handleResize(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 	if err != nil {
-		zap.L().Error("open bucket for thumbnail", zap.String("image_key", payload.Name), zap.String("image_kind", payload.Kind), zap.Error(err))
+		slog.Error("open bucket for thumbnail", slog.String("image_key", payload.Name), slog.String("image_kind", payload.Kind), slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
-	zap.L().Info("image stored successfully", zap.String("image_key", thumbNailKey), zap.String("image_key", payload.Name), zap.String("tweet_id", tweetId), zap.String("tweet_user", tweetUser))
+	slog.Info("image stored successfully", slog.String("image_key", thumbNailKey), slog.String("image_key", payload.Name), slog.String("tweet_id", tweetId), slog.String("tweet_user", tweetUser))
 	err = h.service.UpdateThumbImage(ctx, tweetId, thumbNailKey)
 	if err != nil {
-		zap.L().Error("save in database", zap.String("image_key", payload.Name), zap.String("image_kind", payload.Kind), zap.Error(err))
+		slog.Error("save in database", slog.String("image_key", payload.Name), slog.String("image_kind", payload.Kind), slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
-	zap.L().Info("image saved", zap.Duration("elapsed", time.Since(start).Round(time.Millisecond)), zap.String("image_thumb", thumbNailKey), zap.String("image_key", payload.Name), zap.String("image_kind", payload.Kind))
+	slog.Info("image saved", slog.Duration("elapsed", time.Since(start).Round(time.Millisecond)), slog.String("image_thumb", thumbNailKey), slog.String("image_key", payload.Name), slog.String("image_kind", payload.Kind))
 
 	w.WriteHeader(http.StatusCreated)
 	_, _ = w.Write([]byte("No Content"))
