@@ -9,7 +9,7 @@ require (
 	github.com/chromedp/cdproto v0.0.0-20240127002248-bd7a66284627
 	github.com/chromedp/chromedp v0.9.3
 	github.com/docker/go-connections v0.5.0
-	github.com/getsentry/sentry-go v0.26.0
+	github.com/getsentry/sentry-go v0.27.0
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.5.0
 	github.com/joho/godotenv v1.5.1
