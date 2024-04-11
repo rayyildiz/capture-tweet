@@ -43,7 +43,7 @@ func Run() error {
 	}
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/sitemap", h.handleRequest)
+	mux.HandleFunc("GET /sitemap", h.handleRequest)
 
 	slog.Info("initialized objects", slog.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 

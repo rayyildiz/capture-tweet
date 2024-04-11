@@ -34,7 +34,7 @@ func Run() error {
 	}
 
 	handler := http.NewServeMux()
-	handler.HandleFunc("/capture", h.handleCapture)
+	handler.HandleFunc("ANY /capture", h.handleCapture)
 
 	slog.Info("initialized objects", slog.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 

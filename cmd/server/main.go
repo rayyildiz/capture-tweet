@@ -89,9 +89,9 @@ func Run() error {
 	mux := http.DefaultServeMux
 
 	if os.Getenv("GRAPHQL_ENABLE_PLAYGROUND") == "true" {
-		mux.Handle("/api/docs", playground.Handler("GraphQL playground", "/api/query"))
+		mux.Handle("GET /api/docs", playground.Handler("GraphQL playground", "/api/query"))
 	}
-	mux.Handle("/api/query", infra.VersionHandler(srv))
+	mux.Handle("ANY /api/query", infra.VersionHandler(srv))
 
 	h := cors.New(cors.Options{
 		AllowedOrigins:   []string{"https://capturetweet.com", "https://www.capturetweet.com", "http://localhost:3000", "http://localhost:4000"},

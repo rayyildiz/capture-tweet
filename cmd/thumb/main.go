@@ -47,8 +47,8 @@ func Run() error {
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/log", h.handleLog)
-	mux.HandleFunc("/resize", h.handleResize)
+	mux.HandleFunc("POST /log", h.handleLog)
+	mux.HandleFunc("POST /resize", h.handleResize)
 
 	slog.Info("initialized objects", slog.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 

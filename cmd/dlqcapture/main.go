@@ -37,7 +37,7 @@ func Run() error {
 	h := handlerImpl{
 		bucket: bucket,
 	}
-	mux.HandleFunc("/dlq-capture", h.handleMessages)
+	mux.HandleFunc("POST /dlq-capture", h.handleMessages)
 
 	slog.Info("initialized objects", slog.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 
