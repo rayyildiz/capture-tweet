@@ -17,7 +17,7 @@ require (
 	github.com/rs/cors v1.11.0
 	github.com/stretchr/testify v1.9.0
 	github.com/testcontainers/testcontainers-go v0.31.0
-	github.com/vektah/gqlparser/v2 v2.5.11
+	github.com/vektah/gqlparser/v2 v2.5.12
 	go.uber.org/goleak v1.3.0
 	go.uber.org/mock v0.4.0
 	gocloud.dev v0.37.0
