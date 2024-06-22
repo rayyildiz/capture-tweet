@@ -5,6 +5,7 @@ import (
 	"crypto/md5" // #nosec
 	"encoding/base64"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
@@ -12,7 +13,6 @@ import (
 	"time"
 
 	"capturetweet.com/pkg/tweet"
-	"go.uber.org/zap"
 	"gocloud.dev/blob"
 )
 
@@ -26,7 +26,7 @@ func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-		zap.L().Warn("method not allowed", zap.String("method", r.Method))
+		slog.Warn("method not allowed", slog.String("method", r.Method))
 		return
 	}
 
@@ -37,25 +37,25 @@ func (h handlerImpl) handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	size, err := strconv.Atoi(r.URL.Query().Get("size"))
 	if err != nil {
-		zap.L().Warn("there is no query string param for size", zap.String("path", r.URL.Path))
+		slog.Warn("there is no query string param for size", slog.String("path", r.URL.Path))
 		size = 50
 	}
 
 	tweets, err := h.repo.FindAllOrderByUpdated(ctx, size)
 	if err != nil {
-		zap.L().Warn("could not get repositories", zap.Error(err))
+		slog.Warn("could not get repositories", slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
 	err = createSitemap(ctx, h.bucket, tweets)
 	if err != nil {
-		zap.L().Warn("could not get create sitemap", zap.Error(err))
+		slog.Warn("could not get create sitemap", slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
-	zap.L().Info("create sitemap", zap.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
+	slog.Info("create sitemap", slog.Duration("elapsed", time.Since(start).Round(time.Millisecond)))
 
 	w.WriteHeader(http.StatusCreated)
 	_, _ = w.Write([]byte("No Content"))
@@ -101,7 +101,7 @@ func createSitemap(ctx context.Context, bucket *blob.Bucket, tweets []tweet.Twee
 
 	oldSitemapAttrs, err := bucket.Attributes(ctx, "sitemap.xml")
 	if err != nil {
-		zap.L().Error("bucket:ReadAll", zap.Error(err))
+		slog.Error("bucket:ReadAll", slog.Any("err", err))
 		return err
 	}
 	/* #nosec */
@@ -112,7 +112,7 @@ func createSitemap(ctx context.Context, bucket *blob.Bucket, tweets []tweet.Twee
 
 	if newHash != oldHash {
 
-		zap.L().Info("old and new sitemap NOT equal, write on bucket")
+		slog.Info("old and new sitemap NOT equal, write on bucket")
 
 		err = bucket.WriteAll(ctx, "sitemap.xml", newSitemap, &blob.WriterOptions{
 			ContentType:  "application/xml",
@@ -122,11 +122,11 @@ func createSitemap(ctx context.Context, bucket *blob.Bucket, tweets []tweet.Twee
 			},
 		})
 		if err != nil {
-			zap.L().Error("bucket:writeAll", zap.Error(err))
+			slog.Error("bucket:writeAll", slog.Any("err", err))
 			return err
 		}
 
-		zap.L().Info("old and new sitemap NOT equal, ping search engines.")
+		slog.Info("old and new sitemap NOT equal, ping search engines.")
 
 		var wg sync.WaitGroup
 		wg.Add(2)
@@ -143,7 +143,7 @@ func createSitemap(ctx context.Context, bucket *blob.Bucket, tweets []tweet.Twee
 		wg.Wait()
 
 	} else {
-		zap.L().Info("old and new sitemap equals, no need to ping search engines.", zap.String("old_hash", oldHash), zap.String("new_hash", newHash))
+		slog.Info("old and new sitemap equals, no need to ping search engines.", slog.String("old_hash", oldHash), slog.String("new_hash", newHash))
 	}
 	return nil
 }
@@ -151,7 +151,7 @@ func createSitemap(ctx context.Context, bucket *blob.Bucket, tweets []tweet.Twee
 func ping(ctx context.Context, pingUrl string) {
 	request, err := http.NewRequest(http.MethodGet, pingUrl, nil)
 	if err != nil {
-		zap.L().Error("error creating request", zap.String("url", pingUrl), zap.Error(err))
+		slog.Error("error creating request", slog.String("url", pingUrl), slog.Any("err", err))
 		return
 	}
 	request.Header.Add("x-app-name", "go-http")
@@ -160,8 +160,8 @@ func ping(ctx context.Context, pingUrl string) {
 
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
-		zap.L().Error("error while ping", zap.String("url", pingUrl), zap.Error(err))
+		slog.Error("error while ping", slog.String("url", pingUrl), slog.Any("err", err))
 	} else {
-		zap.L().Info("success", zap.String("url", pingUrl), zap.String("status", resp.Status))
+		slog.Info("success", slog.String("url", pingUrl), slog.String("status", resp.Status))
 	}
 }

@@ -5,17 +5,14 @@ import (
 	"testing"
 
 	"capturetweet.com/api"
-	"capturetweet.com/internal/infra"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestMutationResolver_Capture(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	infra.RegisterLogger()
 
 	tweetService := api.NewMockTweetService(ctrl)
 	tweetService.EXPECT().Store(gomock.Any(), "https://twitter.com/jack/status/20").Return("20", nil)
@@ -40,8 +37,6 @@ func TestMutationResolver_Capture(t *testing.T) {
 func TestMutationResolver_Contact(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	infra.RegisterLogger()
 
 	contentService := api.NewMockContentService(ctrl)
 	contentService.EXPECT().StoreContactRequest(gomock.Any(), "test@example.com", "Ramazan", "hello", "captcha").Return(nil)

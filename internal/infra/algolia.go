@@ -1,4 +1,4 @@
-//go:generate go run github.com/golang/mock/mockgen -package=infra -self_package=capturetweet.com/internal/infra -destination=algolia_mock.go . IndexInterface
+//go:generate go run go.uber.org/mock/mockgen@latest -package=infra -self_package=capturetweet.com/internal/infra -destination=algolia_mock.go . IndexInterface
 package infra
 
 import (

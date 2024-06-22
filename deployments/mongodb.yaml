@@ -38,9 +38,9 @@ spec:
               cpu: 150m
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
-              value: "OVzXseTlsKLu9HVn7zS9t1Wh59bEOe"
+              value: "***REMOVED***"
             - name: MONGO_INITDB_ROOT_PASSWORD
-              value: "XYEbHtCbT97HOETfvbmuIuJToWdzl8"
+              value: "***REMOVED***"
   volumeClaimTemplates:
     - metadata:
         name: mongodb-data

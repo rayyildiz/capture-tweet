@@ -8,9 +8,9 @@ import (
 	"capturetweet.com/api"
 	"capturetweet.com/internal/infra"
 	"github.com/ChimeraCoder/anaconda"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestService_FindById(t *testing.T) {
@@ -35,7 +35,6 @@ func TestService_FindById(t *testing.T) {
 			},
 		},
 	}, nil)
-	infra.RegisterLogger()
 
 	svc := NewService(repo, nil, nil, nil, nil)
 	require.NotNil(t, svc)
@@ -83,8 +82,6 @@ func TestService_Store(t *testing.T) {
 
 	topic := infra.NewTopic("mem://topicTest")
 
-	infra.RegisterLogger()
-
 	svc := NewService(repo, searchService, userService, twitterAPI, topic)
 	require.NotNil(t, svc)
 
@@ -109,8 +106,6 @@ func TestService_UpdateLargeImage(t *testing.T) {
 	repo := NewMockRepository(ctrl)
 	repo.EXPECT().UpdateLargeImage(gomock.Any(), "1", "capture/large/1.png").Return(nil)
 
-	infra.RegisterLogger()
-
 	svc := NewService(repo, nil, nil, nil, nil)
 	require.NotNil(t, svc)
 
@@ -124,8 +119,6 @@ func TestService_UpdateThumbImage(t *testing.T) {
 
 	repo := NewMockRepository(ctrl)
 	repo.EXPECT().UpdateThumbImage(gomock.Any(), "2", "capture/thumb/2.png").Return(nil)
-
-	infra.RegisterLogger()
 
 	svc := NewService(repo, nil, nil, nil, nil)
 	require.NotNil(t, svc)
@@ -155,8 +148,6 @@ func TestService_SearchByUser(t *testing.T) {
 			FullText:  "test2",
 		},
 	}, nil)
-
-	infra.RegisterLogger()
 
 	svc := NewService(repo, nil, nil, nil, nil)
 	require.NotNil(t, svc)

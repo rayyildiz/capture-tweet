@@ -8,11 +8,11 @@ import (
 	"capturetweet.com/api"
 	"capturetweet.com/internal/infra"
 	"github.com/docker/go-connections/nat"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
+	"go.uber.org/mock/gomock"
 )
 
 func TestService_CaptureURL(t *testing.T) {
@@ -29,8 +29,6 @@ func TestService_CaptureURL(t *testing.T) {
 	})
 	require.NoError(t, err)
 	defer chromeC.Terminate(ctx)
-
-	infra.RegisterLogger()
 
 	service := NewService(nil, nil)
 	require.NotNil(t, service)
@@ -50,8 +48,6 @@ func TestService_CaptureURL(t *testing.T) {
 
 func TestService_SaveCapture(t *testing.T) {
 	ctx := context.Background()
-
-	infra.RegisterLogger()
 
 	bucket := infra.NewBucket("mem://test")
 	require.NotNil(t, bucket)
@@ -93,8 +89,6 @@ func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
 
 	bucket := infra.NewBucket("mem://tmp2")
 	require.NotNil(t, bucket)
-
-	infra.RegisterLogger()
 
 	tweetS := api.NewMockTweetService(ctrl)
 	tweetS.EXPECT().UpdateLargeImage(gomock.Any(), "1356685552276434946", gomock.Any()).Return(nil)

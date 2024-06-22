@@ -1,4 +1,4 @@
-//go:generate go run github.com/golang/mock/mockgen -package=api -self_package=capturetweet.com/api -destination=service_mock.go . UserService,TweetService,SearchService,BrowserService,ContentService
+//go:generate go run go.uber.org/mock/mockgen@latest -package=api -self_package=capturetweet.com/api -destination=service_mock.go . UserService,TweetService,SearchService,BrowserService,ContentService
 package api
 
 import (

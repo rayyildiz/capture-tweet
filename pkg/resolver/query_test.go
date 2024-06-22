@@ -5,17 +5,14 @@ import (
 	"testing"
 
 	"capturetweet.com/api"
-	"capturetweet.com/internal/infra"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestQueryResolver_Tweet(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	infra.RegisterLogger()
 
 	tweetService := api.NewMockTweetService(ctrl)
 	tweetService.EXPECT().FindById(gomock.Any(), "1234").Return(&api.TweetModel{
@@ -38,8 +35,6 @@ func TestQueryResolver_Tweet(t *testing.T) {
 func TestQueryResolver_SearchByUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	infra.RegisterLogger()
 
 	tweetService := api.NewMockTweetService(ctrl)
 	tweetService.EXPECT().SearchByUser(gomock.Any(), "user1").Return([]api.TweetModel{
@@ -97,8 +92,6 @@ func TestQueryResolver_SearchByUser(t *testing.T) {
 func TestQueryResolver_Search(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	infra.RegisterLogger()
 
 	tweetService := api.NewMockTweetService(ctrl)
 	tweetService.EXPECT().Search(gomock.Any(), "test", 10, 0, 0).Return([]api.TweetModel{

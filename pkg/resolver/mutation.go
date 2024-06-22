@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 
 	"capturetweet.com/internal/convert"
-	"go.uber.org/zap"
 )
 
 type mutationResolverImpl struct {
@@ -19,13 +19,13 @@ func newMutationResolver() MutationResolver {
 func (r mutationResolverImpl) Capture(ctx context.Context, url string) (*Tweet, error) {
 	id, err := _twitterService.Store(ctx, url)
 	if err != nil {
-		zap.L().Error("capture error", zap.String("url", url), zap.Error(err))
+		slog.Error("capture error", slog.String("url", url), slog.Any("err", err))
 		return nil, err
 	}
 
 	model, err := _twitterService.FindById(ctx, id)
 	if err != nil {
-		zap.L().Error("capture error, findById", zap.String("id", id), zap.Error(err))
+		slog.Error("capture error, findById", slog.String("id", id), slog.Any("err", err))
 		return nil, err
 	}
 	var resources []*Resource
@@ -61,7 +61,7 @@ func (r mutationResolverImpl) Contact(ctx context.Context, input ContactInput, t
 
 	err := _contentService.StoreContactRequest(ctx, input.Email, input.FullName, msg, captcha)
 	if err != nil {
-		zap.L().Error("could not send mail", zap.String("contact_email", input.Email), zap.String("contact_fullName", input.FullName), zap.Error(err))
+		slog.Error("could not send mail", slog.String("contact_email", input.Email), slog.String("contact_fullName", input.FullName), slog.Any("err", err))
 		return "", errors.New("error occurred, please try again or contact from info@capturetweet.com mail address")
 	}
 	return "We saved your message and we will contact you as soon as possible, thanks for feedback", nil

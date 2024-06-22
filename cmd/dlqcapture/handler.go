@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"go.uber.org/zap"
 	"gocloud.dev/blob"
+	"log/slog"
 	"net/http"
 )
 
@@ -24,7 +24,7 @@ type PubSubMessage struct {
 
 func (h handlerImpl) handleMessages(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		zap.L().Warn("method not allowed", zap.String("method", r.Method))
+		slog.Warn("method not allowed", slog.String("method", r.Method))
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
 	}
@@ -32,14 +32,14 @@ func (h handlerImpl) handleMessages(w http.ResponseWriter, r *http.Request) {
 	var payload PubSubMessage
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
-		zap.L().Error("bad request", zap.Error(err))
+		slog.Error("bad request", slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 	defer r.Body.Close()
 
 	key := fmt.Sprintf("dlq/%s.json", payload.Message.MessageId)
-	zap.L().Info("message saving into bucket", zap.String("key", key))
+	slog.Info("message saving into bucket", slog.String("key", key))
 
 	err = h.bucket.WriteAll(r.Context(), key, payload.Message.Data, &blob.WriterOptions{
 		ContentType: "application/json",
@@ -50,7 +50,7 @@ func (h handlerImpl) handleMessages(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 	if err != nil {
-		zap.L().Error("could not create a write", zap.Error(err))
+		slog.Error("could not create a write", slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
