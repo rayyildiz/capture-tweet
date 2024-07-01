@@ -5,7 +5,7 @@ go 1.22
 require (
 	github.com/99designs/gqlgen v0.17.49
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
-	github.com/algolia/algoliasearch-client-go/v3 v3.31.1
+	github.com/algolia/algoliasearch-client-go/v3 v3.31.2
 	github.com/chromedp/cdproto v0.0.0-20240614221651-cc28c8fb63e7
 	github.com/chromedp/chromedp v0.9.5
 	github.com/docker/go-connections v0.5.0
