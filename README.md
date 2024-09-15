@@ -4,7 +4,7 @@
 [![pull-request](https://github.com/rayyildiz/capture-tweet/actions/workflows/pr.yml/badge.svg)](https://github.com/rayyildiz/capture-tweet/actions/workflows/pr.yml)
 [![Security Scan](https://github.com/rayyildiz/capture-tweet/actions/workflows/security_scan.yml/badge.svg)](https://github.com/rayyildiz/capture-tweet/actions/workflows/security_scan.yml)
 
-I am going to close capturetweet on 31.12.2023, which I started at Starbucks to try [cloud run](https://cloud.google.com/run) features, 
+I am going to close capturetweet on 31.12.2023, which I started to try [cloud run](https://cloud.google.com/run) features, 
 in accordance with [Twitter's pricing policy](https://www.engadget.com/twitter-announces-new-api-pricing-including-a-limited-free-tier-for-bots-005251253.html).
 Anyone who wishes can deploy the application to the GCP cloud run. All necessary [CI /CD pipelines](.github/workflows/ci.yml) are ready.
 
