@@ -21,6 +21,7 @@ import (
 type MockUserService struct {
 	ctrl     *gomock.Controller
 	recorder *MockUserServiceMockRecorder
+	isgomock struct{}
 }
 
 // MockUserServiceMockRecorder is the mock recorder for MockUserService.
@@ -41,39 +42,40 @@ func (m *MockUserService) EXPECT() *MockUserServiceMockRecorder {
 }
 
 // FindById mocks base method.
-func (m *MockUserService) FindById(arg0 context.Context, arg1 string) (*UserModel, error) {
+func (m *MockUserService) FindById(ctx context.Context, id string) (*UserModel, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindById", arg0, arg1)
+	ret := m.ctrl.Call(m, "FindById", ctx, id)
 	ret0, _ := ret[0].(*UserModel)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindById indicates an expected call of FindById.
-func (mr *MockUserServiceMockRecorder) FindById(arg0, arg1 any) *gomock.Call {
+func (mr *MockUserServiceMockRecorder) FindById(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockUserService)(nil).FindById), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockUserService)(nil).FindById), ctx, id)
 }
 
 // FindOrCreate mocks base method.
-func (m *MockUserService) FindOrCreate(arg0 context.Context, arg1 *anaconda.User) (*UserModel, error) {
+func (m *MockUserService) FindOrCreate(ctx context.Context, user *anaconda.User) (*UserModel, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindOrCreate", arg0, arg1)
+	ret := m.ctrl.Call(m, "FindOrCreate", ctx, user)
 	ret0, _ := ret[0].(*UserModel)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindOrCreate indicates an expected call of FindOrCreate.
-func (mr *MockUserServiceMockRecorder) FindOrCreate(arg0, arg1 any) *gomock.Call {
+func (mr *MockUserServiceMockRecorder) FindOrCreate(ctx, user any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOrCreate", reflect.TypeOf((*MockUserService)(nil).FindOrCreate), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOrCreate", reflect.TypeOf((*MockUserService)(nil).FindOrCreate), ctx, user)
 }
 
 // MockTweetService is a mock of TweetService interface.
 type MockTweetService struct {
 	ctrl     *gomock.Controller
 	recorder *MockTweetServiceMockRecorder
+	isgomock struct{}
 }
 
 // MockTweetServiceMockRecorder is the mock recorder for MockTweetService.
@@ -94,97 +96,98 @@ func (m *MockTweetService) EXPECT() *MockTweetServiceMockRecorder {
 }
 
 // FindById mocks base method.
-func (m *MockTweetService) FindById(arg0 context.Context, arg1 string) (*TweetModel, error) {
+func (m *MockTweetService) FindById(ctx context.Context, id string) (*TweetModel, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindById", arg0, arg1)
+	ret := m.ctrl.Call(m, "FindById", ctx, id)
 	ret0, _ := ret[0].(*TweetModel)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindById indicates an expected call of FindById.
-func (mr *MockTweetServiceMockRecorder) FindById(arg0, arg1 any) *gomock.Call {
+func (mr *MockTweetServiceMockRecorder) FindById(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockTweetService)(nil).FindById), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockTweetService)(nil).FindById), ctx, id)
 }
 
 // Search mocks base method.
-func (m *MockTweetService) Search(arg0 context.Context, arg1 string, arg2, arg3, arg4 int) ([]TweetModel, error) {
+func (m *MockTweetService) Search(ctx context.Context, term string, size, start, page int) ([]TweetModel, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Search", arg0, arg1, arg2, arg3, arg4)
+	ret := m.ctrl.Call(m, "Search", ctx, term, size, start, page)
 	ret0, _ := ret[0].([]TweetModel)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Search indicates an expected call of Search.
-func (mr *MockTweetServiceMockRecorder) Search(arg0, arg1, arg2, arg3, arg4 any) *gomock.Call {
+func (mr *MockTweetServiceMockRecorder) Search(ctx, term, size, start, page any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockTweetService)(nil).Search), arg0, arg1, arg2, arg3, arg4)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockTweetService)(nil).Search), ctx, term, size, start, page)
 }
 
 // SearchByUser mocks base method.
-func (m *MockTweetService) SearchByUser(arg0 context.Context, arg1 string) ([]TweetModel, error) {
+func (m *MockTweetService) SearchByUser(ctx context.Context, userId string) ([]TweetModel, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchByUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "SearchByUser", ctx, userId)
 	ret0, _ := ret[0].([]TweetModel)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchByUser indicates an expected call of SearchByUser.
-func (mr *MockTweetServiceMockRecorder) SearchByUser(arg0, arg1 any) *gomock.Call {
+func (mr *MockTweetServiceMockRecorder) SearchByUser(ctx, userId any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchByUser", reflect.TypeOf((*MockTweetService)(nil).SearchByUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchByUser", reflect.TypeOf((*MockTweetService)(nil).SearchByUser), ctx, userId)
 }
 
 // Store mocks base method.
-func (m *MockTweetService) Store(arg0 context.Context, arg1 string) (string, error) {
+func (m *MockTweetService) Store(ctx context.Context, url string) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Store", arg0, arg1)
+	ret := m.ctrl.Call(m, "Store", ctx, url)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Store indicates an expected call of Store.
-func (mr *MockTweetServiceMockRecorder) Store(arg0, arg1 any) *gomock.Call {
+func (mr *MockTweetServiceMockRecorder) Store(ctx, url any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockTweetService)(nil).Store), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockTweetService)(nil).Store), ctx, url)
 }
 
 // UpdateLargeImage mocks base method.
-func (m *MockTweetService) UpdateLargeImage(arg0 context.Context, arg1, arg2 string) error {
+func (m *MockTweetService) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateLargeImage", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "UpdateLargeImage", ctx, id, captureUrl)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateLargeImage indicates an expected call of UpdateLargeImage.
-func (mr *MockTweetServiceMockRecorder) UpdateLargeImage(arg0, arg1, arg2 any) *gomock.Call {
+func (mr *MockTweetServiceMockRecorder) UpdateLargeImage(ctx, id, captureUrl any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateLargeImage", reflect.TypeOf((*MockTweetService)(nil).UpdateLargeImage), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateLargeImage", reflect.TypeOf((*MockTweetService)(nil).UpdateLargeImage), ctx, id, captureUrl)
 }
 
 // UpdateThumbImage mocks base method.
-func (m *MockTweetService) UpdateThumbImage(arg0 context.Context, arg1, arg2 string) error {
+func (m *MockTweetService) UpdateThumbImage(ctx context.Context, id, captureUrl string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateThumbImage", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "UpdateThumbImage", ctx, id, captureUrl)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateThumbImage indicates an expected call of UpdateThumbImage.
-func (mr *MockTweetServiceMockRecorder) UpdateThumbImage(arg0, arg1, arg2 any) *gomock.Call {
+func (mr *MockTweetServiceMockRecorder) UpdateThumbImage(ctx, id, captureUrl any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateThumbImage", reflect.TypeOf((*MockTweetService)(nil).UpdateThumbImage), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateThumbImage", reflect.TypeOf((*MockTweetService)(nil).UpdateThumbImage), ctx, id, captureUrl)
 }
 
 // MockSearchService is a mock of SearchService interface.
 type MockSearchService struct {
 	ctrl     *gomock.Controller
 	recorder *MockSearchServiceMockRecorder
+	isgomock struct{}
 }
 
 // MockSearchServiceMockRecorder is the mock recorder for MockSearchService.
@@ -205,38 +208,39 @@ func (m *MockSearchService) EXPECT() *MockSearchServiceMockRecorder {
 }
 
 // Put mocks base method.
-func (m *MockSearchService) Put(arg0 context.Context, arg1, arg2, arg3 string) error {
+func (m *MockSearchService) Put(ctx context.Context, tweetId, fullText, author string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Put", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "Put", ctx, tweetId, fullText, author)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Put indicates an expected call of Put.
-func (mr *MockSearchServiceMockRecorder) Put(arg0, arg1, arg2, arg3 any) *gomock.Call {
+func (mr *MockSearchServiceMockRecorder) Put(ctx, tweetId, fullText, author any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Put", reflect.TypeOf((*MockSearchService)(nil).Put), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Put", reflect.TypeOf((*MockSearchService)(nil).Put), ctx, tweetId, fullText, author)
 }
 
 // Search mocks base method.
-func (m *MockSearchService) Search(arg0 context.Context, arg1 string, arg2 int) ([]SearchModel, error) {
+func (m *MockSearchService) Search(ctx context.Context, term string, size int) ([]SearchModel, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Search", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "Search", ctx, term, size)
 	ret0, _ := ret[0].([]SearchModel)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Search indicates an expected call of Search.
-func (mr *MockSearchServiceMockRecorder) Search(arg0, arg1, arg2 any) *gomock.Call {
+func (mr *MockSearchServiceMockRecorder) Search(ctx, term, size any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockSearchService)(nil).Search), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockSearchService)(nil).Search), ctx, term, size)
 }
 
 // MockBrowserService is a mock of BrowserService interface.
 type MockBrowserService struct {
 	ctrl     *gomock.Controller
 	recorder *MockBrowserServiceMockRecorder
+	isgomock struct{}
 }
 
 // MockBrowserServiceMockRecorder is the mock recorder for MockBrowserService.
@@ -257,33 +261,33 @@ func (m *MockBrowserService) EXPECT() *MockBrowserServiceMockRecorder {
 }
 
 // CaptureSaveUpdateDatabase mocks base method.
-func (m *MockBrowserService) CaptureSaveUpdateDatabase(arg0 context.Context, arg1 *CaptureRequestModel) (*CaptureResponseModel, error) {
+func (m *MockBrowserService) CaptureSaveUpdateDatabase(ctx context.Context, model *CaptureRequestModel) (*CaptureResponseModel, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CaptureSaveUpdateDatabase", arg0, arg1)
+	ret := m.ctrl.Call(m, "CaptureSaveUpdateDatabase", ctx, model)
 	ret0, _ := ret[0].(*CaptureResponseModel)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CaptureSaveUpdateDatabase indicates an expected call of CaptureSaveUpdateDatabase.
-func (mr *MockBrowserServiceMockRecorder) CaptureSaveUpdateDatabase(arg0, arg1 any) *gomock.Call {
+func (mr *MockBrowserServiceMockRecorder) CaptureSaveUpdateDatabase(ctx, model any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CaptureSaveUpdateDatabase", reflect.TypeOf((*MockBrowserService)(nil).CaptureSaveUpdateDatabase), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CaptureSaveUpdateDatabase", reflect.TypeOf((*MockBrowserService)(nil).CaptureSaveUpdateDatabase), ctx, model)
 }
 
 // CaptureURL mocks base method.
-func (m *MockBrowserService) CaptureURL(arg0 context.Context, arg1 *CaptureRequestModel) ([]byte, error) {
+func (m *MockBrowserService) CaptureURL(ctx context.Context, model *CaptureRequestModel) ([]byte, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CaptureURL", arg0, arg1)
+	ret := m.ctrl.Call(m, "CaptureURL", ctx, model)
 	ret0, _ := ret[0].([]byte)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CaptureURL indicates an expected call of CaptureURL.
-func (mr *MockBrowserServiceMockRecorder) CaptureURL(arg0, arg1 any) *gomock.Call {
+func (mr *MockBrowserServiceMockRecorder) CaptureURL(ctx, model any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CaptureURL", reflect.TypeOf((*MockBrowserService)(nil).CaptureURL), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CaptureURL", reflect.TypeOf((*MockBrowserService)(nil).CaptureURL), ctx, model)
 }
 
 // Close mocks base method.
@@ -299,24 +303,25 @@ func (mr *MockBrowserServiceMockRecorder) Close() *gomock.Call {
 }
 
 // SaveCapture mocks base method.
-func (m *MockBrowserService) SaveCapture(arg0 context.Context, arg1 []byte, arg2 *CaptureRequestModel) (*CaptureResponseModel, error) {
+func (m *MockBrowserService) SaveCapture(ctx context.Context, originalImage []byte, model *CaptureRequestModel) (*CaptureResponseModel, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SaveCapture", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "SaveCapture", ctx, originalImage, model)
 	ret0, _ := ret[0].(*CaptureResponseModel)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SaveCapture indicates an expected call of SaveCapture.
-func (mr *MockBrowserServiceMockRecorder) SaveCapture(arg0, arg1, arg2 any) *gomock.Call {
+func (mr *MockBrowserServiceMockRecorder) SaveCapture(ctx, originalImage, model any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveCapture", reflect.TypeOf((*MockBrowserService)(nil).SaveCapture), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveCapture", reflect.TypeOf((*MockBrowserService)(nil).SaveCapture), ctx, originalImage, model)
 }
 
 // MockContentService is a mock of ContentService interface.
 type MockContentService struct {
 	ctrl     *gomock.Controller
 	recorder *MockContentServiceMockRecorder
+	isgomock struct{}
 }
 
 // MockContentServiceMockRecorder is the mock recorder for MockContentService.
@@ -337,15 +342,15 @@ func (m *MockContentService) EXPECT() *MockContentServiceMockRecorder {
 }
 
 // StoreContactRequest mocks base method.
-func (m *MockContentService) StoreContactRequest(arg0 context.Context, arg1, arg2, arg3, arg4 string) error {
+func (m *MockContentService) StoreContactRequest(ctx context.Context, senderMail, senderName, message, captcha string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StoreContactRequest", arg0, arg1, arg2, arg3, arg4)
+	ret := m.ctrl.Call(m, "StoreContactRequest", ctx, senderMail, senderName, message, captcha)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // StoreContactRequest indicates an expected call of StoreContactRequest.
-func (mr *MockContentServiceMockRecorder) StoreContactRequest(arg0, arg1, arg2, arg3, arg4 any) *gomock.Call {
+func (mr *MockContentServiceMockRecorder) StoreContactRequest(ctx, senderMail, senderName, message, captcha any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreContactRequest", reflect.TypeOf((*MockContentService)(nil).StoreContactRequest), arg0, arg1, arg2, arg3, arg4)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreContactRequest", reflect.TypeOf((*MockContentService)(nil).StoreContactRequest), ctx, senderMail, senderName, message, captcha)
 }

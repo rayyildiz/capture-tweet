@@ -20,6 +20,7 @@ import (
 type MockIndexInterface struct {
 	ctrl     *gomock.Controller
 	recorder *MockIndexInterfaceMockRecorder
+	isgomock struct{}
 }
 
 // MockIndexInterfaceMockRecorder is the mock recorder for MockIndexInterface.
@@ -40,10 +41,10 @@ func (m *MockIndexInterface) EXPECT() *MockIndexInterfaceMockRecorder {
 }
 
 // Delete mocks base method.
-func (m *MockIndexInterface) Delete(arg0 ...any) (search.DeleteTaskRes, error) {
+func (m *MockIndexInterface) Delete(opts ...any) (search.DeleteTaskRes, error) {
 	m.ctrl.T.Helper()
 	varargs := []any{}
-	for _, a := range arg0 {
+	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "Delete", varargs...)
@@ -53,16 +54,16 @@ func (m *MockIndexInterface) Delete(arg0 ...any) (search.DeleteTaskRes, error) {
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockIndexInterfaceMockRecorder) Delete(arg0 ...any) *gomock.Call {
+func (mr *MockIndexInterfaceMockRecorder) Delete(opts ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIndexInterface)(nil).Delete), arg0...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIndexInterface)(nil).Delete), opts...)
 }
 
 // GetObject mocks base method.
-func (m *MockIndexInterface) GetObject(arg0 string, arg1 any, arg2 ...any) error {
+func (m *MockIndexInterface) GetObject(objectID string, object any, opts ...any) error {
 	m.ctrl.T.Helper()
-	varargs := []any{arg0, arg1}
-	for _, a := range arg2 {
+	varargs := []any{objectID, object}
+	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetObject", varargs...)
@@ -71,17 +72,17 @@ func (m *MockIndexInterface) GetObject(arg0 string, arg1 any, arg2 ...any) error
 }
 
 // GetObject indicates an expected call of GetObject.
-func (mr *MockIndexInterfaceMockRecorder) GetObject(arg0, arg1 any, arg2 ...any) *gomock.Call {
+func (mr *MockIndexInterfaceMockRecorder) GetObject(objectID, object any, opts ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{arg0, arg1}, arg2...)
+	varargs := append([]any{objectID, object}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetObject", reflect.TypeOf((*MockIndexInterface)(nil).GetObject), varargs...)
 }
 
 // SaveObject mocks base method.
-func (m *MockIndexInterface) SaveObject(arg0 any, arg1 ...any) (search.SaveObjectRes, error) {
+func (m *MockIndexInterface) SaveObject(object any, opts ...any) (search.SaveObjectRes, error) {
 	m.ctrl.T.Helper()
-	varargs := []any{arg0}
-	for _, a := range arg1 {
+	varargs := []any{object}
+	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "SaveObject", varargs...)
@@ -91,17 +92,17 @@ func (m *MockIndexInterface) SaveObject(arg0 any, arg1 ...any) (search.SaveObjec
 }
 
 // SaveObject indicates an expected call of SaveObject.
-func (mr *MockIndexInterfaceMockRecorder) SaveObject(arg0 any, arg1 ...any) *gomock.Call {
+func (mr *MockIndexInterfaceMockRecorder) SaveObject(object any, opts ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{arg0}, arg1...)
+	varargs := append([]any{object}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveObject", reflect.TypeOf((*MockIndexInterface)(nil).SaveObject), varargs...)
 }
 
 // Search mocks base method.
-func (m *MockIndexInterface) Search(arg0 string, arg1 ...any) (search.QueryRes, error) {
+func (m *MockIndexInterface) Search(query string, opts ...any) (search.QueryRes, error) {
 	m.ctrl.T.Helper()
-	varargs := []any{arg0}
-	for _, a := range arg1 {
+	varargs := []any{query}
+	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "Search", varargs...)
@@ -111,8 +112,8 @@ func (m *MockIndexInterface) Search(arg0 string, arg1 ...any) (search.QueryRes, 
 }
 
 // Search indicates an expected call of Search.
-func (mr *MockIndexInterfaceMockRecorder) Search(arg0 any, arg1 ...any) *gomock.Call {
+func (mr *MockIndexInterfaceMockRecorder) Search(query any, opts ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{arg0}, arg1...)
+	varargs := append([]any{query}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockIndexInterface)(nil).Search), varargs...)
 }
