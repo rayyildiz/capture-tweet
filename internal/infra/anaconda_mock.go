@@ -21,6 +21,7 @@ import (
 type MockTweetAPI struct {
 	ctrl     *gomock.Controller
 	recorder *MockTweetAPIMockRecorder
+	isgomock struct{}
 }
 
 // MockTweetAPIMockRecorder is the mock recorder for MockTweetAPI.
@@ -41,16 +42,16 @@ func (m *MockTweetAPI) EXPECT() *MockTweetAPIMockRecorder {
 }
 
 // GetTweet mocks base method.
-func (m *MockTweetAPI) GetTweet(arg0 int64, arg1 url.Values) (anaconda.Tweet, error) {
+func (m *MockTweetAPI) GetTweet(id int64, v url.Values) (anaconda.Tweet, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTweet", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetTweet", id, v)
 	ret0, _ := ret[0].(anaconda.Tweet)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetTweet indicates an expected call of GetTweet.
-func (mr *MockTweetAPIMockRecorder) GetTweet(arg0, arg1 any) *gomock.Call {
+func (mr *MockTweetAPIMockRecorder) GetTweet(id, v any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTweet", reflect.TypeOf((*MockTweetAPI)(nil).GetTweet), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTweet", reflect.TypeOf((*MockTweetAPI)(nil).GetTweet), id, v)
 }

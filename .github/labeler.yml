@@ -1,0 +1,63 @@
+infrastructure:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'compose.yaml'
+          - 'Dockerfile'
+          - 'Dockerfile.*'
+          - 'fly.toml'
+
+development:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'compose.yaml'
+          - 'Dockerfile'
+          - 'Dockerfile.*'
+          - '.github/**/*'
+          - '.gitignore'
+          - '.editorconfig'
+          - '.gitattributes'
+          - '.aiignore'
+          - 'bench/*'
+
+dependency:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'go.mod'
+          - 'go.sum'
+          - 'go.dev'
+          - 'package.json'
+          - 'package-lock.json'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/**'
+          - '**/*.md'
+          - '.junie/*.md'
+          - '.fleet/**'
+
+go:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.go'
+
+typescript:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.ts'
+          - '**/*.tsx'
+          - '**/*.js'
+          - '**/*.jsx'
+
+html:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.html'
+          - 'templates/**/*'
+          - 'static/**/*'
+          - '**/*.html'
+          - '**/*.js'
+          - '**/*.css'
+
+feature:
+  - head-branch: [ '^feature', 'feature' ]

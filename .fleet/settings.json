@@ -1,0 +1,21 @@
+{
+    "backend.maxHeapSizeMb": 2048,
+    "plugins": [
+        {
+            "type": "add",
+            "pluginName": "fleet.go"
+        },
+        {
+            "type": "add",
+            "pluginName": "fleet.react"
+        },
+        {
+            "type": "add",
+            "pluginName": "fleet.git.frontend"
+        },
+        {
+            "type": "add",
+            "pluginName": "fleet.css"
+        }
+    ]
+}

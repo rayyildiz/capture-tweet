@@ -20,6 +20,7 @@ import (
 type MockRepository struct {
 	ctrl     *gomock.Controller
 	recorder *MockRepositoryMockRecorder
+	isgomock struct{}
 }
 
 // MockRepositoryMockRecorder is the mock recorder for MockRepository.
@@ -40,15 +41,15 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 }
 
 // ContactUs mocks base method.
-func (m *MockRepository) ContactUs(arg0 context.Context, arg1, arg2, arg3 string) error {
+func (m *MockRepository) ContactUs(ctx context.Context, email, fullName, message string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ContactUs", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "ContactUs", ctx, email, fullName, message)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // ContactUs indicates an expected call of ContactUs.
-func (mr *MockRepositoryMockRecorder) ContactUs(arg0, arg1, arg2, arg3 any) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) ContactUs(ctx, email, fullName, message any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContactUs", reflect.TypeOf((*MockRepository)(nil).ContactUs), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContactUs", reflect.TypeOf((*MockRepository)(nil).ContactUs), ctx, email, fullName, message)
 }

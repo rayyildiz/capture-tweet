@@ -21,6 +21,7 @@ import (
 type MockRepository struct {
 	ctrl     *gomock.Controller
 	recorder *MockRepositoryMockRecorder
+	isgomock struct{}
 }
 
 // MockRepositoryMockRecorder is the mock recorder for MockRepository.
@@ -41,117 +42,117 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 }
 
 // Exist mocks base method.
-func (m *MockRepository) Exist(arg0 context.Context, arg1 string) bool {
+func (m *MockRepository) Exist(ctx context.Context, id string) bool {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Exist", arg0, arg1)
+	ret := m.ctrl.Call(m, "Exist", ctx, id)
 	ret0, _ := ret[0].(bool)
 	return ret0
 }
 
 // Exist indicates an expected call of Exist.
-func (mr *MockRepositoryMockRecorder) Exist(arg0, arg1 any) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) Exist(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Exist", reflect.TypeOf((*MockRepository)(nil).Exist), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Exist", reflect.TypeOf((*MockRepository)(nil).Exist), ctx, id)
 }
 
 // FindAllOrderByUpdated mocks base method.
-func (m *MockRepository) FindAllOrderByUpdated(arg0 context.Context, arg1 int) ([]Tweet, error) {
+func (m *MockRepository) FindAllOrderByUpdated(ctx context.Context, size int) ([]Tweet, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindAllOrderByUpdated", arg0, arg1)
+	ret := m.ctrl.Call(m, "FindAllOrderByUpdated", ctx, size)
 	ret0, _ := ret[0].([]Tweet)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindAllOrderByUpdated indicates an expected call of FindAllOrderByUpdated.
-func (mr *MockRepositoryMockRecorder) FindAllOrderByUpdated(arg0, arg1 any) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) FindAllOrderByUpdated(ctx, size any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAllOrderByUpdated", reflect.TypeOf((*MockRepository)(nil).FindAllOrderByUpdated), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAllOrderByUpdated", reflect.TypeOf((*MockRepository)(nil).FindAllOrderByUpdated), ctx, size)
 }
 
 // FindById mocks base method.
-func (m *MockRepository) FindById(arg0 context.Context, arg1 string) (*Tweet, error) {
+func (m *MockRepository) FindById(ctx context.Context, id string) (*Tweet, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindById", arg0, arg1)
+	ret := m.ctrl.Call(m, "FindById", ctx, id)
 	ret0, _ := ret[0].(*Tweet)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindById indicates an expected call of FindById.
-func (mr *MockRepositoryMockRecorder) FindById(arg0, arg1 any) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) FindById(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockRepository)(nil).FindById), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockRepository)(nil).FindById), ctx, id)
 }
 
 // FindByIds mocks base method.
-func (m *MockRepository) FindByIds(arg0 context.Context, arg1 []string) ([]Tweet, error) {
+func (m *MockRepository) FindByIds(ctx context.Context, ids []string) ([]Tweet, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByIds", arg0, arg1)
+	ret := m.ctrl.Call(m, "FindByIds", ctx, ids)
 	ret0, _ := ret[0].([]Tweet)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindByIds indicates an expected call of FindByIds.
-func (mr *MockRepositoryMockRecorder) FindByIds(arg0, arg1 any) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) FindByIds(ctx, ids any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByIds", reflect.TypeOf((*MockRepository)(nil).FindByIds), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByIds", reflect.TypeOf((*MockRepository)(nil).FindByIds), ctx, ids)
 }
 
 // FindByUser mocks base method.
-func (m *MockRepository) FindByUser(arg0 context.Context, arg1 string) ([]Tweet, error) {
+func (m *MockRepository) FindByUser(ctx context.Context, userId string) ([]Tweet, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "FindByUser", ctx, userId)
 	ret0, _ := ret[0].([]Tweet)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindByUser indicates an expected call of FindByUser.
-func (mr *MockRepositoryMockRecorder) FindByUser(arg0, arg1 any) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) FindByUser(ctx, userId any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUser", reflect.TypeOf((*MockRepository)(nil).FindByUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUser", reflect.TypeOf((*MockRepository)(nil).FindByUser), ctx, userId)
 }
 
 // Store mocks base method.
-func (m *MockRepository) Store(arg0 context.Context, arg1 *anaconda.Tweet) error {
+func (m *MockRepository) Store(ctx context.Context, tweet *anaconda.Tweet) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Store", arg0, arg1)
+	ret := m.ctrl.Call(m, "Store", ctx, tweet)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Store indicates an expected call of Store.
-func (mr *MockRepositoryMockRecorder) Store(arg0, arg1 any) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) Store(ctx, tweet any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockRepository)(nil).Store), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockRepository)(nil).Store), ctx, tweet)
 }
 
 // UpdateLargeImage mocks base method.
-func (m *MockRepository) UpdateLargeImage(arg0 context.Context, arg1, arg2 string) error {
+func (m *MockRepository) UpdateLargeImage(ctx context.Context, id, captureUrl string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateLargeImage", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "UpdateLargeImage", ctx, id, captureUrl)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateLargeImage indicates an expected call of UpdateLargeImage.
-func (mr *MockRepositoryMockRecorder) UpdateLargeImage(arg0, arg1, arg2 any) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) UpdateLargeImage(ctx, id, captureUrl any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateLargeImage", reflect.TypeOf((*MockRepository)(nil).UpdateLargeImage), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateLargeImage", reflect.TypeOf((*MockRepository)(nil).UpdateLargeImage), ctx, id, captureUrl)
 }
 
 // UpdateThumbImage mocks base method.
-func (m *MockRepository) UpdateThumbImage(arg0 context.Context, arg1, arg2 string) error {
+func (m *MockRepository) UpdateThumbImage(ctx context.Context, id, captureUrl string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateThumbImage", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "UpdateThumbImage", ctx, id, captureUrl)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateThumbImage indicates an expected call of UpdateThumbImage.
-func (mr *MockRepositoryMockRecorder) UpdateThumbImage(arg0, arg1, arg2 any) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) UpdateThumbImage(ctx, id, captureUrl any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateThumbImage", reflect.TypeOf((*MockRepository)(nil).UpdateThumbImage), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateThumbImage", reflect.TypeOf((*MockRepository)(nil).UpdateThumbImage), ctx, id, captureUrl)
 }
