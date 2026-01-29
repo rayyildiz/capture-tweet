@@ -3,6 +3,8 @@ package browser
 import (
 	"context"
 	"os"
+	"os/exec"
+	"strings"
 	"testing"
 
 	"capturetweet.com/api"
@@ -15,7 +17,23 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+func requireDocker(t *testing.T) {
+	t.Helper()
+
+	if _, err := exec.LookPath("docker"); err != nil {
+		t.Skip("docker binary not found")
+	}
+
+	cmd := exec.Command("docker", "info")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Skipf("docker daemon not available: %v (%s)", err, strings.TrimSpace(string(output)))
+	}
+}
+
 func TestService_CaptureURL(t *testing.T) {
+	requireDocker(t)
+
 	os.Setenv("APP_SLEEP_TIME_MS", "16000")
 	ctx := context.Background()
 	req := testcontainers.ContainerRequest{
@@ -68,6 +86,8 @@ func TestService_SaveCapture(t *testing.T) {
 }
 
 func TestService_CaptureSaveUpdateDatabase(t *testing.T) {
+	requireDocker(t)
+
 	os.Setenv("APP_SLEEP_TIME_MS", "15000")
 	minImageSize = 1024 * 5
 
